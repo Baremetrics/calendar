@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+body, html {
+  font-family: $font-family;
+  position: relative;
+  height: 100%;
+}
+.daterange {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+}
