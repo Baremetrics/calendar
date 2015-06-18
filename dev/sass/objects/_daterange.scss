@@ -147,26 +147,35 @@
           width: calc(100% / 7);
           cursor: pointer;
 
-          &:hover {
+          &.hover {
             background-color: $moon;
-            border-left: 2px solid $mouse;
+            border-color: $blue;
+            border-style: solid;
+          }
+          &.hover-before {
+            border-left-width: 2px;
             border-radius: 2px 0 0 2px;
             padding-left: rem(3);
           }
+          &.hover-after {
+            border-right-width: 2px;
+            border-radius: 0 2px 2px 0;
+            padding-right: rem(3);
+          }
         }
-        .dr-selected, .dr-start, .dr-end {
+        .dr-selected, .dr-start, .dr-end, .dr-maybe {
           background-color: $moon;
         }
         .dr-fade {
           color: $mouse;
         }
         .dr-start {
-          border-left: 2px solid $blue !important;
+          border-left: 2px solid $blue;
           border-radius: 2px 0 0 2px;
           padding-left: rem(3);
         }
         .dr-end {
-          border-right: 2px solid $blue !important;
+          border-right: 2px solid $blue;
           border-radius: 0 2px 2px 0;
           padding-right: rem(3);
         }

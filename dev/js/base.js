@@ -14,6 +14,13 @@ function Calendar() {
   $('.dr-date').click(function() {
     self.calendarOpen(this);
   });
+
+  $('.dr-date').keydown(function(event){
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      self.calendarOpen(this);
+    }
+  });
 }
 
 
@@ -34,13 +41,11 @@ Calendar.prototype.presetToggle = function() {
 
 
 Calendar.prototype.calendarOpen = function(element) {
+  var self = this;
   var cal_width = $('.dr-dates').innerWidth() - 8;
-  this.start_date = $('.dr-date-start').html();
-  this.end_date = $('.dr-date-end').html();
-  this.current_date = $(element).html();
-
-  if ($(element).hasClass('active'))
-    return false;
+  this.start_date = new Date($('.dr-date-start').html());
+  this.end_date = new Date($('.dr-date-end').html());
+  this.current_date = new Date($(element).html());
 
   if (this.presetIsOpen == true)
     this.presetToggle();
@@ -48,11 +53,41 @@ Calendar.prototype.calendarOpen = function(element) {
   if (this.calIsOpen == true)
     this.calendarClose();
 
-  cal.calendarCreate();
+  this.calendarCreate();
 
-  // $('.dr-day').click(function() {
+  $('.dr-day').on({
+    mouseenter: function() {
+      var this_date = moment($(this).data('date'));
+      var start_date = moment(self.start_date);
+      var end_date = moment(self.end_date);
+      var current_date = moment(self.current_date);
 
-  // });
+      if (start_date.isSame(current_date)) {
+        $(this).addClass('hover hover-before');
+        $('.dr-start').css({'border': 'none', 'padding-left': '0.3125rem'});
+      }
+
+      if (end_date.isSame(current_date)) {
+        $(this).addClass('hover hover-after');
+        $('.dr-end').css({'border': 'none', 'padding-right': '0.3125rem'});
+      }
+
+      $(this).next().addClass('dr-maybe');
+
+      // if (this_date.isBefore(current_date)) {
+      //   $(this).addClass('hover hover-before');
+      // } else if (this_date.isAfter(current_date)) {
+      //   $(this).addClass('hover hover-after');
+      // } else {
+      //   console.log('equal');
+      // }
+    },
+    mouseleave: function() {
+      $(this).removeClass('hover hover-before hover-after');
+      $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
+      $('.dr-day').removeClass('dr-maybe');
+    }
+  });
 
   $('.dr-calendar')
     .css('width', cal_width)
@@ -77,9 +112,9 @@ Calendar.prototype.calendarClose = function() {
 
 
 Calendar.prototype.calendarArray = function(start, end, current) {
-  var start = start ? new Date(start) : new Date();
-  var end = end ? new Date(end) : moment(start).add(1, 'week');
-  var current = current ? new Date(current) : start;
+  var start = start || new Date();
+  var end = end || moment(start).add(1, 'week');
+  var current = current || start || end;
 
   var first_day = moment(start).startOf('month');
   var last_day = moment(end).endOf('month');
@@ -106,9 +141,10 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
     return {
       str: +d.format('D'),
-      start: d.format('D') == moment(start).format('D'),
-      end: d.format('D') == moment(end).format('D'),
-      selected: moment(d).isBetween(start, end),
+      start: d.isSame(start),
+      end: d.isSame(end),
+      selected: d.isBetween(start, end),
+      date: d.toISOString(),
       fade: true
     }
   }).reverse();
@@ -125,9 +161,10 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
     return {
       str: +d.format('D'),
-      start: d.format('D') == moment(start).format('D'),
-      end: d.format('D') == moment(end).format('D'),
-      selected: moment(d).isBetween(start, end),
+      start: d.isSame(start),
+      end: d.isSame(end),
+      selected: d.isBetween(start, end),
+      date: d.toISOString(),
       fade: true
     }
   });
@@ -145,10 +182,11 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
     return {
       str: +d.format('D'),
-      start: d.format('D') == moment(start).format('D'),
-      end: d.format('D') == moment(end).format('D'),
-      current: d.format('D') == moment(current).format('D'),
-      selected: moment(d).isBetween(start, end)
+      start: d.isSame(start),
+      end: d.isSame(end),
+      current: d.isSame(current),
+      selected: d.isBetween(start, end),
+      date: d.toISOString()
     }
   });
 
@@ -159,7 +197,6 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
 Calendar.prototype.calendarCreate = function() {
   var array = this.calendarArray(this.start_date, this.end_date, this.current_date);
-
   var current_week;
 
   _.each(array, function(d, i) {
@@ -180,7 +217,7 @@ Calendar.prototype.calendarCreate = function() {
     if (d.selected)
       classString += " dr-selected";
 
-    $('.dr-day-list').append('<li class="'+ classString +'">'+ d.str +'</li>');
+    $('.dr-day-list').append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
   });
 }
 
