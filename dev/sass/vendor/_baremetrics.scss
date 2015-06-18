@@ -1,0 +1,187 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "baremetrics";
+  src:url("../fonts/baremetrics.eot");
+  src:url("../fonts/baremetrics.eot?#iefix") format("embedded-opentype"),
+      url("../fonts/baremetrics.woff") format("woff"),
+      url("../fonts/baremetrics.ttf") format("truetype"),
+      url("../fonts/baremetrics.svg#baremetrics") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "baremetrics" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "baremetrics" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-card:before {
+  content: "c";
+}
+.icon-email:before {
+  content: "d";
+}
+.icon-twitter:before {
+  content: "b";
+}
+.icon-linkedin:before {
+  content: "f";
+}
+.icon-facebook:before {
+  content: "g";
+}
+.icon-new:before {
+  content: "i";
+}
+.icon-calendar:before {
+  content: "j";
+}
+.icon-up:before {
+  content: "k";
+}
+.icon-stop:before {
+  content: "l";
+}
+.icon-skull:before {
+  content: "m";
+}
+.icon-money:before {
+  content: "n";
+}
+.icon-down:before {
+  content: "o";
+}
+.icon-dribbble:before {
+  content: "a";
+}
+.icon-question:before {
+  content: "p";
+}
+.icon-options:before {
+  content: "s";
+}
+.icon-star:before {
+  content: "t";
+}
+.icon-right:before {
+  content: "u";
+}
+.icon-plus:before {
+  content: "v";
+}
+.icon-equal:before {
+  content: "w";
+}
+.icon-plans:before {
+  content: "y";
+}
+.icon-comments:before {
+  content: "z";
+}
+.icon-dashboards:before {
+  content: "e";
+}
+.icon-refresh:before {
+  content: "h";
+}
+.icon-help:before {
+  content: "D";
+}
+.icon-question-comment:before {
+  content: "F";
+}
+.icon-left:before {
+  content: "q";
+}
+.icon-toggle:before {
+  content: "B";
+}
+.icon-forecast:before {
+  content: "C";
+}
+.icon-status:before {
+  content: "E";
+}
+.icon-warn:before {
+  content: "G";
+}
+.icon-question-round:before {
+  content: "H";
+}
+.icon-benchmark:before {
+  content: "I";
+}
+.icon-check:before {
+  content: "J";
+}
+.icon-customers-1:before {
+  content: "A";
+}
+.icon-location:before {
+  content: "r";
+}
+.icon-trash:before {
+  content: "K";
+}
+.icon-edit:before {
+  content: "L";
+}
+.icon-arrow-left:before {
+  content: "M";
+}
+.icon-search:before {
+  content: "N";
+}
+.icon-settings:before {
+  content: "O";
+}
+.icon-breakout:before {
+  content: "P";
+}
+.icon-right-big:before {
+  content: "Q";
+}
+.icon-left-big:before {
+  content: "R";
+}
+.icon-download:before {
+  content: "S";
+}
+.icon-edu:before {
+  content: "T";
+}
+.icon-subtract:before {
+  content: "x";
+}
+.icon-play:before {
+  content: "U";
+}
+.icon-check-solid:before {
+  content: "V";
+}
+.icon-note:before {
+  content: "W";
+}

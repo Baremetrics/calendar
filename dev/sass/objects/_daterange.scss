@@ -1,5 +1,4 @@
 .daterange {
-  // display: flex;
 
   .dr-input {
     display: flex;
@@ -30,7 +29,7 @@
         line-height: rem(35);
         text-align: center;
 
-        &:hover, &:focus {
+        &:hover, &:focus, &.active {
           color: $blue;
         }
       }
@@ -82,6 +81,106 @@
 
 
   .dr-selections {
+
+    .dr-calendar {
+      font-size: rem(15);
+      box-shadow: 0 0 5px $mouse;
+      border-radius: 0 0 $radius $radius;
+      position: relative;
+      z-index: 9;
+      padding-top: 5px;
+      top: -5px;
+      left: 4px;
+
+      .dr-range-switcher {
+        display: flex;
+        justify-content: space-between;
+        padding: rem(6 8);
+        font-size: rem(14);
+
+        .dr-switcher {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: calc(50% - 0.5rem / 2);
+          border: 1px solid rgba($mouse, 0.5);
+          border-radius: $radius;
+          height: rem(25);
+
+          i {
+            color: $mouse;
+            position: relative;
+            top: 1px;
+            cursor: pointer;
+            font-size: rem(12);
+            padding: rem(0 4);
+
+            &:hover {
+              color: $blue;
+            }
+          }
+        }
+      }
+      .dr-days-of-week-list {
+        display: flex;
+        background-color: $moon;
+        font-size: rem(10);
+        color: $rat;
+        padding: rem(5 0);
+        border: 1px solid rgba($mouse, 0.5);
+        border-left: none;
+        border-right: none;
+
+        .dr-day-of-week {
+          width: calc(100% / 7);
+          text-align: center;
+        }
+      }
+      .dr-days-list {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: rem(15);
+
+        .dr-week {
+          display: flex;
+          width: 100%;
+        }
+        .dr-day {
+          padding: rem(5);
+          text-align: center;
+          width: calc(100% / 7);
+          cursor: pointer;
+
+          &:hover {
+            background-color: $moon;
+            border-left: 2px solid $mouse;
+            border-radius: 2px 0 0 2px;
+            padding-left: rem(3);
+          }
+        }
+        .dr-selected, .dr-start, .dr-end {
+          background-color: $moon;
+        }
+        .dr-start {
+          border-left: 2px solid $blue !important;
+          border-radius: 2px 0 0 2px;
+          padding-left: rem(3);
+          cursor: default;
+          pointer-events: none;
+        }
+        .dr-end {
+          border-right: 2px solid $blue !important;
+          border-radius: 0 2px 2px 0;
+          padding-right: rem(3);
+          cursor: default;
+          pointer-events: none;
+        }
+        .dr-current {
+          color: $blue !important;
+          background-color: rgba($blue, 0.2) !important;
+        }
+      }
+    }
 
     .dr-preset-list {
       color: $blue;
