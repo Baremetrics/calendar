@@ -136,15 +136,11 @@
           text-align: center;
         }
       }
-      .dr-days-list {
+      .dr-day-list {
         display: flex;
         flex-wrap: wrap;
         font-size: rem(15);
 
-        .dr-week {
-          display: flex;
-          width: 100%;
-        }
         .dr-day {
           padding: rem(5);
           text-align: center;
@@ -161,19 +157,18 @@
         .dr-selected, .dr-start, .dr-end {
           background-color: $moon;
         }
+        .dr-fade {
+          color: $mouse;
+        }
         .dr-start {
           border-left: 2px solid $blue !important;
           border-radius: 2px 0 0 2px;
           padding-left: rem(3);
-          cursor: default;
-          pointer-events: none;
         }
         .dr-end {
           border-right: 2px solid $blue !important;
           border-radius: 0 2px 2px 0;
           padding-right: rem(3);
-          cursor: default;
-          pointer-events: none;
         }
         .dr-current {
           color: $blue !important;

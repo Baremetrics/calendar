@@ -10,6 +10,7 @@
 
   <script src="js/vendor/underscore.js"></script>
   <script src="js/vendor/jquery.js"></script>
+  <script src="js/vendor/moment.js"></script>
 </head>
 <body>
 
@@ -17,9 +18,9 @@
   <div class="daterange"> 
     <div class="dr-input">
       <div class="dr-dates">
-        <div class="dr-date" data-date="start" contenteditable>May 15, 2015</div>
+        <div class="dr-date dr-date-start" contenteditable>May 15, 2015</div>
         <span class="dr-dates-dash">–</span>
-        <div class="dr-date" data-date="end" contenteditable>May 22, 2015</div>
+        <div class="dr-date dr-date-end" contenteditable>May 22, 2015</div>
       </div>
 
       <div class="dr-presets">
@@ -44,67 +45,52 @@
           <li class="dr-day-of-week">F</li>
           <li class="dr-day-of-week">S</li>
         </ul>
-        <div class="dr-days-list">
-          <ul class="dr-week">
-            <li class="dr-day">31</li>
-            <li class="dr-day">1</li>
-            <li class="dr-day">2</li>
-            <li class="dr-day">3</li>
-            <li class="dr-day">4</li>
-            <li class="dr-day">5</li>
-            <li class="dr-day">6</li>
-          </ul>
-
-          <ul class="dr-week">
-            <li class="dr-day">7</li>
-            <li class="dr-day">8</li>
-            <li class="dr-day">9</li>
-            <li class="dr-day">10</li>
-            <li class="dr-day">11</li>
-            <li class="dr-day">12</li>
-            <li class="dr-day">13</li>
-          </ul>
-
-          <ul class="dr-week">
-            <li class="dr-day">14</li>
-            <li class="dr-day dr-start dr-current">15</li>
-            <li class="dr-day dr-selected">16</li>
-            <li class="dr-day dr-selected">17</li>
-            <li class="dr-day dr-selected">18</li>
-            <li class="dr-day dr-selected">19</li>
-            <li class="dr-day dr-selected">20</li>
-          </ul>
-
-          <ul class="dr-week">
-            <li class="dr-day dr-selected">21</li>
-            <li class="dr-day dr-end">22</li>
-            <li class="dr-day">23</li>
-            <li class="dr-day">24</li>
-            <li class="dr-day">25</li>
-            <li class="dr-day">26</li>
-            <li class="dr-day">27</li>
-          </ul>
-
-          <ul class="dr-week">
-            <li class="dr-day">28</li>
-            <li class="dr-day">29</li>
-            <li class="dr-day">30</li>
-            <li class="dr-day">1</li>
-            <li class="dr-day">2</li>
-            <li class="dr-day">3</li>
-            <li class="dr-day">4</li>
-          </ul>
-
-          <ul class="dr-week">
-            <li class="dr-day">5</li>
-            <li class="dr-day">6</li>
-            <li class="dr-day">7</li>
-            <li class="dr-day">8</li>
-            <li class="dr-day">9</li>
-            <li class="dr-day">10</li>
-            <li class="dr-day">11</li>
-          </ul>
-        </div>
+        <ul class="dr-day-list">
+          <!-- 
+          <li class="dr-day dr-fade">31</li>
+          <li class="dr-day">1</li>
+          <li class="dr-day">2</li>
+          <li class="dr-day">3</li>
+          <li class="dr-day">4</li>
+          <li class="dr-day">5</li>
+          <li class="dr-day">6</li>
+          <li class="dr-day">7</li>
+          <li class="dr-day">8</li>
+          <li class="dr-day">9</li>
+          <li class="dr-day">10</li>
+          <li class="dr-day">11</li>
+          <li class="dr-day">12</li>
+          <li class="dr-day">13</li>
+          <li class="dr-day">14</li>
+          <li class="dr-day dr-start dr-current">15</li>
+          <li class="dr-day dr-selected">16</li>
+          <li class="dr-day dr-selected">17</li>
+          <li class="dr-day dr-selected">18</li>
+          <li class="dr-day dr-selected">19</li>
+          <li class="dr-day dr-selected">20</li>
+          <li class="dr-day dr-selected">21</li>
+          <li class="dr-day dr-end">22</li>
+          <li class="dr-day">23</li>
+          <li class="dr-day">24</li>
+          <li class="dr-day">25</li>
+          <li class="dr-day">26</li>
+          <li class="dr-day">27</li>
+          <li class="dr-day">28</li>
+          <li class="dr-day">29</li>
+          <li class="dr-day">30</li>
+          <li class="dr-day dr-fade">1</li>
+          <li class="dr-day dr-fade">2</li>
+          <li class="dr-day dr-fade">3</li>
+          <li class="dr-day dr-fade">4</li>
+          <li class="dr-day dr-fade">5</li>
+          <li class="dr-day dr-fade">6</li>
+          <li class="dr-day dr-fade">7</li>
+          <li class="dr-day dr-fade">8</li>
+          <li class="dr-day dr-fade">9</li>
+          <li class="dr-day dr-fade">10</li>
+          <li class="dr-day dr-fade">11</li>
+          -->
+        </ul>
       </div>
 
       <ul class="dr-preset-list" style="display: none;">
