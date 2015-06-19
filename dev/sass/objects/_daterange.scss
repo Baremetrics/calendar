@@ -19,9 +19,9 @@
     .dr-dates {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       padding: 0 rem(24) 0 rem(12);
-      min-width: 200px;
+      min-width: 220px;
 
       .dr-date {
         font-size: rem(15);

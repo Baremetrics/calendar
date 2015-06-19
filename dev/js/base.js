@@ -25,10 +25,6 @@ function Calendar() {
 
 
 Calendar.prototype.presetToggle = function() {
-  $('.dr-preset-list').slideToggle(200);
-  $('.dr-input').toggleClass('active');
-  $('.dr-presets').toggleClass('active');
-
   if (this.presetIsOpen == false) {
     this.presetIsOpen = true;
   } else if (this.presetIsOpen == true) {
@@ -37,6 +33,10 @@ Calendar.prototype.presetToggle = function() {
 
   if (this.calIsOpen == true)
     this.calendarClose();
+
+  $('.dr-preset-list').slideToggle(200);
+  $('.dr-input').toggleClass('active');
+  $('.dr-presets').toggleClass('active');
 }
 
 
@@ -188,7 +188,7 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
 
   // Leftover faded dates
-  var leftover = (6 * 7) - (current_month.end.str - 1 + start_hidden.length);
+  var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
   d = undefined;
 
   var end_hidden = _.map(_.range(leftover), function() {
@@ -210,7 +210,7 @@ Calendar.prototype.calendarArray = function(start, end, current) {
   // Actual visible dates
   d = undefined;
 
-  var visible = _.map(_.range(current_month.end.str - 1), function() {
+  var visible = _.map(_.range(current_month.end.str), function() {
     if (d == undefined) {
       d = moment(first_day);
     } else {
