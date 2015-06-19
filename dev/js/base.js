@@ -72,20 +72,33 @@ Calendar.prototype.calendarOpen = function(element) {
         $('.dr-end').css({'border': 'none', 'padding-right': '0.3125rem'});
       }
 
-      $(this).next().addClass('dr-maybe');
+      $('.dr-selected').css('background-color', 'transparent');
 
-      // if (this_date.isBefore(current_date)) {
-      //   $(this).addClass('hover hover-before');
-      // } else if (this_date.isAfter(current_date)) {
-      //   $(this).addClass('hover hover-after');
-      // } else {
-      //   console.log('equal');
-      // }
+      var element_i = $('[data-date="'+ this_date._i +'"]');
+      var i = 0;
+
+      _.each(_.range(6 * 7), function(i) {
+        if (moment(element_i.next().data('date')).isSame(self.end_date))
+          return false;
+
+        if (moment(element_i.data('date')).isAfter(self.end_date)) {
+          if (i > 5) {
+            $(element_i).addClass('dr-end');
+            return false;
+          } 
+
+          i++;
+        } 
+
+        element_i = element_i.next().addClass('dr-maybe');
+      });
     },
     mouseleave: function() {
       $(this).removeClass('hover hover-before hover-after');
       $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
+      $('.dr-maybe').removeClass('dr-end');
       $('.dr-day').removeClass('dr-maybe');
+      $('.dr-selected').css('background-color', '');
     }
   });
 
