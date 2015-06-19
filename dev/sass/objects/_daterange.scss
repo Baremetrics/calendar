@@ -156,9 +156,9 @@
             padding-left: rem(3) !important;
           }
           &.hover-after {
-            border-left: 2px solid $blue !important;
+            border-right: 2px solid $blue !important;
             border-radius: 0 2px 2px 0;
-            padding-right: rem(3);
+            padding-right: rem(3) !important;
           }
         }
         .dr-selected, .dr-start, .dr-end {

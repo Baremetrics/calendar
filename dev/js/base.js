@@ -65,38 +65,62 @@ Calendar.prototype.calendarOpen = function(element) {
       if (start_date.isSame(current_date)) {
         $(this).addClass('hover hover-before');
         $('.dr-start').css({'border': 'none', 'padding-left': '0.3125rem'});
+        setMaybeRange('start');
       }
 
       if (end_date.isSame(current_date)) {
         $(this).addClass('hover hover-after');
         $('.dr-end').css({'border': 'none', 'padding-right': '0.3125rem'});
+        setMaybeRange('end');
       }
 
       $('.dr-selected').css('background-color', 'transparent');
 
-      var element_i = $('[data-date="'+ this_date._i +'"]');
-      var i = 0;
+      function setMaybeRange(type) {
+        var element_i = $('[data-date="'+ this_date._i +'"]');
+        var i = 0;
 
-      _.each(_.range(6 * 7), function(i) {
-        if (moment(element_i.next().data('date')).isSame(self.end_date))
-          return false;
+        _.each(_.range(6 * 7), function(i) {
+          if (type == 'start')
+            if (moment(element_i.next().data('date')).isSame(self.end_date))
+              return false;
 
-        if (moment(element_i.data('date')).isAfter(self.end_date)) {
-          if (i > 5) {
-            $(element_i).addClass('dr-end');
-            return false;
+          if (type == 'end')
+            if (moment(element_i.prev().data('date')).isSame(self.start_date))
+              return false;
+
+
+          if (type == 'start') {
+            if (moment(element_i.data('date')).isAfter(self.end_date)) {
+              if (i > 5) {
+                $(element_i).addClass('dr-end');
+                return false;
+              }
+            } i++;
+          }
+
+          if (type == 'end') {
+            if (moment(element_i.data('date')).isBefore(self.start_date)) {
+              if (i > 5) {
+                $(element_i).addClass('dr-start');
+                return false;
+              } 
+            } i++;
           } 
 
-          i++;
-        } 
 
-        element_i = element_i.next().addClass('dr-maybe');
-      });
+          if (type == 'start')
+            element_i = element_i.next().addClass('dr-maybe');
+
+          if (type == 'end')
+            element_i = element_i.prev().addClass('dr-maybe');
+        });
+      }
     },
     mouseleave: function() {
       $(this).removeClass('hover hover-before hover-after');
       $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
-      $('.dr-maybe').removeClass('dr-end');
+      $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
       $('.dr-day').removeClass('dr-maybe');
       $('.dr-selected').css('background-color', '');
     }
@@ -129,8 +153,8 @@ Calendar.prototype.calendarArray = function(start, end, current) {
   var end = end || moment(start).add(1, 'week');
   var current = current || start || end;
 
-  var first_day = moment(start).startOf('month');
-  var last_day = moment(end).endOf('month');
+  var first_day = moment(current).startOf('month');
+  var last_day = moment(current).endOf('month');
 
   var current_month = {
     start: {
@@ -164,8 +188,8 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
 
   // Leftover faded dates
-  var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
-  var d = undefined;
+  var leftover = (6 * 7) - (current_month.end.str - 1 + start_hidden.length);
+  d = undefined;
 
   var end_hidden = _.map(_.range(leftover), function() {
     if (d == undefined) {
@@ -184,9 +208,9 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 
 
   // Actual visible dates
-  var d = undefined;
+  d = undefined;
 
-  var visible = _.map(_.range(current_month.end.str), function() {
+  var visible = _.map(_.range(current_month.end.str - 1), function() {
     if (d == undefined) {
       d = moment(first_day);
     } else {
