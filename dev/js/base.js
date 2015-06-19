@@ -20,6 +20,9 @@ function Calendar() {
       event.preventDefault();
       self.calendarOpen(this);
     }
+    if (event.keyCode == 27) {
+      self.calendarClose('force');
+    }
   });
 }
 
@@ -136,13 +139,15 @@ Calendar.prototype.calendarOpen = function(element) {
 }
 
 
-Calendar.prototype.calendarClose = function() {
-  if (!this.calIsOpen || this.presetIsOpen)
-    $('.dr-calendar').slideUp(200);
+Calendar.prototype.calendarClose = function(type) {
+  if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
+    $('.dr-calendar').slideUp(200, function() {$('.dr-day').remove();});
+  } else {
+    $('.dr-day').remove();
+  }
 
   $('.dr-input').removeClass('active');
   $('.dr-date').removeClass('active');
-  $('.dr-day').remove();
 
   this.calIsOpen = false;
 }
