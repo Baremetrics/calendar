@@ -1,6 +1,7 @@
 function Calendar() {
   this.calIsOpen = false;
   this.presetIsOpen = false;
+  this.element = null;
   this.start_date = null;
   this.end_date = null;
   this.current_date = null;
@@ -24,6 +25,36 @@ function Calendar() {
       self.calendarClose('force');
     }
   });
+
+  $('.dr-month-switcher i').click(function() {
+    var m = $('.dr-month-switcher span').html();
+    var y = $('.dr-year-switcher span').html();
+    var back = moment(new Date(m +', '+ y)).subtract(1, 'month').format('MMMM');
+    var forward = moment(new Date(m +', '+ y)).add(1, 'month').format('MMMM');
+
+    if ($(this).hasClass('icon-left')) {  
+      $(this).parent().find('span').html(back);
+      self.calendarOpen(this.element, moment(new Date(back +', '+ y)));
+    } else if ($(this).hasClass('icon-right')) {
+      $(this).parent().find('span').html(forward);
+      self.calendarOpen(this.element, moment(new Date(forward +', '+ y)));
+    }
+  });
+
+  $('.dr-year-switcher i').click(function() {
+    var m = $('.dr-month-switcher span').html();
+    var y = $('.dr-year-switcher span').html();
+    var back = moment(new Date(m +', '+ y)).subtract(1, 'year').format('YYYY');
+    var forward = moment(new Date(m +', '+ y)).add(1, 'year').format('YYYY');
+
+    if ($(this).hasClass('icon-left')) {  
+      $(this).parent().find('span').html(back);
+      self.calendarOpen(this.element, moment(new Date(m +', '+ back)));
+    } else if ($(this).hasClass('icon-right')) {
+      $(this).parent().find('span').html(forward);
+      self.calendarOpen(this.element, moment(new Date(m +', '+ forward)));
+    }
+  });
 }
 
 
@@ -43,20 +74,21 @@ Calendar.prototype.presetToggle = function() {
 }
 
 
-Calendar.prototype.calendarOpen = function(element) {
+Calendar.prototype.calendarOpen = function(element, switcher) {
   var self = this;
   var cal_width = $('.dr-dates').innerWidth() - 8;
+  this.element = element || this.element;
   this.start_date = new Date($('.dr-date-start').html());
   this.end_date = new Date($('.dr-date-end').html());
-  this.current_date = new Date($(element).html());
+  this.current_date = new Date($(this.element).html());
 
   if (this.presetIsOpen == true)
     this.presetToggle();
 
   if (this.calIsOpen == true)
-    this.calendarClose();
+    this.calendarClose(switcher ? 'switcher' : undefined);
 
-  this.calendarCreate();
+  this.calendarCreate(switcher);
 
   $('.dr-day').on({
     mouseenter: function() {
@@ -111,7 +143,6 @@ Calendar.prototype.calendarOpen = function(element) {
             } i++;
           } 
 
-
           if (type == 'start')
             element_i = element_i.next().addClass('dr-maybe');
 
@@ -126,6 +157,13 @@ Calendar.prototype.calendarOpen = function(element) {
       $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
       $('.dr-day').removeClass('dr-maybe');
       $('.dr-selected').css('background-color', '');
+    },
+    mousedown: function() {
+      var date = $(this).data('date');
+      var string = moment(date).format('MMMM D, YYYY');
+
+      $(self.element).html(string);
+      self.calendarOpen(self.element);
     }
   });
 
@@ -141,10 +179,15 @@ Calendar.prototype.calendarOpen = function(element) {
 
 Calendar.prototype.calendarClose = function(type) {
   if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-    $('.dr-calendar').slideUp(200, function() {$('.dr-day').remove();});
+    $('.dr-calendar').slideUp(200, function() {
+      $('.dr-day').remove();
+    });
   } else {
     $('.dr-day').remove();
   }
+
+  if (type == 'switcher')
+    return false;
 
   $('.dr-input').removeClass('active');
   $('.dr-date').removeClass('active');
@@ -153,13 +196,13 @@ Calendar.prototype.calendarClose = function(type) {
 }
 
 
-Calendar.prototype.calendarArray = function(start, end, current) {
+Calendar.prototype.calendarArray = function(start, end, current, switcher) {
   var start = start || new Date();
   var end = end || moment(start).add(1, 'week');
   var current = current || start || end;
 
-  var first_day = moment(current).startOf('month');
-  var last_day = moment(current).endOf('month');
+  var first_day = moment(switcher || current).startOf('month');
+  var last_day = moment(switcher || current).endOf('month');
 
   var current_month = {
     start: {
@@ -237,9 +280,11 @@ Calendar.prototype.calendarArray = function(start, end, current) {
 }
 
 
-Calendar.prototype.calendarCreate = function() {
-  var array = this.calendarArray(this.start_date, this.end_date, this.current_date);
-  var current_week;
+Calendar.prototype.calendarCreate = function(switcher) {
+  var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
+
+  $('.dr-month-switcher span').html(moment(switcher || this.current_date).format('MMMM'))
+  $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'))
 
   _.each(array, function(d, i) {
     var classString = "dr-day";
