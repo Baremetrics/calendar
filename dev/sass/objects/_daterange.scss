@@ -21,7 +21,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 rem(24) 0 rem(12);
-      min-width: 225px;
+      min-width: 230px;
 
       .dr-date {
         font-size: rem(15);
@@ -183,6 +183,12 @@
         .dr-current {
           color: $blue !important;
           background-color: rgba($blue, 0.2) !important;
+        }
+        .dr-outside {
+          pointer-events: none;
+          cursor: default;
+          background-color: rgba($red, 0.2);
+          color: rgba($black, 0.2);
         }
       }
     }

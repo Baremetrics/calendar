@@ -1,7 +1,9 @@
-function Calendar() {
+function Calendar(settings) {
   this.calIsOpen = false;
   this.presetIsOpen = false;
   this.element = null;
+  this.earlist = settings.earlist,
+  this.latest = settings.latest,
   this.start_date = null;
   this.end_date = null;
   this.current_date = null;
@@ -73,6 +75,7 @@ function Calendar() {
 Calendar.prototype.presetToggle = function() {
   if (this.presetIsOpen == false) {
     this.presetIsOpen = true;
+    this.presetCreate();
   } else if (this.presetIsOpen) {
     this.presetIsOpen = false;
   }
@@ -83,6 +86,43 @@ Calendar.prototype.presetToggle = function() {
   $('.dr-preset-list').slideToggle(200);
   $('.dr-input').toggleClass('active');
   $('.dr-presets').toggleClass('active');
+}
+
+
+Calendar.prototype.presetCreate = function() {
+  var self = this;
+  var s = new Date($('.dr-date-start').html());
+  var e = new Date($('.dr-date-end').html());
+  this.start_date = s == 'Invalid Date' ? this.start_date : s;
+  this.end_date = e == 'Invalid Date' ? this.end_date : e;
+
+  $('.dr-list-item').each(function() {
+    var month_count = $(this).data('months');
+    var last_day = moment(self.end_date).endOf('month').startOf('day');
+    var is_last_day = last_day.isSame(self.end_date);
+    var first_day;
+
+    if (!is_last_day)
+      last_day = moment(self.end_date).subtract(1, 'month').endOf('month').startOf('day');
+
+    if (typeof month_count == 'number') {
+      first_day = moment(self.end_date).subtract(is_last_day ? month_count - 1 : month_count, 'month').startOf('month');
+
+      if (month_count == 12)
+        first_day = moment(self.end_date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
+    } else {
+      first_day = moment(self.earlist);
+      last_day = moment(self.latest);
+    }
+
+    $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
+  });
+
+  $('.dr-list-item').click(function() {
+    var range = $('.dr-item-aside', this).html().split('–');
+    $('.dr-date-start').html(range[0]);
+    $('.dr-date-end').html(range[1]);
+  });
 }
 
 
@@ -108,6 +148,33 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
 
   $('.dr-month-switcher span').html(moment(switcher || this.current_date).format('MMMM'));
   $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'));
+  $('.dr-switcher i').css('opacity', 1);
+
+  var next_month = moment(switcher || this.current_date).add(1, 'month');
+  var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
+  var next_year = moment(switcher || this.current_date).add(1, 'year');
+  var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
+
+  if (next_month.isAfter(this.latest))
+    $('.dr-month-switcher .icon-right').css('opacity', 0);
+
+  if (past_month.isBefore(this.earlist))
+    $('.dr-month-switcher .icon-left').css('opacity', 0);
+
+  if (next_year.isAfter(this.latest))
+    $('.dr-year-switcher .icon-right').css('opacity', 0);
+
+  if (past_year.isBefore(this.earlist))
+    $('.dr-year-switcher .icon-left').css('opacity', 0);
+
+
+  // if (switcher) {
+  //   if (switcher.isAfter(this.latest)) {
+  //     $('.dr-switcher .icon-right').css('opacity', 0);
+  //   } else if (switcher.endOf('month').isBefore(this.earlist)) {
+  //     $('.dr-switcher .icon-left').css('opacity', 0);
+  //   }
+  // }
 
   $('.dr-day').on({
     mouseenter: function() {
@@ -230,6 +297,7 @@ Calendar.prototype.calendarClose = function(type) {
 
 
 Calendar.prototype.calendarArray = function(start, end, current, switcher) {
+  var self = this;
   var start = start || new Date();
   var end = end || moment(start).add(1, 'week');
   var current = current || start || end;
@@ -263,6 +331,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       end: d.isSame(end),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
+      outside: d.isBefore(self.earlist),
       fade: true
     }
   }).reverse();
@@ -283,6 +352,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       end: d.isSame(end),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
+      outside: d.isAfter(self.latest),
       fade: true
     }
   });
@@ -304,7 +374,8 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       end: d.isSame(end),
       current: d.isSame(current),
       selected: d.isBetween(start, end),
-      date: d.toISOString()
+      date: d.toISOString(),
+      outside: d.isBefore(self.earlist) || d.isAfter(self.latest)
     }
   });
 
@@ -334,9 +405,15 @@ Calendar.prototype.calendarCreate = function(switcher) {
     if (d.selected)
       classString += " dr-selected";
 
+    if (d.outside)
+      classString += " dr-outside";
+
     $('.dr-day-list').append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
   });
 }
 
 
-var cal = new Calendar();
+var cal = new Calendar({
+  earlist: new Date('Feb 15, 2013'),
+  latest: new Date()
+});
