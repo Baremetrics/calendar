@@ -183,12 +183,20 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       var string = moment(date).format('MMMM D, YYYY');
 
       if (other) {
-        var d = other.data('date');
-        $('.dr-date').not(self.element).html(moment(d).format('MMMM D, YYYY'));
+        $('.dr-date')
+          .not(self.element)
+          .html(moment(other.data('date'))
+          .format('MMMM D, YYYY'));
       }
 
       $(self.element).html(string);
       self.calendarOpen(self.element);
+
+      if ($(self.element).hasClass('dr-date-start')) {
+        $('.dr-date-end').trigger('click');
+      } else if ($(self.element).hasClass('dr-date-end')) {
+        self.calendarClose('force');
+      }
     }
   });
 
