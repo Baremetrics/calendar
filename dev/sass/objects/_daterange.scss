@@ -1,4 +1,7 @@
 .daterange {
+  position: relative;
+  padding: rem(10 0);
+  float: right;
 
   .dr-input {
     display: flex;
@@ -6,7 +9,7 @@
     border-radius: $radius;
     background-color: $white;
     position: relative;
-    z-index: 10;
+    z-index: 5;
     overflow: hidden;
 
     &:hover {
@@ -81,13 +84,16 @@
 
 
   .dr-selections {
+    position: absolute;
 
     .dr-calendar {
+      background-color: $white;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
       border-radius: 0 0 $radius $radius;
       position: relative;
-      z-index: 9;
+      overflow: hidden;
+      z-index: 4;
       padding-top: 5px;
       top: -5px;
       left: 4px;
@@ -103,7 +109,6 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
-          width: calc(50% - 0.5rem / 2);
           border: 1px solid rgba($mouse, 0.5);
           border-radius: $radius;
           height: rem(25);
@@ -124,6 +129,13 @@
               opacity: 0;
             }
           }
+        }
+        .dr-month-switcher {
+          width: 100%;
+          margin-right: rem(6);
+        }
+        .dr-year-switcher {
+          min-width: 80px;
         }
       }
       .dr-days-of-week-list {
@@ -199,16 +211,18 @@
     }
 
     .dr-preset-list {
+      background-color: $white;
       color: $blue;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
       border-radius: 0 0 $radius $radius;
       position: relative;
-      z-index: 9;
+      overflow: hidden;
+      z-index: 4;
       padding-top: 5px;
       top: -5px;
       left: 4px;
-      width: calc(100% - 8px);
+      width: 100%;
     }
     .dr-list-item {
       display: flex;
@@ -216,6 +230,7 @@
       padding: rem(12 10);
       border-bottom: 1px solid $moon;
       cursor: pointer;
+      white-space: nowrap;
 
       &:hover {
         background-color: $moon;

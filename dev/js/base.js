@@ -2,7 +2,7 @@ function Calendar(settings) {
   this.calIsOpen = false;
   this.presetIsOpen = false;
   this.element = null;
-  this.earlist = settings.earlist,
+  this.earliest = settings.earliest,
   this.latest = settings.latest,
   this.start_date = null;
   this.end_date = null;
@@ -39,30 +39,30 @@ function Calendar(settings) {
   $('.dr-month-switcher i').click(function() {
     var m = $('.dr-month-switcher span').html();
     var y = $('.dr-year-switcher span').html();
-    var back = moment(new Date(m +', '+ y)).subtract(1, 'month').format('MMMM');
-    var forward = moment(new Date(m +', '+ y)).add(1, 'month').startOf('day').format('MMMM');
+    var back = moment(new Date(m +', '+ y)).subtract(1, 'month');
+    var forward = moment(new Date(m +', '+ y)).add(1, 'month').startOf('day');
 
     if ($(this).hasClass('icon-left')) {  
-      $(this).parent().find('span').html(back);
-      self.calendarOpen(this.element, moment(new Date(back +', '+ y)));
+      $(this).parent().find('span').html(back.format('MMMM'));
+      self.calendarOpen(this.element, back);
     } else if ($(this).hasClass('icon-right')) {
-      $(this).parent().find('span').html(forward);
-      self.calendarOpen(this.element, moment(new Date(forward +', '+ y)));
+      $(this).parent().find('span').html(forward.format('MMMM'));
+      self.calendarOpen(this.element, forward);
     }
   });
 
   $('.dr-year-switcher i').click(function() {
     var m = $('.dr-month-switcher span').html();
     var y = $('.dr-year-switcher span').html();
-    var back = moment(new Date(m +', '+ y)).subtract(1, 'year').format('YYYY');
-    var forward = moment(new Date(m +', '+ y)).add(1, 'year').startOf('day').format('YYYY');
+    var back = moment(new Date(m +', '+ y)).subtract(1, 'year');
+    var forward = moment(new Date(m +', '+ y)).add(1, 'year').startOf('day');
 
     if ($(this).hasClass('icon-left')) {  
-      $(this).parent().find('span').html(back);
-      self.calendarOpen(this.element, moment(new Date(m +', '+ back)));
+      $(this).parent().find('span').html(back.format('YYYY'));
+      self.calendarOpen(this.element, back);
     } else if ($(this).hasClass('icon-right')) {
-      $(this).parent().find('span').html(forward);
-      self.calendarOpen(this.element, moment(new Date(m +', '+ forward)));
+      $(this).parent().find('span').html(forward.format('YYYY'));
+      self.calendarOpen(this.element, forward);
     }
   });
 
@@ -83,7 +83,6 @@ function Calendar(settings) {
 
 Calendar.prototype.presetToggle = function() {
   if (this.presetIsOpen == false) {
-    console.log("fired");
     this.presetIsOpen = true;
     this.presetCreate();
   } else if (this.presetIsOpen) {
@@ -123,7 +122,7 @@ Calendar.prototype.presetCreate = function() {
       if (month_count == 12)
         first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
     } else {
-      first_day = moment(self.earlist);
+      first_day = moment(self.earliest);
       last_day = moment(self.latest);
     }
 
@@ -149,7 +148,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
   if (moment(s).isAfter(e) || 
       moment(e).isBefore(s) || 
       moment(s).isSame(e) ||
-      moment(s).isBefore(this.earlist) ||
+      moment(s).isBefore(this.earliest) ||
       moment(e).isAfter(this.latest)) {
     return this.calendarResetDates();
   }
@@ -171,21 +170,21 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
   $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'));
   $('.dr-switcher i').removeClass('dr-disabled');
 
-  var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('day');
+  var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('month').startOf('day');
   var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
-  var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('day');
+  var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
   var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
 
   if (next_month.isAfter(this.latest))
     $('.dr-month-switcher .icon-right').addClass('dr-disabled');
 
-  if (past_month.isBefore(this.earlist))
+  if (past_month.isBefore(this.earliest))
     $('.dr-month-switcher .icon-left').addClass('dr-disabled');
 
   if (next_year.isAfter(this.latest))
     $('.dr-year-switcher .icon-right').addClass('dr-disabled');
 
-  if (past_year.isBefore(this.earlist))
+  if (past_year.isBefore(this.earliest))
     $('.dr-year-switcher .icon-left').addClass('dr-disabled');
 
   $('.dr-day').on({
@@ -244,7 +243,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
             if (moment(curr).isBefore(self.start_date)) {
               other = other || moment(curr).subtract(6, 'day');
 
-              if (i > 5 || (prev ? moment(prev).isBefore(self.earlist) : false)) {
+              if (i > 5 || (prev ? moment(prev).isBefore(self.earliest) : false)) {
                 $(element_i).addClass('dr-start');
                 other = moment(curr);
                 return false;
@@ -353,7 +352,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       end: d.isSame(end),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
-      outside: d.isBefore(self.earlist),
+      outside: d.isBefore(self.earliest),
       fade: true
     }
   }).reverse();
@@ -397,7 +396,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       current: d.isSame(current),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
-      outside: d.isBefore(self.earlist) || d.isAfter(self.latest)
+      outside: d.isBefore(self.earliest) || d.isAfter(self.latest)
     }
   });
 
@@ -436,6 +435,6 @@ Calendar.prototype.calendarCreate = function(switcher) {
 
 
 var cal = new Calendar({
-  earlist: new Date('Feb 15, 2013'),
-  latest: new Date()
+  earliest: new Date($('.daterange').data('earliest')),
+  latest: new Date($('.daterange').data('latest'))
 });
