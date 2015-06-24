@@ -91,6 +91,7 @@
       padding-top: 5px;
       top: -5px;
       left: 4px;
+      transition: width .2s;
 
       .dr-range-switcher {
         display: flex;
@@ -117,6 +118,10 @@
 
             &:hover {
               color: $blue;
+            }
+            &.dr-disabled {
+              pointer-events: none;
+              opacity: 0;
             }
           }
         }
@@ -187,8 +192,8 @@
         .dr-outside {
           pointer-events: none;
           cursor: default;
-          background-color: rgba($red, 0.2);
-          color: rgba($black, 0.2);
+          background-color: rgba($red, 0.1);
+          color: rgba($red, 0.2);
         }
       }
     }
