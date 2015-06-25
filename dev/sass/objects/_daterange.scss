@@ -1,6 +1,5 @@
 .daterange {
   position: relative;
-  padding: rem(10 0);
   float: right;
 
   .dr-input {
@@ -245,12 +244,24 @@
 }
 
 .daterange--single {
+  // width: 100%;
 
   .dr-input {
+    cursor: text;
+    border: none;
+    box-shadow: none;
 
     .dr-dates {
-      padding: rem(0 12);
-      min-width: inherit;
+      padding: 0;
+      min-width: 160px;
+      width: 100%;
+
+      .dr-date {
+        width: 100%;
+        padding: rem(0 12);
+        height: rem(38);
+        text-align: left;
+      }
     }
   } 
 }

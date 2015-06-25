@@ -7,6 +7,27 @@ body, html {
   position: relative;
   height: 100%;
 }
+input[type="text"], input[type="email"], input[type="password"], textarea {
+  padding: rem(8 12);
+  font-size: rem(16);
+  font-family: $font-family;
+  color: $rhino;
+  vertical-align: middle;
+  border: 1px solid $mouse;
+  width: 100%;
+  border-radius: $radius;
+  outline: none;
+  -webkit-appearance: none;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($bluemoon, 0.8);
+    border-color: $blue;
+  }
+  &.small {
+    padding: rem(6 8);
+    font-size: rem(12);
+  }
+}
 .daterange {
   position: absolute;
   left: 50px;

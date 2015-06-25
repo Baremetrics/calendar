@@ -27,29 +27,52 @@ function Calendar(settings) {
     self.calendarSaveDates();
   });
 
-  $('.dr-date').click(function() {
-    self.calendarOpen(this);
-  });
-
-  $('.dr-date').keydown(function(event){
-    if (event.keyCode == 13) { // Enter
-      event.preventDefault();
+  $('.dr-date').on({
+    'click': function() {
       self.calendarOpen(this);
-      self.calendarClose('force');
-      self.calendarSaveDates();
-    }
-    if (event.keyCode == 27) { // ESC
-      self.calendarClose('force');
-      self.calendarResetDates();
-    }
-    if (event.keyCode == 9) { // Tab
-      event.preventDefault();
+    },
 
-      if ($(self.element).hasClass('dr-date-start')) {
-        $('.dr-date-end').trigger('click');
-      } else {
+    'blur': function() {
+      if (!self.start_date && !self.end_date)
         self.calendarClose('force');
-        self.calendarSaveDates();
+    },
+
+    'keyup': function(event) {
+      if (event.keyCode == 9 && !self.calIsOpen && !self.start_date && !self.end_date)
+        self.calendarOpen(this);
+    },
+
+    'keydown': function(event) {
+      if (event.keyCode == 13) { // Enter
+        event.preventDefault();
+        self.calendarCheckDates();
+        self.calendarClose('force');
+        self.calendarResetDates();
+        
+        if ($(self.element).hasClass('dr-date-start') || 
+            $(self.element).hasClass('dr-date-end'))
+          self.calendarSaveDates();
+      }
+
+      if (event.keyCode == 27) { // ESC
+        self.calendarClose('force');
+        self.calendarResetDates();
+      }
+
+      if (event.keyCode == 9) { // Tab
+        if ($(self.element).hasClass('dr-date-start')) {
+          event.preventDefault();
+          $('.dr-date-end').trigger('click');
+        } else if ($(self.element).hasClass('dr-date-end')) {
+          event.preventDefault();
+          self.calendarCheckDates();
+          self.calendarClose('force');
+          self.calendarSaveDates();
+        } else {
+          self.calendarCheckDates();
+          self.calendarClose('force');
+          self.calendarResetDates();
+        }
       }
     }
   });
@@ -89,9 +112,10 @@ function Calendar(settings) {
       if (self.presetIsOpen)
         self.presetToggle();
 
-      if (self.calIsOpen)
+      if (self.calIsOpen) {
         self.calendarClose('force');
         self.calendarResetDates();
+      }
     });
 
     event.stopPropagation();
@@ -153,8 +177,13 @@ Calendar.prototype.calendarResetDates = function() {
   $('.dr-date-start').html(moment(this.start_date).format('MMMM D, YYYY'));
   $('.dr-date-end').html(moment(this.end_date).format('MMMM D, YYYY'));
 
-  if (!this.start_date && !this.end_date)
-    $('.dr-date').html(moment(this.current_date).format('MMMM D, YYYY'));
+  if (!this.start_date && !this.end_date) {
+    var old_date = $('.dr-date').val();
+    var new_date = moment(this.current_date).format('MMMM D, YYYY');
+
+    if (old_date != new_date)
+      $('.dr-date').val(new_date);
+  }
 }
 
 
@@ -170,13 +199,10 @@ Calendar.prototype.calendarSaveDates = function() {
 }
 
 
-Calendar.prototype.calendarOpen = function(element, switcher) {
-  var self = this;
-  var other;
-  var cal_width = $('.dr-dates').innerWidth() - 8;
+Calendar.prototype.calendarCheckDates = function() {
   var s = new Date($('.dr-date-start').html());
   var e = new Date($('.dr-date-end').html());
-  var c = new Date($(element).html());
+  var c = new Date($(this.element).html() || $(this.element).val());
 
   if (moment(s).isAfter(e) || 
       moment(e).isBefore(s) || 
@@ -186,10 +212,18 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
     return this.calendarResetDates();
   }
 
-  this.element = element || this.element;
   this.start_date = s == 'Invalid Date' ? this.start_date : s;
   this.end_date = e == 'Invalid Date' ? this.end_date : e;
   this.current_date = c == 'Invalid Date' ? this.current_date : c;
+}
+
+
+Calendar.prototype.calendarOpen = function(element, switcher) {
+  var self = this;
+  var other;
+  var cal_width = $('.dr-dates').innerWidth() - 8;
+
+  this.element = element || this.element;
 
   if (this.presetIsOpen == true)
     this.presetToggle();
@@ -197,18 +231,17 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
   if (this.calIsOpen == true)
     this.calendarClose(switcher ? 'switcher' : undefined);
 
+  this.calendarCheckDates();
   this.calendarCreate(switcher);
-
-  $('.dr-month-switcher span').html(moment(switcher || this.current_date).format('MMMM'));
-  $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'));
-
-  if (!this.start_date && !this.end_date)
-    $('.dr-date').html(moment(this.current_date).format('MMMM D, YYYY'));
+  this.calendarResetDates();
 
   var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('month').startOf('day');
   var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
   var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
   var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
+
+  $('.dr-month-switcher span').html(moment(switcher || this.current_date).format('MMMM'));
+  $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'));
 
   $('.dr-switcher i').removeClass('dr-disabled');
 
@@ -326,13 +359,16 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       }
 
       $(self.element).html(string);
+      $(self.element).val(string);
       self.calendarOpen(self.element);
 
       if ($(self.element).hasClass('dr-date-start')) {
         $('.dr-date-end').trigger('click');
-      } else {
+      } else if ($(self.element).hasClass('dr-date-end')) {
         self.calendarClose('force');
         self.calendarSaveDates();
+      } else {
+        self.calendarClose('force');
       }
     }
   });
@@ -359,8 +395,8 @@ Calendar.prototype.calendarClose = function(type) {
   if (type == 'switcher')
     return false;
 
-  $('.dr-input').removeClass('active');
-  $('.dr-date').removeClass('active').blur();
+  $('.dr-input, .dr-date').removeClass('active');
+  $('.dr-date-start, .dr-date-end').blur();
 
   this.calIsOpen = false;
 }
@@ -482,9 +518,9 @@ Calendar.prototype.calendarCreate = function(switcher) {
   });
 }
 
-if ($('.daterange--single')) {
+if ($('.daterange--single').length) {
   new Calendar();
-} else if ($('.daterange')) {
+} else if ($('.daterange').length) {
   new Calendar({
     earliest: new Date($('.daterange').data('earliest')),
     latest: new Date($('.daterange').data('latest')),
