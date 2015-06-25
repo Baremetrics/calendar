@@ -189,7 +189,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
 
   $('.dr-day').on({
     mouseenter: function() {
-      var this_date = moment($(this).data('date'));
+      var element = $(this);
       var start_date = moment(self.start_date);
       var end_date = moment(self.end_date);
       var current_date = moment(self.current_date);
@@ -210,13 +210,20 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
 
       function setMaybeRange(type) {
         other = undefined;
-        var element_i = $('[data-date="'+ this_date._i +'"]');
-        var i = 0;
 
         $.each(_.range(6 * 7), function(i) {
-          var next = element_i.next().data('date');
-          var prev = element_i.prev().data('date');
-          var curr = element_i.data('date');
+          var next = element.next().data('date');
+          var prev = element.prev().data('date');
+          var curr = element.data('date');
+
+          if (!curr)
+            return false;
+
+          if (!prev)
+            prev = curr;
+
+          if (!next)
+            next = curr;
 
           if (type == 'start')
             if (moment(next).isSame(self.end_date))
@@ -232,11 +239,11 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
               other = other || moment(curr).add(6, 'day').startOf('day');
 
               if (i > 5 || (next ? moment(next).isAfter(self.latest) : false)) {
-                $(element_i).addClass('dr-end');
+                $(element).addClass('dr-end');
                 other = moment(curr);
                 return false;
               }
-            } i++;
+            }
           }
 
           if (type == 'end') {
@@ -244,19 +251,19 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
               other = other || moment(curr).subtract(6, 'day');
 
               if (i > 5 || (prev ? moment(prev).isBefore(self.earliest) : false)) {
-                $(element_i).addClass('dr-start');
+                $(element).addClass('dr-start');
                 other = moment(curr);
                 return false;
               }
-            } i++;
+            }
           } 
 
 
           if (type == 'start')
-            element_i = element_i.next().addClass('dr-maybe');
+            element = element.next().addClass('dr-maybe');
 
           if (type == 'end')
-            element_i = element_i.prev().addClass('dr-maybe');
+            element = element.prev().addClass('dr-maybe');
         });
       }
     },
@@ -280,11 +287,11 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       $(self.element).html(string);
       self.calendarOpen(self.element);
 
-      if ($(self.element).hasClass('dr-date-start')) {
-        $('.dr-date-end').trigger('click');
-      } else if ($(self.element).hasClass('dr-date-end')) {
-        self.calendarClose('force');
-      }
+      // if ($(self.element).hasClass('dr-date-start')) {
+      //   $('.dr-date-end').trigger('click');
+      // } else if ($(self.element).hasClass('dr-date-end')) {
+      //   self.calendarClose('force');
+      // }
     }
   });
 
@@ -350,6 +357,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       str: +d.format('D'),
       start: d.isSame(start),
       end: d.isSame(end),
+      current: d.isSame(current),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
       outside: d.isBefore(self.earliest),
@@ -371,6 +379,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
       str: +d.format('D'),
       start: d.isSame(start),
       end: d.isSame(end),
+      current: d.isSame(current),
       selected: d.isBetween(start, end),
       date: d.toISOString(),
       outside: d.isAfter(self.latest),
