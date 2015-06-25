@@ -16,7 +16,7 @@
       border-color: $blue;
     }
     &.active {
-      box-shadow: 0px 2px 3px $moon;
+      box-shadow: 0 0 0 3px rgba($bluemoon, 0.8);
       border-color: $blue;
     }
     .dr-dates {
@@ -98,6 +98,7 @@
       top: -5px;
       left: 4px;
       transition: width .2s;
+      min-width: 210px;
 
       .dr-range-switcher {
         display: flex;
@@ -204,8 +205,7 @@
         .dr-outside {
           pointer-events: none;
           cursor: default;
-          background-color: rgba($red, 0.1);
-          color: rgba($red, 0.2);
+          color: rgba($mouse, 0.5);
         }
       }
     }
@@ -242,4 +242,15 @@
       }
     }
   }
+}
+
+.daterange--single {
+
+  .dr-input {
+
+    .dr-dates {
+      padding: rem(0 12);
+      min-width: inherit;
+    }
+  } 
 }
