@@ -163,8 +163,11 @@ Calendar.prototype.presetCreate = function() {
 
       if (month_count == 12)
         first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
-    } else {
+    } else if (month_count == 'all') {
       first_day = moment(self.earliest);
+      last_day = moment(self.latest);
+    } else {
+      first_day = moment(self.latest).subtract(30, 'day');
       last_day = moment(self.latest);
     }
 
@@ -342,7 +345,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
     },
     mouseleave: function() {
       $(this).removeClass('hover hover-before hover-after');
-      $(this).not('.dr-current').removeClass('dr-start dr-end');
+      // $(this).not('.dr-current').removeClass('dr-start dr-end');
       $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
       $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
       $('.dr-day').removeClass('dr-maybe');
