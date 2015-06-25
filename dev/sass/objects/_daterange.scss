@@ -30,6 +30,9 @@
         height: rem(35);
         line-height: rem(35);
         text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:hover, &:focus, &.active {
           color: $blue;
@@ -248,8 +251,6 @@
 
   .dr-input {
     cursor: text;
-    // border: none;
-    // box-shadow: none;
 
     .dr-dates {
       padding: 0;
