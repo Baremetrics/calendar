@@ -80,8 +80,8 @@ function Calendar(settings) {
   $('.dr-month-switcher i').click(function() {
     var m = $('.dr-month-switcher span').html();
     var y = $('.dr-year-switcher span').html();
-    var back = moment(new Date(m +', '+ y)).subtract(1, 'month');
-    var forward = moment(new Date(m +', '+ y)).add(1, 'month').startOf('day');
+    var back = moment(new Date(m +' 1, '+ y)).subtract(1, 'month');
+    var forward = moment(new Date(m +' 1, '+ y)).add(1, 'month').startOf('day');
 
     if ($(this).hasClass('icon-left')) {  
       $(this).parent().find('span').html(back.format('MMMM'));
@@ -95,8 +95,8 @@ function Calendar(settings) {
   $('.dr-year-switcher i').click(function() {
     var m = $('.dr-month-switcher span').html();
     var y = $('.dr-year-switcher span').html();
-    var back = moment(new Date(m +', '+ y)).subtract(1, 'year');
-    var forward = moment(new Date(m +', '+ y)).add(1, 'year').startOf('day');
+    var back = moment(new Date(m +' 1, '+ y)).subtract(1, 'year');
+    var forward = moment(new Date(m +' 1, '+ y)).add(1, 'year').startOf('day');
 
     if ($(this).hasClass('icon-left')) {  
       $(this).parent().find('span').html(back.format('YYYY'));
