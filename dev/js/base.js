@@ -32,11 +32,6 @@ function Calendar(settings) {
       self.calendarOpen(this);
     },
 
-    'blur': function() {
-      if (!self.start_date && !self.end_date)
-        self.calendarClose('force');
-    },
-
     'keyup': function(event) {
       if (event.keyCode == 9 && !self.calIsOpen && !self.start_date && !self.end_date)
         self.calendarOpen(this);
@@ -100,10 +95,10 @@ function Calendar(settings) {
 
     if ($(this).hasClass('icon-left')) {  
       $(this).parent().find('span').html(back.format('YYYY'));
-      self.calendarOpen(this.element, back);
+      self.calendarOpen(self.element, back);
     } else if ($(this).hasClass('icon-right')) {
       $(this).parent().find('span').html(forward.format('YYYY'));
-      self.calendarOpen(this.element, forward);
+      self.calendarOpen(self.element, forward);
     }
   });
 
@@ -112,6 +107,17 @@ function Calendar(settings) {
       if (self.presetIsOpen)
         self.presetToggle();
 
+      if (self.calIsOpen) {
+        self.calendarClose('force');
+        self.calendarResetDates();
+      }
+    });
+
+    event.stopPropagation();
+  });
+
+  $('.daterange, .dr-date').focus(function(event) {
+    $('html').one('click',function() {
       if (self.calIsOpen) {
         self.calendarClose('force');
         self.calendarResetDates();
@@ -181,11 +187,11 @@ Calendar.prototype.calendarResetDates = function() {
   $('.dr-date-end').html(moment(this.end_date).format('MMMM D, YYYY'));
 
   if (!this.start_date && !this.end_date) {
-    var old_date = $('.dr-date').val();
+    var old_date = $('.dr-date').html();
     var new_date = moment(this.current_date).format('MMMM D, YYYY');
 
     if (old_date != new_date)
-      $('.dr-date').val(new_date);
+      $('.dr-date').html(new_date);
   }
 }
 
@@ -205,7 +211,7 @@ Calendar.prototype.calendarSaveDates = function() {
 Calendar.prototype.calendarCheckDates = function() {
   var s = new Date($('.dr-date-start').html());
   var e = new Date($('.dr-date-end').html());
-  var c = new Date($(this.element).html() || $(this.element).val());
+  var c = new Date($(this.element).html());
 
   if (moment(s).isAfter(e) || 
       moment(e).isBefore(s) || 
@@ -362,7 +368,6 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       }
 
       $(self.element).html(string);
-      $(self.element).val(string);
       self.calendarOpen(self.element);
 
       if ($(self.element).hasClass('dr-date-start')) {
