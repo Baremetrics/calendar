@@ -27,8 +27,7 @@
 
       .dr-date {
         font-size: rem(15);
-        height: rem(35);
-        line-height: rem(35);
+        padding: rem(10.5 0);
         text-align: center;
         white-space: nowrap;
         overflow: hidden;
@@ -259,8 +258,7 @@
 
       .dr-date {
         width: 100%;
-        padding: rem(0 12);
-        height: rem(36);
+        padding: rem(10.5 12);
         text-align: left;
       }
     }
