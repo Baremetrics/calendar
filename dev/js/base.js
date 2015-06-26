@@ -389,14 +389,17 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       }
     },
     mouseleave: function() {
+      if ($(this).hasClass('dr-hover-before dr-end'))
+        $(this).removeClass('dr-end');
+
+      if ($(this).hasClass('dr-hover-after dr-start'))
+        $(this).removeClass('dr-start');
+
       $(this).removeClass('dr-hover dr-hover-before dr-hover-after');
       $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
       $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
       $('.dr-day').removeClass('dr-maybe');
       $('.dr-selected').css('background-color', '');
-
-      if (!$('.dr-maybe').length)
-       $(this).removeClass('dr-start dr-end');
     },
     mousedown: function() {
       var date = $(this).data('date');
