@@ -313,13 +313,13 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       var current_date = moment(self.current_date);
 
       if (start_date.isSame(current_date)) {
-        element.addClass('hover hover-before');
+        element.addClass('dr-hover dr-hover-before');
         $('.dr-start').css({'border': 'none', 'padding-left': '0.3125rem'});
         setMaybeRange('start');
       }
 
       if (end_date.isSame(current_date)) {
-        element.addClass('hover hover-after');
+        element.addClass('dr-hover dr-hover-after');
         $('.dr-end').css({'border': 'none', 'padding-right': '0.3125rem'});
         setMaybeRange('end');
       }
@@ -389,12 +389,14 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
       }
     },
     mouseleave: function() {
-      $(this).removeClass('hover hover-before hover-after');
-      // $(this).not('.dr-current').removeClass('dr-start dr-end');
+      $(this).removeClass('dr-hover dr-hover-before dr-hover-after');
       $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
       $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
       $('.dr-day').removeClass('dr-maybe');
       $('.dr-selected').css('background-color', '');
+
+      if (!$('.dr-maybe').length)
+       $(this).removeClass('dr-start dr-end');
     },
     mousedown: function() {
       var date = $(this).data('date');
