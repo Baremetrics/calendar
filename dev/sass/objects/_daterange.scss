@@ -1,7 +1,9 @@
 .daterange {
   position: relative;
-  float: right;
 
+  * {
+    box-sizing: border-box;
+  }
   .dr-input {
     display: flex;
     border: 1px solid $mouse;
@@ -32,6 +34,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        outline: none;
 
         &:hover, &:focus, &.active {
           color: $blue;
@@ -118,17 +121,43 @@
           i {
             color: $mouse;
             position: relative;
-            top: 1px;
+            top: -1px;
             cursor: pointer;
             font-size: rem(12);
-            padding: rem(0 4);
+            height: 100%;
+            width: 20px;
 
-            &:hover {
-              color: $blue;
+            &:hover:before, &:hover:after {
+              background-color: $blue;
             }
             &.dr-disabled {
               pointer-events: none;
               opacity: 0;
+            }
+            &:before, &:after {
+              content: "";
+              position: absolute;
+              width: 7px;
+              height: 2px;
+              background-color: $mouse;
+              border-radius: 1px;
+              left: 50%;
+            }
+            &.dr-left:before {
+              top: calc(50% - 2px);
+              transform: translate(-50%, -50%) rotate(-45deg);
+            }
+            &.dr-left:after {
+              top: calc(50% + 2px);
+              transform: translate(-50%, -50%) rotate(45deg);
+            }
+            &.dr-right:before {
+              top: calc(50% - 2px);
+              transform: translate(-50%, -50%) rotate(45deg);
+            }
+            &.dr-right:after {
+              top: calc(50% + 2px);
+              transform: translate(-50%, -50%) rotate(-45deg);
             }
           }
         }
@@ -246,7 +275,6 @@
 }
 
 .daterange--single {
-  width: 100%;
 
   .dr-input {
     cursor: text;

@@ -1,20 +1,25 @@
 function Calendar(settings) {
-  this.calIsOpen = false;
-  this.presetIsOpen = false;
-  this.element = null;
-  this.earliest = settings ? settings.earliest : new Date('January 1, 1900');
-  this.latest = settings ? settings.latest : new Date('December 31, 2900');
-  this.start_date = settings ? settings.start : null;
-  this.end_date = settings ? settings.end : null;
-  this.current_date = null;
-
   var self = this;
 
-  $('.dr-presets').click(function() {
+  this.calIsOpen =    false;
+  this.presetIsOpen = false;
+  this.type =         settings.type || 'single';
+  this.element =      settings.element || $('.daterange');
+  this.selected =     null;
+  this.earliest =     settings.earliest_date || new Date('January 1, 1900');
+  this.latest =       settings.latest_date || new Date('December 31, 2900');
+  this.end_date =     settings.end_date || new Date();
+  this.start_date =   settings.start_date || new Date(moment(this.end_date).subtract(1, 'month'));
+  this.current_date = null;
+  this.callback =     settings.callback || null;
+
+  this.calendarHTML(settings.type);
+
+  $('.dr-presets', this.element).click(function() {
     self.presetToggle();
   });
 
-  $('.dr-list-item').click(function() {
+  $('.dr-list-item', this.element).click(function() {
     var range = $('.dr-item-aside', this).html().split('–');
 
     self.start_date = new Date(range[0]);
@@ -24,7 +29,7 @@ function Calendar(settings) {
     self.calendarSaveDates();
   });
 
-  $('.dr-date').on({
+  $('.dr-date', this.element).on({
     'click': function() {
       self.calendarOpen(this);
     },
@@ -41,8 +46,8 @@ function Calendar(settings) {
         self.calendarSetDates();
         self.calendarClose('force');
         
-        if ($(self.element).hasClass('dr-date-start') || 
-            $(self.element).hasClass('dr-date-end'))
+        if ($(self.selected).hasClass('dr-date-start') || 
+            $(self.selected).hasClass('dr-date-end'))
           self.calendarSaveDates();
       }
 
@@ -52,10 +57,10 @@ function Calendar(settings) {
       }
 
       if (event.keyCode == 9) { // Tab
-        if ($(self.element).hasClass('dr-date-start')) {
+        if ($(self.selected).hasClass('dr-date-start')) {
           event.preventDefault();
-          $('.dr-date-end').trigger('click');
-        } else if ($(self.element).hasClass('dr-date-end')) {
+          $('.dr-date-end', self.element).trigger('click');
+        } else if ($(self.selected).hasClass('dr-date-end')) {
           event.preventDefault();
           self.calendarCheckDates();
           self.calendarSaveDates();
@@ -69,41 +74,41 @@ function Calendar(settings) {
     }
   });
 
-  $('.dr-month-switcher i').click(function() {
-    var m = $('.dr-month-switcher span').html();
-    var y = $('.dr-year-switcher span').html();
+  $('.dr-month-switcher i', this.element).click(function() {
+    var m = $('.dr-month-switcher span', self.element).html();
+    var y = $('.dr-year-switcher span', self.element).html();
     var back = moment(new Date(m +' 1, '+ y)).subtract(1, 'month');
     var forward = moment(new Date(m +' 1, '+ y)).add(1, 'month').startOf('day');
 
-    if ($(this).hasClass('icon-left')) {  
+    if ($(this).hasClass('dr-left')) {  
       $(this).parent().find('span').html(back.format('MMMM'));
-      self.calendarOpen(self.element, back);
-    } else if ($(this).hasClass('icon-right')) {
+      self.calendarOpen(self.selected, back);
+    } else if ($(this).hasClass('dr-right')) {
       $(this).parent().find('span').html(forward.format('MMMM'));
-      self.calendarOpen(self.element, forward);
+      self.calendarOpen(self.selected, forward);
     }
   });
 
-  $('.dr-year-switcher i').click(function() {
-    var m = $('.dr-month-switcher span').html();
-    var y = $('.dr-year-switcher span').html();
+  $('.dr-year-switcher i', this.element).click(function() {
+    var m = $('.dr-month-switcher span', self.element).html();
+    var y = $('.dr-year-switcher span', self.element).html();
     var back = moment(new Date(m +' 1, '+ y)).subtract(1, 'year');
     var forward = moment(new Date(m +' 1, '+ y)).add(1, 'year').startOf('day');
 
-    if ($(this).hasClass('icon-left')) {  
+    if ($(this).hasClass('dr-left')) {  
       $(this).parent().find('span').html(back.format('YYYY'));
-      self.calendarOpen(self.element, back);
-    } else if ($(this).hasClass('icon-right')) {
+      self.calendarOpen(self.selected, back);
+    } else if ($(this).hasClass('dr-right')) {
       $(this).parent().find('span').html(forward.format('YYYY'));
-      self.calendarOpen(self.element, forward);
+      self.calendarOpen(self.selected, forward);
     }
   });
 
-  $('.dr-dates-dash').click(function() {
-    $('.dr-date-start').trigger('click');
+  $('.dr-dates-dash', this.element).click(function() {
+    $('.dr-date-start', self.element).trigger('click');
   });
 
-  $('.daterange').click(function(event) {
+  $(this.element).click(function(event) {
     $('html').one('click',function() {
       if (self.presetIsOpen)
         self.presetToggle();
@@ -117,7 +122,7 @@ function Calendar(settings) {
     event.stopPropagation();
   });
 
-  $('.daterange, .dr-date').focus(function(event) {
+  $(this.element).add('.dr-date', this.element).focus(function(event) {
     $('html').one('click',function() {
       if (self.calIsOpen) {
         self.calendarSetDates();
@@ -141,9 +146,9 @@ Calendar.prototype.presetToggle = function() {
   if (this.calIsOpen == true)
     this.calendarClose();
 
-  $('.dr-preset-list').slideToggle(200);
-  $('.dr-input').toggleClass('active');
-  $('.dr-presets').toggleClass('active');
+  $('.dr-preset-list', this.element).slideToggle(200);
+  $('.dr-input', this.element).toggleClass('active');
+  $('.dr-presets', this.element).toggleClass('active');
 }
 
 
@@ -151,12 +156,12 @@ Calendar.prototype.presetCreate = function() {
   var self = this;
   var date = this.latest;
 
-  var s = new Date($('.dr-date-start').html());
-  var e = new Date($('.dr-date-end').html());
+  var s = new Date($('.dr-date-start', self.element).html());
+  var e = new Date($('.dr-date-end', self.element).html());
   this.start_date = s == 'Invalid Date' ? this.start_date : s;
   this.end_date = e == 'Invalid Date' ? this.end_date : e;
 
-  $('.dr-list-item').each(function() {
+  $('.dr-list-item', this.element).each(function() {
     var month_count = $(this).data('months');
     var last_day = moment(date).endOf('month').startOf('day');
     var is_last_day = last_day.isSame(date);
@@ -184,36 +189,29 @@ Calendar.prototype.presetCreate = function() {
 
 
 Calendar.prototype.calendarSetDates = function() {
-  $('.dr-date-start').html(moment(this.start_date).format('MMMM D, YYYY'));
-  $('.dr-date-end').html(moment(this.end_date).format('MMMM D, YYYY'));
+  $('.dr-date-start', this.element).html(moment(this.start_date).format('MMMM D, YYYY'));
+  $('.dr-date-end', this.element).html(moment(this.end_date).format('MMMM D, YYYY'));
 
   if (!this.start_date && !this.end_date) {
-    var old_date = $('.dr-date').html();
+    var old_date = $('.dr-date', this.element).html();
     var new_date = moment(this.current_date).format('MMMM D, YYYY');
 
     if (old_date != new_date)
-      $('.dr-date').html(new_date);
+      $('.dr-date', this.element).html(new_date);
   }
 }
 
 
 Calendar.prototype.calendarSaveDates = function() {
-  var start = moment(this.start_date).format("YYYY-MM-DD"),
-      end = moment(this.end_date).format("YYYY-MM-DD"),
-      url = "?start_date="+ start +"&end_date="+ end,
-      full = (window.location.pathname + url + window.location.hash);
-  
-  window.setTimeout(function() {
-    window.location = full;
-  }, 200);
+  return this.callback();
 }
 
 
 Calendar.prototype.calendarCheckDates = function() {
   var regex = /(?!<=\d)(st|nd|rd|th)/;
-  var s = $('.dr-date-start').html();
-  var e = $('.dr-date-end').html();
-  var c = $(this.element).html();
+  var s = $('.dr-date-start', this.element).html();
+  var e = $('.dr-date-end', this.element).html();
+  var c = $(this.selected).html();
   var s_array = [];
   var e_array = [];
   var c_array = [];
@@ -266,12 +264,12 @@ Calendar.prototype.calendarCheckDates = function() {
 }
 
 
-Calendar.prototype.calendarOpen = function(element, switcher) {
+Calendar.prototype.calendarOpen = function(selected, switcher) {
   var self = this;
   var other;
-  var cal_width = $('.dr-dates').innerWidth() - 8;
+  var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
 
-  this.element = element || this.element;
+  this.selected = selected || this.selected;
 
   if (this.presetIsOpen == true)
     this.presetToggle();
@@ -288,54 +286,54 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
   var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
   var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
 
-  $('.dr-month-switcher span').html(moment(switcher || this.current_date).format('MMMM'));
-  $('.dr-year-switcher span').html(moment(switcher || this.current_date).format('YYYY'));
+  $('.dr-month-switcher span', this.element).html(moment(switcher || this.current_date).format('MMMM'));
+  $('.dr-year-switcher span', this.element).html(moment(switcher || this.current_date).format('YYYY'));
 
-  $('.dr-switcher i').removeClass('dr-disabled');
+  $('.dr-switcher i', this.element).removeClass('dr-disabled');
 
   if (next_month.isAfter(this.latest))
-    $('.dr-month-switcher .icon-right').addClass('dr-disabled');
+    $('.dr-month-switcher .dr-right', this.element).addClass('dr-disabled');
 
   if (past_month.isBefore(this.earliest))
-    $('.dr-month-switcher .icon-left').addClass('dr-disabled');
+    $('.dr-month-switcher .dr-left', this.element).addClass('dr-disabled');
 
   if (next_year.isAfter(this.latest))
-    $('.dr-year-switcher .icon-right').addClass('dr-disabled');
+    $('.dr-year-switcher .dr-right', this.element).addClass('dr-disabled');
 
   if (past_year.isBefore(this.earliest))
-    $('.dr-year-switcher .icon-left').addClass('dr-disabled');
+    $('.dr-year-switcher .dr-left', this.element).addClass('dr-disabled');
 
-  $('.dr-day').on({
+  $('.dr-day', this.element).on({
     mouseenter: function() {
-      var element = $(this);
+      var selected = $(this);
       var start_date = moment(self.start_date);
       var end_date = moment(self.end_date);
       var current_date = moment(self.current_date);
 
       if (start_date.isSame(current_date)) {
-        element.addClass('dr-hover dr-hover-before');
-        $('.dr-start').css({'border': 'none', 'padding-left': '0.3125rem'});
+        selected.addClass('dr-hover dr-hover-before');
+        $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
         setMaybeRange('start');
       }
 
       if (end_date.isSame(current_date)) {
-        element.addClass('dr-hover dr-hover-after');
-        $('.dr-end').css({'border': 'none', 'padding-right': '0.3125rem'});
+        selected.addClass('dr-hover dr-hover-after');
+        $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
         setMaybeRange('end');
       }
 
       if (!self.start_date && !self.end_date)
-        element.addClass('dr-maybe');
+        selected.addClass('dr-maybe');
 
-      $('.dr-selected').css('background-color', 'transparent');
+      $('.dr-selected', self.element).css('background-color', 'transparent');
 
       function setMaybeRange(type) {
         other = undefined;
 
         $.each(_.range(6 * 7), function(i) {
-          var next = element.next().data('date');
-          var prev = element.prev().data('date');
-          var curr = element.data('date');
+          var next = selected.next().data('date');
+          var prev = selected.prev().data('date');
+          var curr = selected.data('date');
 
           if (!curr)
             return false;
@@ -360,7 +358,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
               other = other || moment(curr).add(6, 'day').startOf('day');
 
               if (i > 5 || (next ? moment(next).isAfter(self.latest) : false)) {
-                $(element).addClass('dr-end');
+                $(selected).addClass('dr-end');
                 other = moment(curr);
                 return false;
               }
@@ -372,7 +370,7 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
               other = other || moment(curr).subtract(6, 'day');
 
               if (i > 5 || (prev ? moment(prev).isBefore(self.earliest) : false)) {
-                $(element).addClass('dr-start');
+                $(selected).addClass('dr-start');
                 other = moment(curr);
                 return false;
               }
@@ -381,10 +379,10 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
 
 
           if (type == 'start')
-            element = element.next().addClass('dr-maybe');
+            selected = selected.next().addClass('dr-maybe');
 
           if (type == 'end')
-            element = element.prev().addClass('dr-maybe');
+            selected = selected.prev().addClass('dr-maybe');
         });
       }
     },
@@ -396,27 +394,27 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
         $(this).removeClass('dr-start');
 
       $(this).removeClass('dr-hover dr-hover-before dr-hover-after');
-      $('.dr-start, .dr-end').css({'border': '', 'padding': ''});
-      $('.dr-maybe:not(.dr-current)').removeClass('dr-start dr-end');
-      $('.dr-day').removeClass('dr-maybe');
-      $('.dr-selected').css('background-color', '');
+      $('.dr-start, .dr-end', self.element).css({'border': '', 'padding': ''});
+      $('.dr-maybe:not(.dr-current)', self.element).removeClass('dr-start dr-end');
+      $('.dr-day', self.element).removeClass('dr-maybe');
+      $('.dr-selected', self.element).css('background-color', '');
     },
     mousedown: function() {
       var date = $(this).data('date');
       var string = moment(date).format('MMMM D, YYYY');
 
       if (other) {
-        $('.dr-date')
-          .not(self.element)
+        $('.dr-date', self.element)
+          .not(self.selected)
           .html(other.format('MMMM D, YYYY'));
       }
 
-      $(self.element).html(string);
-      self.calendarOpen(self.element);
+      $(self.selected).html(string);
+      self.calendarOpen(self.selected);
 
-      if ($(self.element).hasClass('dr-date-start')) {
-        $('.dr-date-end').trigger('click');
-      } else if ($(self.element).hasClass('dr-date-end')) {
+      if ($(self.selected).hasClass('dr-date-start')) {
+        $('.dr-date-end', self.element).trigger('click');
+      } else if ($(self.selected).hasClass('dr-date-end')) {
         self.calendarSaveDates();
         self.calendarClose('force');
       } else {
@@ -425,31 +423,33 @@ Calendar.prototype.calendarOpen = function(element, switcher) {
     }
   });
 
-  $('.dr-calendar')
+  $('.dr-calendar', this.element)
     .css('width', cal_width)
     .slideDown(200);
-  $('.dr-input').addClass('active');
-  $(element).addClass('active').focus();
+  $('.dr-input', this.element).addClass('active');
+  $(selected).addClass('active').focus();
 
   this.calIsOpen = true;
 }
 
 
 Calendar.prototype.calendarClose = function(type) {
+  var self = this;
+
   if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-    $('.dr-date-start, .dr-date-end').blur();
-    $('.dr-calendar').slideUp(200, function() {
-      $('.dr-day').remove();
+    $('.dr-date-start, .dr-date-end', this.element).blur();
+    $('.dr-calendar', this.element).slideUp(200, function() {
+      $('.dr-day', self.element).remove();
     });
   } else {
-    $('.dr-day').remove();
+    $('.dr-day', this.element).remove();
   }
 
   if (type == 'switcher') {
     return false;
   }
 
-  $('.dr-input, .dr-date').removeClass('active');
+  $('.dr-input, .dr-date', this.element).removeClass('active');
 
   this.calIsOpen = false;
 }
@@ -544,6 +544,7 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
 
 
 Calendar.prototype.calendarCreate = function(switcher) {
+  var self = this;
   var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
 
   _.each(array, function(d, i) {
@@ -567,17 +568,93 @@ Calendar.prototype.calendarCreate = function(switcher) {
     if (d.outside)
       classString += " dr-outside";
 
-    $('.dr-day-list').append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
+    $('.dr-day-list', self.element).append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
   });
 }
 
-if ($('.daterange--single').length) {
-  new Calendar();
-} else if ($('.daterange').length) {
-  new Calendar({
-    earliest: new Date($('.daterange').data('earliest')),
-    latest: new Date($('.daterange').data('latest')),
-    start: new Date($('.dr-date-start').html()),
-    end: new Date($('.dr-date-end').html())
-  });
+
+Calendar.prototype.calendarHTML = function(type) {
+  if (type == "double")
+    return this.element.append('<div class="dr-input">' +
+      '<div class="dr-dates">' +
+        '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format('MMMM D, YYYY') +'</div>' +
+        '<span class="dr-dates-dash">–</span>' +
+        '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format('MMMM D, YYYY') +'</div>' +
+      '</div>' +
+
+      '<div class="dr-presets">' +
+        '<span class="dr-preset-bar"></span>' +
+        '<span class="dr-preset-bar"></span>' +
+        '<span class="dr-preset-bar"></span>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="dr-selections">' +
+      '<div class="dr-calendar" style="display: none;">' +
+        '<div class="dr-range-switcher">' +
+          '<div class="dr-switcher dr-month-switcher">' +
+            '<i class="dr-left"></i>' +
+            '<span>April</span>' +
+            '<i class="dr-right"></i>' +
+          '</div>' +
+          '<div class="dr-switcher dr-year-switcher">' +
+            '<i class="dr-left"></i>' +
+            '<span>2015</span>' +
+            '<i class="dr-right"></i>' +
+          '</div>' +
+        '</div>' +
+        '<ul class="dr-days-of-week-list">' +
+          '<li class="dr-day-of-week">S</li>' +
+          '<li class="dr-day-of-week">M</li>' +
+          '<li class="dr-day-of-week">T</li>' +
+          '<li class="dr-day-of-week">W</li>' +
+          '<li class="dr-day-of-week">T</li>' +
+          '<li class="dr-day-of-week">F</li>' +
+          '<li class="dr-day-of-week">S</li>' +
+        '</ul>' +
+        '<ul class="dr-day-list"></ul>' +
+      '</div>' +
+
+      '<ul class="dr-preset-list" style="display: none;">' +
+        '<li class="dr-list-item" data-months="days">Last 30 days <span class="dr-item-aside"></span></li>' +
+        '<li class="dr-list-item" data-months="1">Last month <span class="dr-item-aside"></span></li>' +
+        '<li class="dr-list-item" data-months="3">Last 3 months <span class="dr-item-aside"></span></li>' +
+        '<li class="dr-list-item" data-months="6">Last 6 months <span class="dr-item-aside"></span></li>' +
+        '<li class="dr-list-item" data-months="12">Last year <span class="dr-item-aside"></span></li>' +
+        '<li class="dr-list-item" data-months="all">All time <span class="dr-item-aside"></span></li>' +
+      '</ul>' +
+    '</div>');
+
+  return this.element.append('<div class="dr-input">' +
+    '<div class="dr-dates">' +
+      '<div class="dr-date" contenteditable>'+ moment().format('MMMM D, YYYY') +'</div>' +
+    '</div>' +
+  '</div>' +
+
+  '<div class="dr-selections">' +
+    '<div class="dr-calendar" style="display: none;">' +
+      '<div class="dr-range-switcher">' +
+        '<div class="dr-switcher dr-month-switcher">' +
+          '<i class="dr-left"></i>' +
+          '<span></span>' +
+          '<i class="dr-right"></i>' +
+        '</div>' +
+        '<div class="dr-switcher dr-year-switcher">' +
+          '<i class="dr-left"></i>' +
+          '<span></span>' +
+          '<i class="dr-right"></i>' +
+        '</div>' +
+      '</div>' +
+      '<ul class="dr-days-of-week-list">' +
+        '<li class="dr-day-of-week">S</li>' +
+        '<li class="dr-day-of-week">M</li>' +
+        '<li class="dr-day-of-week">T</li>' +
+        '<li class="dr-day-of-week">W</li>' +
+        '<li class="dr-day-of-week">T</li>' +
+        '<li class="dr-day-of-week">F</li>' +
+        '<li class="dr-day-of-week">S</li>' +
+      '</ul>' +
+      '<ul class="dr-day-list"></ul>' +
+    '</div>' +
+  '</div>');
 }
