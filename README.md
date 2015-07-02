@@ -14,9 +14,9 @@ The Baremetrics date range picker is a simplified solution for selecting both da
 I've included my signature gulpfile too so be sure and take a look at that as well.
 
 ```bash
-cd <project directory>
-npm install
-gulp
+$ cd <project directory>
+$ npm install
+$ gulp
 ```
 
 I also use [pow](http://pow.cx/) and the [powder gem](https://github.com/Rodreegez/powder) to run my local dev environments but however you plan on wrangling that the gulpfile turns on a livereload server so as long as you have the files serving somehow any changes you make will show up instantly.
