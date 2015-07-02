@@ -10,7 +10,7 @@ function Calendar(settings) {
   this.latest =       settings.latest_date || new Date('December 31, 2900');
   this.end_date =     settings.end_date || (this.type == 'double' ? new Date() : null);
   this.start_date =   settings.start_date || (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
-  this.current_date = null;
+  this.current_date = settings.current_date || (this.type == 'single' ? new Date() : null);
   this.callback =     settings.callback || this.calendarSetDates;
 
   this.calendarHTML(this.type);
@@ -617,7 +617,7 @@ Calendar.prototype.calendarHTML = function(type) {
 
   return this.element.append('<div class="dr-input">' +
     '<div class="dr-dates">' +
-      '<div class="dr-date" contenteditable>'+ moment().format('MMMM D, YYYY') +'</div>' +
+      '<div class="dr-date" contenteditable>'+ moment(this.current_date).format('MMMM D, YYYY') +'</div>' +
     '</div>' +
   '</div>' +
 

@@ -26,7 +26,8 @@ Next you've just gotta create a `new Calendar` instance.
 
 ```js
 new Calendar({
-  element: $('.daterange--single')
+  element: $('.daterange--single'),
+  current_date: new Date('June 15, 2015')
 });
 
 new Calendar({
@@ -54,6 +55,8 @@ new Calendar({
   - The earliest date to show in the calendar
 - latest_date
   - The latest date to show in the calendar
+- current_date
+  - The date to start the calendar on
 
 ### Double Calendar params
 - element\*
