@@ -45,7 +45,7 @@ new Calendar({
 ```
 
 ### Single Calendar params
-- element \*
+- element__\*__
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
@@ -55,11 +55,8 @@ new Calendar({
 - latest_date
   - The latest date to show in the calendar
 
----
-\* required
-
 ### Double Calendar params
-- element \*
+- element__\*__
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
@@ -72,6 +69,9 @@ new Calendar({
   - The date to start the selection on for the calendar
 - end_date
   - The date to end the selection on for the calendar
+
+---
+\* required
 
 ## Developing
 
