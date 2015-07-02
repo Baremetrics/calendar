@@ -3,17 +3,17 @@ function Calendar(settings) {
 
   this.calIsOpen =    false;
   this.presetIsOpen = false;
-  this.type =         settings.type || 'single';
   this.element =      settings.element || $('.daterange');
+  this.type =         this.element.hasClass('daterange--single') ? 'single' : 'double';
   this.selected =     null;
   this.earliest =     settings.earliest_date || new Date('January 1, 1900');
   this.latest =       settings.latest_date || new Date('December 31, 2900');
-  this.end_date =     settings.end_date || (settings.type == 'double' ? new Date() : null);
-  this.start_date =   settings.start_date || (settings.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
+  this.end_date =     settings.end_date || (this.type == 'double' ? new Date() : null);
+  this.start_date =   settings.start_date || (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
   this.current_date = null;
   this.callback =     settings.callback || this.calendarSetDates;
 
-  this.calendarHTML(settings.type);
+  this.calendarHTML(this.type);
 
   $('.dr-presets', this.element).click(function() {
     self.presetToggle();
