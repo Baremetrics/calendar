@@ -17,7 +17,6 @@ if ($('.daterange--double').length) {
           end = moment(this.end_date).format('ll');
       
       console.log('Start Date: '+ start +'\nEnd Date: '+ end);
-      window.alert('Start Date: '+ start +'\nEnd Date: '+ end);
     }
   });
 }
