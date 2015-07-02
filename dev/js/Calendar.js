@@ -427,7 +427,7 @@ Calendar.prototype.calendarClose = function(type) {
   var self = this;
 
   if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-    $('.dr-date-start, .dr-date-end', this.element).blur();
+    $('.dr-date', this.element).blur();
     $('.dr-calendar', this.element).slideUp(200, function() {
       $('.dr-day', self.element).remove();
     });
