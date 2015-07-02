@@ -1,9 +1,10 @@
-# Baremetrics Date Range Picker
+# [Baremetrics](https://baremetrics.com/) Date Range Picker
 
 Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)  
 Code by [Tyler van der Hoeven](https://github.com/tyvdh)
 
 [View a Demo](http://baremetrics.github.io/calendar/)
+[View in a live production app](https://demo.baremetrics.com/)
 
 ![](http://tyler.link/bqs5/Screen%20Shot%202015-07-02%20at%201.29.07%20PM.png)
 ![](http://tyler.link/br0F/Screen%20Shot%202015-07-02%20at%201.29.28%20PM.png)
