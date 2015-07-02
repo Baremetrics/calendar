@@ -8,10 +8,10 @@ function Calendar(settings) {
   this.selected =     null;
   this.earliest =     settings.earliest_date || new Date('January 1, 1900');
   this.latest =       settings.latest_date || new Date('December 31, 2900');
-  this.end_date =     settings.end_date || settings.type == 'double' ? new Date() : null;
-  this.start_date =   settings.start_date || settings.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null;
+  this.end_date =     settings.end_date || (settings.type == 'double' ? new Date() : null);
+  this.start_date =   settings.start_date || (settings.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
   this.current_date = null;
-  this.callback =     settings.callback || null;
+  this.callback =     settings.callback || this.calendarSetDates;
 
   this.calendarHTML(settings.type);
 
@@ -44,11 +44,8 @@ function Calendar(settings) {
         event.preventDefault();
         self.calendarCheckDates();
         self.calendarSetDates();
+        self.calendarSaveDates();
         self.calendarClose('force');
-        
-        if ($(self.selected).hasClass('dr-date-start') || 
-            $(self.selected).hasClass('dr-date-end'))
-          self.calendarSaveDates();
       }
 
       if (event.keyCode == 27) { // ESC
@@ -60,14 +57,9 @@ function Calendar(settings) {
         if ($(self.selected).hasClass('dr-date-start')) {
           event.preventDefault();
           $('.dr-date-end', self.element).trigger('click');
-        } else if ($(self.selected).hasClass('dr-date-end')) {
-          event.preventDefault();
-          self.calendarCheckDates();
-          self.calendarSaveDates();
-          self.calendarClose('force');
         } else {
           self.calendarCheckDates();
-          self.calendarSetDates();
+          self.calendarSaveDates();
           self.calendarClose('force');
         }
       }
@@ -414,10 +406,8 @@ Calendar.prototype.calendarOpen = function(selected, switcher) {
 
       if ($(self.selected).hasClass('dr-date-start')) {
         $('.dr-date-end', self.element).trigger('click');
-      } else if ($(self.selected).hasClass('dr-date-end')) {
-        self.calendarSaveDates();
-        self.calendarClose('force');
       } else {
+        self.calendarSaveDates();
         self.calendarClose('force');
       }
     }
