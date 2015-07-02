@@ -8,8 +8,8 @@ function Calendar(settings) {
   this.selected =     null;
   this.earliest =     settings.earliest_date || new Date('January 1, 1900');
   this.latest =       settings.latest_date || new Date('December 31, 2900');
-  this.end_date =     settings.end_date || new Date();
-  this.start_date =   settings.start_date || new Date(moment(this.end_date).subtract(1, 'month'));
+  this.end_date =     settings.end_date || settings.type == 'double' ? new Date() : null;
+  this.start_date =   settings.start_date || settings.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null;
   this.current_date = null;
   this.callback =     settings.callback || null;
 
