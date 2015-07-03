@@ -63,6 +63,12 @@ function Calendar(settings) {
           self.calendarClose('force');
         }
       }
+    },
+
+    'blur': function(event) {
+      self.calendarCheckDates();
+      self.calendarSetDates();
+      self.calendarSaveDates();
     }
   });
 
