@@ -6,11 +6,11 @@ function Calendar(settings) {
   this.element =      settings.element || $('.daterange');
   this.type =         this.element.hasClass('daterange--single') ? 'single' : 'double';
   this.selected =     null;
-  this.earliest =     settings.earliest_date || new Date('January 1, 1900');
-  this.latest =       settings.latest_date || new Date('December 31, 2900');
-  this.end_date =     settings.end_date || (this.type == 'double' ? new Date() : null);
-  this.start_date =   settings.start_date || (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
-  this.current_date = settings.current_date || (this.type == 'single' ? new Date() : null);
+  this.earliest =     (settings.earliestDate || settings.earliest_date) || new Date('January 1, 1900');
+  this.latest =       (settings.latestDate || settings.latest_date) || new Date('December 31, 2900');
+  this.endDate =      (settings.endDate || settings.end_date) || (this.type == 'double' ? new Date() : null);
+  this.startDate =    (settings.startDate || settings.start_date) || (this.type == 'double' ? new Date(moment(this.endDate).subtract(1, 'month')) : null);
+  this.currentDate =  (settings.currentDate || settings.current_date) || (this.type == 'single' ? new Date() : null);
   this.callback =     settings.callback || this.calendarSetDates;
 
   this.calendarHTML(this.type);
@@ -22,8 +22,8 @@ function Calendar(settings) {
   $('.dr-list-item', this.element).click(function() {
     var range = $('.dr-item-aside', this).html().split('–');
 
-    self.start_date = new Date(range[0]);
-    self.end_date = new Date(range[1]);
+    self.startDate = new Date(range[0]);
+    self.endDate = new Date(range[1]);
     self.calendarSetDates();
     self.presetToggle();
     self.calendarSaveDates();
@@ -35,7 +35,7 @@ function Calendar(settings) {
     },
 
     'keyup': function(event) {
-      if (event.keyCode == 9 && !self.calIsOpen && !self.start_date && !self.end_date)
+      if (event.keyCode == 9 && !self.calIsOpen && !self.startDate && !self.endDate)
         self.calendarOpen(this);
     },
 
@@ -150,46 +150,46 @@ Calendar.prototype.presetCreate = function() {
 
   var s = new Date($('.dr-date-start', self.element).html());
   var e = new Date($('.dr-date-end', self.element).html());
-  this.start_date = s == 'Invalid Date' ? this.start_date : s;
-  this.end_date = e == 'Invalid Date' ? this.end_date : e;
+  this.startDate = s == 'Invalid Date' ? this.startDate : s;
+  this.endDate = e == 'Invalid Date' ? this.endDate : e;
 
   $('.dr-list-item', this.element).each(function() {
-    var month_count = $(this).data('months');
-    var last_day = moment(date).endOf('month').startOf('day');
-    var is_last_day = last_day.isSame(date);
-    var first_day;
+    var monthCount = $(this).data('months');
+    var lastDay = moment(date).endOf('month').startOf('day');
+    var isLastDay = lastDay.isSame(date);
+    var firstDay;
 
-    if (!is_last_day)
-      last_day = moment(date).subtract(1, 'month').endOf('month').startOf('day');
+    if (!isLastDay)
+      lastDay = moment(date).subtract(1, 'month').endOf('month').startOf('day');
 
-    if (typeof month_count == 'number') {
-      first_day = moment(date).subtract(is_last_day ? month_count - 1 : month_count, 'month').startOf('month');
+    if (typeof monthCount == 'number') {
+      firstDay = moment(date).subtract(isLastDay ? monthCount - 1 : monthCount, 'month').startOf('month');
 
-      if (month_count == 12)
-        first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
-    } else if (month_count == 'all') {
-      first_day = moment(self.earliest);
-      last_day = moment(self.latest);
+      if (monthCount == 12)
+        firstDay = moment(date).subtract(isLastDay ? 12 : 13, 'month').endOf('month').startOf('day');
+    } else if (monthCount == 'all') {
+      firstDay = moment(self.earliest);
+      lastDay = moment(self.latest);
     } else {
-      first_day = moment(self.latest).subtract(30, 'day');
-      last_day = moment(self.latest);
+      firstDay = moment(self.latest).subtract(30, 'day');
+      lastDay = moment(self.latest);
     }
 
-    $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
+    $('.dr-item-aside', this).html(firstDay.format('ll') +' – '+ lastDay.format('ll'));
   });
 }
 
 
 Calendar.prototype.calendarSetDates = function() {
-  $('.dr-date-start', this.element).html(moment(this.start_date).format('MMMM D, YYYY'));
-  $('.dr-date-end', this.element).html(moment(this.end_date).format('MMMM D, YYYY'));
+  $('.dr-date-start', this.element).html(moment(this.startDate).format('MMMM D, YYYY'));
+  $('.dr-date-end', this.element).html(moment(this.endDate).format('MMMM D, YYYY'));
 
-  if (!this.start_date && !this.end_date) {
-    var old_date = $('.dr-date', this.element).html();
-    var new_date = moment(this.current_date).format('MMMM D, YYYY');
+  if (!this.startDate && !this.endDate) {
+    var oldDate = $('.dr-date', this.element).html();
+    var newDate = moment(this.currentDate).format('MMMM D, YYYY');
 
-    if (old_date != new_date)
-      $('.dr-date', this.element).html(new_date);
+    if (oldDate != newDate)
+      $('.dr-date', this.element).html(newDate);
   }
 }
 
@@ -204,38 +204,38 @@ Calendar.prototype.calendarCheckDates = function() {
   var s = $('.dr-date-start', this.element).html();
   var e = $('.dr-date-end', this.element).html();
   var c = $(this.selected).html();
-  var s_array = [];
-  var e_array = [];
-  var c_array = [];
+  var sArray = [];
+  var eArray = [];
+  var cArray = [];
 
   if (s) {
     s = s.replace(regex, '');
-    s_array = s.split(' ');
+    sArray = s.split(' ');
   }
 
   if (e) {
     e = e.replace(regex, '');
-    e_array = e.split(' ');
+    eArray = e.split(' ');
   }
 
   if (c) {
     c = c.replace(regex, '');
-    c_array = c.split(' ');
+    cArray = c.split(' ');
   }
 
-  if (s_array.length == 2) {
-    s_array.push(moment().format('YYYY'))
-    s = s_array.join(' ');
+  if (sArray.length == 2) {
+    sArray.push(moment().format('YYYY'))
+    s = sArray.join(' ');
   }
 
-  if (e_array.length == 2) {
-    e_array.push(moment().format('YYYY'))
-    e = e_array.join(' ');
+  if (eArray.length == 2) {
+    eArray.push(moment().format('YYYY'))
+    e = eArray.join(' ');
   }
 
-  if (c_array.length == 2) {
-    c_array.push(moment().format('YYYY'))
-    c = c_array.join(' ');
+  if (cArray.length == 2) {
+    cArray.push(moment().format('YYYY'))
+    c = cArray.join(' ');
   }
 
   s = new Date(s);
@@ -250,16 +250,16 @@ Calendar.prototype.calendarCheckDates = function() {
     return this.calendarSetDates();
   }
 
-  this.start_date = s == 'Invalid Date' ? this.start_date : s;
-  this.end_date = e == 'Invalid Date' ? this.end_date : e;
-  this.current_date = c == 'Invalid Date' ? this.current_date : c;
+  this.startDate = s == 'Invalid Date' ? this.startDate : s;
+  this.endDate = e == 'Invalid Date' ? this.endDate : e;
+  this.currentDate = c == 'Invalid Date' ? this.currentDate : c;
 }
 
 
 Calendar.prototype.calendarOpen = function(selected, switcher) {
   var self = this;
   var other;
-  var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
+  var calWidth = $('.dr-dates', this.element).innerWidth() - 8;
 
   this.selected = selected || this.selected;
 
@@ -273,48 +273,48 @@ Calendar.prototype.calendarOpen = function(selected, switcher) {
   this.calendarCreate(switcher);
   this.calendarSetDates();
 
-  var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('month').startOf('day');
-  var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
-  var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
-  var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
+  var nextMonth = moment(switcher || this.currentDate).add(1, 'month').startOf('month').startOf('day');
+  var pastMonth = moment(switcher || this.currentDate).subtract(1, 'month').endOf('month');
+  var nextYear = moment(switcher || this.currentDate).add(1, 'year').startOf('month').startOf('day');
+  var pastYear = moment(switcher || this.currentDate).subtract(1, 'year').endOf('month');
 
-  $('.dr-month-switcher span', this.element).html(moment(switcher || this.current_date).format('MMMM'));
-  $('.dr-year-switcher span', this.element).html(moment(switcher || this.current_date).format('YYYY'));
+  $('.dr-month-switcher span', this.element).html(moment(switcher || this.currentDate).format('MMMM'));
+  $('.dr-year-switcher span', this.element).html(moment(switcher || this.currentDate).format('YYYY'));
 
   $('.dr-switcher i', this.element).removeClass('dr-disabled');
 
-  if (next_month.isAfter(this.latest))
+  if (nextMonth.isAfter(this.latest))
     $('.dr-month-switcher .dr-right', this.element).addClass('dr-disabled');
 
-  if (past_month.isBefore(this.earliest))
+  if (pastMonth.isBefore(this.earliest))
     $('.dr-month-switcher .dr-left', this.element).addClass('dr-disabled');
 
-  if (next_year.isAfter(this.latest))
+  if (nextYear.isAfter(this.latest))
     $('.dr-year-switcher .dr-right', this.element).addClass('dr-disabled');
 
-  if (past_year.isBefore(this.earliest))
+  if (pastYear.isBefore(this.earliest))
     $('.dr-year-switcher .dr-left', this.element).addClass('dr-disabled');
 
   $('.dr-day', this.element).on({
     mouseenter: function() {
       var selected = $(this);
-      var start_date = moment(self.start_date);
-      var end_date = moment(self.end_date);
-      var current_date = moment(self.current_date);
+      var startDate = moment(self.startDate);
+      var endDate = moment(self.endDate);
+      var currentDate = moment(self.currentDate);
 
-      if (start_date.isSame(current_date)) {
+      if (startDate.isSame(currentDate)) {
         selected.addClass('dr-hover dr-hover-before');
         $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
         setMaybeRange('start');
       }
 
-      if (end_date.isSame(current_date)) {
+      if (endDate.isSame(currentDate)) {
         selected.addClass('dr-hover dr-hover-after');
         $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
         setMaybeRange('end');
       }
 
-      if (!self.start_date && !self.end_date)
+      if (!self.startDate && !self.endDate)
         selected.addClass('dr-maybe');
 
       $('.dr-selected', self.element).css('background-color', 'transparent');
@@ -337,16 +337,16 @@ Calendar.prototype.calendarOpen = function(selected, switcher) {
             next = curr;
 
           if (type == 'start')
-            if (moment(next).isSame(self.end_date))
+            if (moment(next).isSame(self.endDate))
               return false;
 
           if (type == 'end')
-            if (moment(prev).isSame(self.start_date))
+            if (moment(prev).isSame(self.startDate))
               return false;
 
 
           if (type == 'start') {
-            if (moment(curr).isAfter(self.end_date)) {
+            if (moment(curr).isAfter(self.endDate)) {
               other = other || moment(curr).add(6, 'day').startOf('day');
 
               if (i > 5 || (next ? moment(next).isAfter(self.latest) : false)) {
@@ -358,7 +358,7 @@ Calendar.prototype.calendarOpen = function(selected, switcher) {
           }
 
           if (type == 'end') {
-            if (moment(curr).isBefore(self.start_date)) {
+            if (moment(curr).isBefore(self.startDate)) {
               other = other || moment(curr).subtract(6, 'day');
 
               if (i > 5 || (prev ? moment(prev).isBefore(self.earliest) : false)) {
@@ -414,7 +414,7 @@ Calendar.prototype.calendarOpen = function(selected, switcher) {
   });
 
   $('.dr-calendar', this.element)
-    .css('width', cal_width)
+    .css('width', calWidth)
     .slideDown(200);
   $('.dr-input', this.element).addClass('active');
   $(selected).addClass('active').focus();
@@ -449,17 +449,17 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
   var self = this;
   var current = current || start || end;
 
-  var first_day = moment(switcher || current).startOf('month');
-  var last_day = moment(switcher || current).endOf('month');
+  var firstDay = moment(switcher || current).startOf('month');
+  var lastDay = moment(switcher || current).endOf('month');
 
-  var current_month = {
+  var currentMonth = {
     start: {
-      day: +first_day.format('d'), 
-      str: +first_day.format('D')
+      day: +firstDay.format('d'), 
+      str: +firstDay.format('D')
     }, 
     end: {
-      day: +last_day.format('d'), 
-      str: +last_day.format('D')
+      day: +lastDay.format('d'), 
+      str: +lastDay.format('D')
     }
   }
 
@@ -467,9 +467,9 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
   // Beginning faded dates
   var d = undefined;
 
-  var start_hidden = _.map(_.range(current_month.start.day), function() {
+  var startHidden = _.map(_.range(currentMonth.start.day), function() {
     if (d == undefined) {
-      d = moment(first_day);
+      d = moment(firstDay);
     } d = d.subtract(1, 'day');
 
     return {
@@ -486,12 +486,12 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
 
 
   // Leftover faded dates
-  var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
+  var leftover = (6 * 7) - (currentMonth.end.str + startHidden.length);
   d = undefined;
 
-  var end_hidden = _.map(_.range(leftover), function() {
+  var endHidden = _.map(_.range(leftover), function() {
     if (d == undefined) {
-      d = moment(last_day);
+      d = moment(lastDay);
     } d = d.add(1, 'day').startOf('day');
 
     return {
@@ -510,9 +510,9 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
   // Actual visible dates
   d = undefined;
 
-  var visible = _.map(_.range(current_month.end.str), function() {
+  var visible = _.map(_.range(currentMonth.end.str), function() {
     if (d == undefined) {
-      d = moment(first_day);
+      d = moment(firstDay);
     } else {
       d = d.add(1, 'day').startOf('day');
     }
@@ -529,13 +529,13 @@ Calendar.prototype.calendarArray = function(start, end, current, switcher) {
   });
 
 
-  return start_hidden.concat(visible, end_hidden);
+  return startHidden.concat(visible, endHidden);
 }
 
 
 Calendar.prototype.calendarCreate = function(switcher) {
   var self = this;
-  var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
+  var array = this.calendarArray(this.startDate, this.endDate, this.currentDate, switcher);
 
   _.each(array, function(d, i) {
     var classString = "dr-day";
@@ -567,9 +567,9 @@ Calendar.prototype.calendarHTML = function(type) {
   if (type == "double")
     return this.element.append('<div class="dr-input">' +
       '<div class="dr-dates">' +
-        '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format('MMMM D, YYYY') +'</div>' +
+        '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.startDate).format('MMMM D, YYYY') +'</div>' +
         '<span class="dr-dates-dash">–</span>' +
-        '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format('MMMM D, YYYY') +'</div>' +
+        '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.endDate).format('MMMM D, YYYY') +'</div>' +
       '</div>' +
 
       '<div class="dr-presets">' +
@@ -617,7 +617,7 @@ Calendar.prototype.calendarHTML = function(type) {
 
   return this.element.append('<div class="dr-input">' +
     '<div class="dr-dates">' +
-      '<div class="dr-date" contenteditable>'+ moment(this.current_date).format('MMMM D, YYYY') +'</div>' +
+      '<div class="dr-date" contenteditable>'+ moment(this.currentDate).format('MMMM D, YYYY') +'</div>' +
     '</div>' +
   '</div>' +
 

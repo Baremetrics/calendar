@@ -27,18 +27,18 @@ Next you've just gotta create a `new Calendar` instance.
 ```js
 new Calendar({
   element: $('.daterange--single'),
-  current_date: new Date('June 15, 2015')
+  currentDate: new Date('June 15, 2015')
 });
 
 new Calendar({
   element: $('.daterange--double'),
-  earliest_date: new Date('January 1, 2000'),
-  latest_date: new Date(),
-  start_date: new Date('May 1, 2015'),
-  end_date: new Date('May 31, 2015'),
+  earliestDate: new Date('January 1, 2000'),
+  latestDate: new Date(),
+  startDate: new Date('May 1, 2015'),
+  endDate: new Date('May 31, 2015'),
   callback: function() {
-    var start = moment(this.start_date).format('ll'),
-        end = moment(this.end_date).format('ll');
+    var start = moment(this.startDate).format('ll'),
+        end = moment(this.endDate).format('ll');
     
     console.log('Start Date: '+ start +'\nEnd Date: '+ end);
   }
@@ -50,12 +50,12 @@ new Calendar({
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest`, `this.latest`, `this.end_date` and `this.start_date` for doing things with the new dates.
-- earliest_date
+  - Inside you have access to variables like `this.earliest`, `this.latest`, `this.endDate` and `this.startDate` for doing things with the new dates.
+- earliestDate
   - The earliest date to show in the calendar
-- latest_date
+- latestDate
   - The latest date to show in the calendar
-- current_date
+- currentDate
   - The date to start the calendar on
 
 ### Double Calendar params
@@ -63,14 +63,14 @@ new Calendar({
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest`, `this.latest`, `this.end_date` and `this.start_date` for doing things with the new dates.
-- earliest_date
+  - Inside you have access to variables like `this.earliest`, `this.latest`, `this.endDate` and `this.startDate` for doing things with the new dates.
+- earliestDate
   - The earliest date to show in the calendar
-- latest_date
+- latestDate
   - The latest date to show in the calendar
-- start_date
+- startDate
   - The date to start the selection on for the calendar
-- end_date
+- endDate
   - The date to end the selection on for the calendar
 
 ---
