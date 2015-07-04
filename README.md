@@ -42,7 +42,7 @@ new Calendar({
     
     console.log('Start Date: '+ start +'\nEnd Date: '+ end);
   }
-}
+});
 ```
 
 ### Single Calendar params
