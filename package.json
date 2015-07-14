@@ -1,5 +1,5 @@
 {
-  "name": "baremetrics",
+  "name": "Baremetrics Calendar",
   "version": "1.0.0",
   "devDependencies": {
     "gulp": "^3.8.10",
