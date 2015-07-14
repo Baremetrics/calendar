@@ -88,3 +88,8 @@ $ gulp
 ```
 
 I also use [pow](http://pow.cx/) and the [powder gem](https://github.com/Rodreegez/powder) to run my local dev environments but however you plan on wrangling that the gulpfile turns on a livereload server so as long as you have the files serving somehow any changes you make will show up instantly.
+
+## Dependencies
+- [jQuery](https://jquery.com/)
+- [Underscore](http://underscorejs.org/)
+- [MomentJS](http://momentjs.com/)
