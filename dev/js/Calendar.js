@@ -63,6 +63,38 @@ function Calendar(settings) {
           self.calendarClose('force');
         }
       }
+
+      if (event.keyCode == 38) { // Up
+        event.preventDefault();
+        var timeframe = 'day';
+
+        if (event.shiftKey)
+          timeframe = 'week';
+
+        if (event.metaKey)
+          timeframe = 'month';
+
+        var back = moment(self.current_date).subtract(1, timeframe);
+
+        $(this).html(back.format('MMMM D, YYYY'));
+        self.current_date = back._d;
+      }
+
+      if (event.keyCode == 40) { // Down
+        event.preventDefault();
+        var timeframe = 'day';
+
+        if (event.shiftKey)
+          timeframe = 'week';
+
+        if (event.metaKey)
+          timeframe = 'month';
+
+        var forward = moment(self.current_date).add(1, timeframe);
+
+        $(this).html(forward.format('MMMM D, YYYY'));
+        self.current_date = forward._d;
+      }
     }
   });
 
