@@ -51,7 +51,7 @@ new Calendar({
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest`, `this.latest` and `this.current_date` for doing things with the new dates.
+  - Inside you have access to variables like `this.earliest_date`, `this.latest_date` and `this.current_date` for doing things with the new dates.
 - earliest_date
   - The earliest date to show in the calendar
 - latest_date
@@ -64,7 +64,7 @@ new Calendar({
   - jQuery DOM object of the calendar div you're working on
 - callback
   - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest`, `this.latest`, `this.end_date`, `this.start_date` and `this.current_date` for doing things with the new dates.
+  - Inside you have access to variables like `this.earliest_date`, `this.latest_date`, `this.end_date`, `this.start_date` and `this.current_date` for doing things with the new dates.
 - earliest_date
   - The earliest date to show in the calendar
 - latest_date

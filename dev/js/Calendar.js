@@ -18,8 +18,8 @@
     this.element =      settings.element || $('.daterange');
     this.type =         this.element.hasClass('daterange--single') ? 'single' : 'double';
     this.selected =     null;
-    this.earliest =     settings.earliest_date || new Date('January 1, 1900');
-    this.latest =       settings.latest_date || new Date('December 31, 2900');
+    this.earliest_date =     settings.earliest_date || new Date('January 1, 1900');
+    this.latest_date =       settings.latest_date || new Date('December 31, 2900');
     this.end_date =     settings.end_date || (this.type == 'double' ? new Date() : null);
     this.start_date =   settings.start_date || (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
     this.current_date = settings.current_date || (this.type == 'single' ? new Date() : null);
@@ -190,7 +190,7 @@
 
   Calendar.prototype.presetCreate = function() {
     var self = this;
-    var date = this.latest;
+    var date = this.latest_date;
 
     var s = new Date($('.dr-date-start', self.element).html());
     var e = new Date($('.dr-date-end', self.element).html());
@@ -212,15 +212,15 @@
         if (month_count == 12)
           first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
       } else if (month_count == 'all') {
-        first_day = moment(self.earliest);
-        last_day = moment(self.latest);
+        first_day = moment(self.earliest_date);
+        last_day = moment(self.latest_date);
       } else {
-        first_day = moment(self.latest).subtract(30, 'day');
-        last_day = moment(self.latest);
+        first_day = moment(self.latest_date).subtract(30, 'day');
+        last_day = moment(self.latest_date);
       }
 
-      if (first_day.isBefore(self.earliest))
-        // first_day = moment(self.earliest);
+      if (first_day.isBefore(self.earliest_date))
+        // first_day = moment(self.earliest_date);
         return $(this).remove()
 
       $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
@@ -293,8 +293,8 @@
     if (moment(s).isAfter(e) ||
         moment(e).isBefore(s) ||
         moment(s).isSame(e) ||
-        moment(s).isBefore(this.earliest) ||
-        moment(e).isAfter(this.latest)) {
+        moment(s).isBefore(this.earliest_date) ||
+        moment(e).isAfter(this.latest_date)) {
       return this.calendarSetDates();
     }
 
@@ -331,16 +331,16 @@
 
     $('.dr-switcher i', this.element).removeClass('dr-disabled');
 
-    if (next_month.isAfter(this.latest))
+    if (next_month.isAfter(this.latest_date))
       $('.dr-month-switcher .dr-right', this.element).addClass('dr-disabled');
 
-    if (past_month.isBefore(this.earliest))
+    if (past_month.isBefore(this.earliest_date))
       $('.dr-month-switcher .dr-left', this.element).addClass('dr-disabled');
 
-    if (next_year.isAfter(this.latest))
+    if (next_year.isAfter(this.latest_date))
       $('.dr-year-switcher .dr-right', this.element).addClass('dr-disabled');
 
-    if (past_year.isBefore(this.earliest))
+    if (past_year.isBefore(this.earliest_date))
       $('.dr-year-switcher .dr-left', this.element).addClass('dr-disabled');
 
     $('.dr-day', this.element).on({
@@ -397,7 +397,7 @@
               if (moment(curr).isAfter(self.end_date)) {
                 other = other || moment(curr).add(6, 'day').startOf('day');
 
-                if (i > 5 || (next ? moment(next).isAfter(self.latest) : false)) {
+                if (i > 5 || (next ? moment(next).isAfter(self.latest_date) : false)) {
                   $(selected).addClass('dr-end');
                   other = moment(curr);
                   return false;
@@ -409,7 +409,7 @@
               if (moment(curr).isBefore(self.start_date)) {
                 other = other || moment(curr).subtract(6, 'day');
 
-                if (i > 5 || (prev ? moment(prev).isBefore(self.earliest) : false)) {
+                if (i > 5 || (prev ? moment(prev).isBefore(self.earliest_date) : false)) {
                   $(selected).addClass('dr-start');
                   other = moment(curr);
                   return false;
@@ -527,7 +527,7 @@
         current: d.isSame(current),
         selected: d.isBetween(start, end),
         date: d.toISOString(),
-        outside: d.isBefore(self.earliest),
+        outside: d.isBefore(self.earliest_date),
         fade: true
       }
     }).reverse();
@@ -549,7 +549,7 @@
         current: d.isSame(current),
         selected: d.isBetween(start, end),
         date: d.toISOString(),
-        outside: d.isAfter(self.latest),
+        outside: d.isAfter(self.latest_date),
         fade: true
       }
     });
@@ -572,7 +572,7 @@
         current: d.isSame(current),
         selected: d.isBetween(start, end),
         date: d.toISOString(),
-        outside: d.isBefore(self.earliest) || d.isAfter(self.latest)
+        outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date)
       }
     });
 
