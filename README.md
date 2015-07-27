@@ -1,6 +1,22 @@
 # [Baremetrics](https://baremetrics.com/) Date Range Picker
 _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights for Stripe. **[Get started today!](https://baremetrics.com)**_
 
+---
+
+## 1.0.1 Update
+
+- Removed global CSS reset file
+- Fixed issue with presets not respecting earliest date
+- Registered the package with Bower `bower install BaremetricsCalendar` (Thanks [Agustin Diaz](https://github.com/HiroAgustin))
+- Shifted code base to support UMD support (Thanks [Derrick Reimer](https://github.com/djreimer))
+- Added up/down keyboard support
+  - day = keystroke up/down
+  - week = hold shift + keystroke up/down
+  - month = hold meta + keystroke up/down
+- Fixed a couple minor typos hither and thither
+
+---
+
 The Baremetrics date range picker is a simplified solution for selecting both date ranges and single dates all from a single calender view. There aren't a billion options but the code is pretty basic and modular so feel free to edit however to meet your own needs.
 
 Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)  

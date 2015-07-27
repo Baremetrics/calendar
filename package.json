@@ -1,6 +1,6 @@
 {
   "name": "BaremetricsCalendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^0.0.10",
