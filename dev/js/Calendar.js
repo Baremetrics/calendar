@@ -219,6 +219,10 @@
         last_day = moment(self.latest);
       }
 
+      if (first_day.isBefore(self.earliest))
+        // first_day = moment(self.earliest);
+        return $(this).remove()
+
       $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
     });
   }
