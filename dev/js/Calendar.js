@@ -1,15 +1,15 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
-    define(['jquery', 'underscore', 'moment'], factory);
+    define(['jquery', 'moment'], factory);
   } else if (typeof exports === 'object') {
     // Node/CommonJS
-    module.exports = factory(require('jquery'), require('underscore'), require('moment'));
+    module.exports = factory(require('jquery'), require('moment'));
   } else {
     // Browser globals
-    root.Calendar = factory(jQuery, _, moment);
+    root.Calendar = factory(jQuery, moment);
   }
-}(this, function ($, _, moment) {
+}(this, function ($, moment) {
   function Calendar(settings) {
     var self = this;
 
@@ -370,7 +370,7 @@
         function setMaybeRange(type) {
           other = undefined;
 
-          $.each(_.range(6 * 7), function(i) {
+          range(6 * 7).forEach(function(i) {
             var next = selected.next().data('date');
             var prev = selected.prev().data('date');
             var curr = selected.data('date');
@@ -515,7 +515,7 @@
     // Beginning faded dates
     var d = undefined;
 
-    var start_hidden = _.map(_.range(current_month.start.day), function() {
+    var start_hidden = range(current_month.start.day).map(function() {
       if (d == undefined) {
         d = moment(first_day);
       } d = d.subtract(1, 'day');
@@ -537,7 +537,7 @@
     var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
     d = undefined;
 
-    var end_hidden = _.map(_.range(leftover), function() {
+    var end_hidden = range(leftover).map(function() {
       if (d == undefined) {
         d = moment(last_day);
       } d = d.add(1, 'day').startOf('day');
@@ -558,7 +558,7 @@
     // Actual visible dates
     d = undefined;
 
-    var visible = _.map(_.range(current_month.end.str), function() {
+    var visible = range(current_month.end.str).map(function() {
       if (d == undefined) {
         d = moment(first_day);
       } else {
@@ -585,7 +585,7 @@
     var self = this;
     var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
 
-    _.each(array, function(d, i) {
+    array.forEach(function(d, i) {
       var classString = "dr-day";
 
       if (d.fade)
@@ -695,6 +695,17 @@
         '<ul class="dr-day-list"></ul>' +
       '</div>' +
     '</div>');
+  }
+
+  // Returns a contiguous array of integers with the specified length
+  function range(length) {
+    var range = new Array(length);
+
+    for (var idx = 0; idx < length; idx++) {
+      range[idx] = idx;
+    }
+
+    return range;
   }
 
   return Calendar;

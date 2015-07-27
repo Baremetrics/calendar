@@ -107,5 +107,4 @@ I also use [pow](http://pow.cx/) and the [powder gem](https://github.com/Rodreeg
 
 ## Dependencies
 - [jQuery](https://jquery.com/)
-- [Underscore](http://underscorejs.org/)
 - [MomentJS](http://momentjs.com/)
