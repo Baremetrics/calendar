@@ -11,7 +11,8 @@
     "dev/sass/application.scss"
   ],
   "dependencies": {
-    "moment": "2.10.3"
+    "moment": "2.10.3",
+    "jquery": "2.1.4"
   },
   "moduleType": [
     "globals"
