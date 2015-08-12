@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    ghPages = require('gulp-gh-pages'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
@@ -47,6 +48,12 @@ gulp.task('img', function() {
     }))
     .on('error', handleError)
     .pipe(gulp.dest('public/img'));
+});
+
+// Publish github page
+gulp.task('deploy', function() {
+  return gulp.src('public/**/*')
+    .pipe(ghPages());
 });
 
 
