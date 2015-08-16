@@ -9,14 +9,11 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^0.0.10",
-    "gulp-combine-media-queries": "^0.1.0",
-    "gulp-css-globbing": "^0.1.2",
     "gulp-gh-pages": "^0.5.2",
-    "gulp-imagemin": "^1.0.1",
+    "gulp-less": "^3.0.3",
     "gulp-livereload": "^2.1.1",
     "gulp-minify-css": "^0.3.8",
     "gulp-newer": "^0.3.0",
-    "gulp-sass": "^0.7.3",
     "gulp-uglify": "^1.0.1"
   }
 }
