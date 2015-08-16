@@ -4,7 +4,6 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
     livereload = require('gulp-livereload'),
     newer = require('gulp-newer'),
     globbing = require('gulp-css-globbing'),
@@ -33,23 +32,6 @@ gulp.task('js', function() {
     .pipe(gulp.dest('public/js'));
 });
 
-// Main image task
-gulp.task('img', function() {
-  return gulp.src('dev/img/**/*.{jpg,jpeg,png,gif,svg,ico}')
-    .pipe(newer('public/img'))
-    .pipe(imagemin({ 
-      optimizationLevel: 5,
-      progressive: true, 
-      interlaced: true,
-      svgoPlugins: [{
-        collapseGroups: false,
-        removeViewBox: false
-      }]
-    }))
-    .on('error', handleError)
-    .pipe(gulp.dest('public/img'));
-});
-
 // Publish github page
 gulp.task('deploy', function() {
   return gulp.src('public/**/*')
@@ -59,7 +41,7 @@ gulp.task('deploy', function() {
 
 // FUNCTIONS // ---------------------------------------------------------
 // Initial start function
-gulp.task('start', ['img'], function() {
+gulp.task('start', function() {
   gulp.start('js', 'css');
 });
 
@@ -67,10 +49,9 @@ gulp.task('start', ['img'], function() {
 gulp.task('watch', ['start'], function() {
   gulp.watch('dev/sass/**/*.scss', ['css']);
   gulp.watch('dev/js/**/*.js', ['js']);
-  gulp.watch('dev/img/**/*.{jpg,jpeg,png,gif,svg,ico}', ['img']);
  
   livereload.listen();
-  gulp.watch(['public/*.html', 'public/js/**/*.js', 'public/img/**/*.{jpg,jpeg,png,gif,svg,ico}', 'public/css/*.css']).on('change', livereload.changed);
+  gulp.watch(['public/*.html', 'public/js/**/*.js', 'public/css/*.css']).on('change', livereload.changed);
 });
 
 // Default function
