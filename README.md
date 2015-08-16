@@ -8,7 +8,7 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 - Added license and repo info to the package.json
 - Removed underscore dependency
 - Added the github page publisher function to the gulpfile
-- Added a switch statement for keycode checking (Thanks again [Theodore Brown](https://github.com/theodorejb)
+- Added a switch statement for keycode checking (Thanks again [Theodore Brown](https://github.com/theodorejb))
 - Added the `'use strict'` label to the Calendar.js file
 - Cleaned out some unused gulp functions
 - Compressed the Sass folder to a single level
