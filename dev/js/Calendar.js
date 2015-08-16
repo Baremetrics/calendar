@@ -10,6 +10,7 @@
     root.Calendar = factory(jQuery, moment);
   }
 }(this, function ($, moment) {
+  'use strict';
   function Calendar(settings) {
     var self = this;
 
@@ -52,60 +53,63 @@
       },
 
       'keydown': function(event) {
-        if (event.keyCode == 13) { // Enter
-          event.preventDefault();
-          self.calendarCheckDates();
-          self.calendarSetDates();
-          self.calendarSaveDates();
-          self.calendarClose('force');
-        }
+        switch (event.keyCode) {
 
-        if (event.keyCode == 27) { // ESC
-          self.calendarSetDates();
-          self.calendarClose('force');
-        }
+          case 9: // Tab
+            if ($(self.selected).hasClass('dr-date-start')) {
+              event.preventDefault();
+              $('.dr-date-end', self.element).trigger('click');
+            } else {
+              self.calendarCheckDates();
+              self.calendarSaveDates();
+              self.calendarClose('force');
+            }
+          break;
 
-        if (event.keyCode == 9) { // Tab
-          if ($(self.selected).hasClass('dr-date-start')) {
+          case 13: // Enter
             event.preventDefault();
-            $('.dr-date-end', self.element).trigger('click');
-          } else {
             self.calendarCheckDates();
+            self.calendarSetDates();
             self.calendarSaveDates();
             self.calendarClose('force');
-          }
-        }
+          break;
 
-        if (event.keyCode == 38) { // Up
-          event.preventDefault();
-          var timeframe = 'day';
-
-          if (event.shiftKey)
-            timeframe = 'week';
-
-          if (event.metaKey)
-            timeframe = 'month';
-
-          var back = moment(self.current_date).subtract(1, timeframe);
-
-          $(this).html(back.format('MMMM D, YYYY'));
-          self.current_date = back._d;
-        }
-
-        if (event.keyCode == 40) { // Down
-          event.preventDefault();
-          var timeframe = 'day';
-
-          if (event.shiftKey)
-            timeframe = 'week';
-
-          if (event.metaKey)
-            timeframe = 'month';
-
-          var forward = moment(self.current_date).add(1, timeframe);
-
-          $(this).html(forward.format('MMMM D, YYYY'));
-          self.current_date = forward._d;
+          case 27: // ESC
+            self.calendarSetDates();
+            self.calendarClose('force');
+          break;
+          
+          case 38: // Up
+            event.preventDefault();
+            var timeframe = 'day';
+  
+            if (event.shiftKey)
+              timeframe = 'week';
+  
+            if (event.metaKey)
+              timeframe = 'month';
+  
+            var back = moment(self.current_date).subtract(1, timeframe);
+  
+            $(this).html(back.format('MMMM D, YYYY'));
+            self.current_date = back._d;
+          break;
+          
+          case 40: // Down
+            event.preventDefault();
+            var timeframe = 'day';
+  
+            if (event.shiftKey)
+              timeframe = 'week';
+  
+            if (event.metaKey)
+              timeframe = 'month';
+  
+            var forward = moment(self.current_date).add(1, timeframe);
+  
+            $(this).html(forward.format('MMMM D, YYYY'));
+            self.current_date = forward._d;
+          break;
         }
       }
     });
@@ -220,7 +224,6 @@
       }
 
       if (first_day.isBefore(self.earliest_date))
-        // first_day = moment(self.earliest_date);
         return $(this).remove()
 
       $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
@@ -368,7 +371,7 @@
         $('.dr-selected', self.element).css('background-color', 'transparent');
 
         function setMaybeRange(type) {
-          other = undefined;
+          var other = undefined;
 
           range(6 * 7).forEach(function(i) {
             var next = selected.next().data('date');
@@ -384,16 +387,10 @@
             if (!next)
               next = curr;
 
-            if (type == 'start')
+            if (type == 'start') {
               if (moment(next).isSame(self.end_date))
                 return false;
-
-            if (type == 'end')
-              if (moment(prev).isSame(self.start_date))
-                return false;
-
-
-            if (type == 'start') {
+              
               if (moment(curr).isAfter(self.end_date)) {
                 other = other || moment(curr).add(6, 'day').startOf('day');
 
@@ -403,9 +400,12 @@
                   return false;
                 }
               }
-            }
 
-            if (type == 'end') {
+              selected = selected.next().addClass('dr-maybe');
+            } else if (type == 'end') {
+              if (moment(prev).isSame(self.start_date))
+                return false;
+
               if (moment(curr).isBefore(self.start_date)) {
                 other = other || moment(curr).subtract(6, 'day');
 
@@ -415,14 +415,9 @@
                   return false;
                 }
               }
-            }
 
-
-            if (type == 'start')
-              selected = selected.next().addClass('dr-maybe');
-
-            if (type == 'end')
               selected = selected.prev().addClass('dr-maybe');
+            }
           });
         }
       },
@@ -495,7 +490,7 @@
 
   Calendar.prototype.calendarArray = function(start, end, current, switcher) {
     var self = this;
-    var current = current || start || end;
+    current = current || start || end;
 
     var first_day = moment(switcher || current).startOf('month');
     var last_day = moment(switcher || current).endOf('month');
@@ -572,7 +567,8 @@
         current: d.isSame(current),
         selected: d.isBetween(start, end),
         date: d.toISOString(),
-        outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date)
+        outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date),
+        fade: false
       }
     });
 
