@@ -1,3 +1,5 @@
+'use strict';
+
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -10,7 +12,6 @@
     root.Calendar = factory(jQuery, moment);
   }
 }(this, function ($, moment) {
-  'use strict';
   function Calendar(settings) {
     var self = this;
 
