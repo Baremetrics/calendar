@@ -1,23 +1,19 @@
 var gulp = require('gulp'),
     ghPages = require('gulp-gh-pages'),
-    sass = require('gulp-sass'),
+    less = require('gulp-less'),
     autoprefixer = require('gulp-autoprefixer'),
     minifycss = require('gulp-minify-css'),
     uglify = require('gulp-uglify'),
     livereload = require('gulp-livereload'),
-    newer = require('gulp-newer'),
-    globbing = require('gulp-css-globbing'),
-    cmq = require('gulp-combine-media-queries');
+    newer = require('gulp-newer');
 
 
 // ROOT TASKS // ---------------------------------------------------------
 // Main style task  
 gulp.task('css', function() {
-  return gulp.src('dev/sass/application.scss')
-    .pipe(globbing({extensions: '.scss'}))
-    .pipe(sass())
+  return gulp.src('dev/less/application.less')
+    .pipe(less())
     .on('error', handleError)
-    .pipe(cmq()) // combine all @media queries into the page base
     .pipe(autoprefixer({cascade: false})) // auto prefix
     .pipe(minifycss()) // minify everything
     .pipe(gulp.dest('public/css'));

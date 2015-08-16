@@ -1,3 +1,12 @@
+@blue: #2693d5;
+@bluemoon: #bfdeec;
+@moon: #ebf1f4;
+@white: #fff;
+@rat: #9ba3a7;
+@mouse: #c3cacd;
+
+@radius: 5px;
+
 .daterange {
   position: relative;
 
@@ -14,30 +23,30 @@
   }
   .dr-input {
     display: flex;
-    border: 1px solid $mouse;
-    border-radius: $radius;
-    background-color: $white;
+    border: 1px solid @mouse;
+    border-radius: @radius;
+    background-color: @white;
     position: relative;
     z-index: 5;
     overflow: hidden;
 
     &:hover {
-      border-color: $blue;
+      border-color: @blue;
     }
     &.active {
-      box-shadow: 0 0 0 3px rgba($bluemoon, 0.8);
-      border-color: $blue;
+      box-shadow: 0 0 0 3px fade(@bluemoon, 80%);
+      border-color: @blue;
     }
     .dr-dates {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 rem(24) 0 rem(12);
+      padding: 0 24px 0 12px;
       min-width: 230px;
 
       .dr-date {
-        font-size: rem(15);
-        padding: rem(10.5 0);
+        font-size: 15px;
+        padding: 10.5px 0;
         text-align: center;
         white-space: nowrap;
         overflow: hidden;
@@ -45,11 +54,11 @@
         outline: none;
 
         &:hover, &:focus, &.active {
-          color: $blue;
+          color: @blue;
         }
       }
       .dr-dates-dash {
-        color: $mouse;
+        color: @mouse;
         position: relative;
         top: -2px;
         padding: 0 5px;
@@ -58,8 +67,8 @@
       }
     }
     .dr-presets {
-      width: rem(35);
-      border-left: 1px solid $mouse;
+      width: 35px;
+      border-left: 1px solid @mouse;
       flex-shrink: 0;
       cursor: pointer;
       display: flex;
@@ -69,16 +78,16 @@
       justify-content: center;
 
       &:hover, &.active {
-        border-color: $blue;
-        box-shadow: inset 0 2px 3px $moon;
+        border-color: @blue;
+        box-shadow: inset 0 2px 3px @moon;
 
         .dr-preset-bar {
-          background-color: $blue;
+          background-color: @blue;
         }
       }
       .dr-preset-bar {
         height: 2px;
-        background-color: $mouse;
+        background-color: @mouse;
         margin: 1px 0 1px 25%;
 
         &:nth-child(1) {
@@ -99,10 +108,10 @@
     position: absolute;
 
     .dr-calendar {
-      background-color: $white;
-      font-size: rem(15);
-      box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      background-color: @white;
+      font-size: 15px;
+      box-shadow: 0 0 5px @mouse;
+      border-radius: 0 0 @radius @radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -115,28 +124,28 @@
       .dr-range-switcher {
         display: flex;
         justify-content: space-between;
-        padding: rem(6 8);
-        font-size: rem(14);
+        padding: 6px 8px;
+        font-size: 14px;
 
         .dr-switcher {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border: 1px solid rgba($mouse, 0.5);
-          border-radius: $radius;
-          height: rem(25);
+          border: 1px solid fade(@mouse, 50%);
+          border-radius: @radius;
+          height: 25px;
 
           i {
-            color: $mouse;
+            color: @mouse;
             position: relative;
             top: -1px;
             cursor: pointer;
-            font-size: rem(12);
+            font-size: 12px;
             height: 100%;
             width: 20px;
 
             &:hover:before, &:hover:after {
-              background-color: $blue;
+              background-color: @blue;
             }
             &.dr-disabled {
               pointer-events: none;
@@ -147,31 +156,31 @@
               position: absolute;
               width: 7px;
               height: 2px;
-              background-color: $mouse;
+              background-color: @mouse;
               border-radius: 1px;
               left: 50%;
             }
             &.dr-left:before {
-              top: calc(50% - 2px);
+              top: calc(~"50% - 2px");
               transform: translate(-50%, -50%) rotate(-45deg);
             }
             &.dr-left:after {
-              top: calc(50% + 2px);
+              top: calc(~"50% + 2px");
               transform: translate(-50%, -50%) rotate(45deg);
             }
             &.dr-right:before {
-              top: calc(50% - 2px);
+              top: calc(~"50% - 2px");
               transform: translate(-50%, -50%) rotate(45deg);
             }
             &.dr-right:after {
-              top: calc(50% + 2px);
+              top: calc(~"50% + 2px");
               transform: translate(-50%, -50%) rotate(-45deg);
             }
           }
         }
         .dr-month-switcher {
           width: 100%;
-          margin-right: rem(6);
+          margin-right: 6px;
         }
         .dr-year-switcher {
           min-width: 80px;
@@ -179,81 +188,81 @@
       }
       .dr-days-of-week-list {
         display: flex;
-        background-color: $moon;
-        font-size: rem(10);
-        color: $rat;
-        padding: rem(5 0);
-        border: 1px solid rgba($mouse, 0.5);
+        background-color: @moon;
+        font-size: 10px;
+        color: @rat;
+        padding: 5px 0;
+        border: 1px solid fade(@mouse, 50%);
         border-left: none;
         border-right: none;
 
         .dr-day-of-week {
-          width: calc(100% / 7);
+          width: calc(~"100% / 7");
           text-align: center;
         }
       }
       .dr-day-list {
         display: flex;
         flex-wrap: wrap;
-        font-size: rem(15);
+        font-size: 15px;
 
         .dr-day {
-          padding: rem(5);
+          padding: 5px;
           text-align: center;
-          width: calc(100% / 7);
+          width: calc(~"100% / 7");
           cursor: pointer;
 
           &.dr-hover:not(.dr-current) {
-            background-color: $moon !important;
+            background-color: @moon !important;
           }
           &.dr-hover-before {
-            border-left: 2px solid $blue !important;
+            border-left: 2px solid @blue !important;
             border-radius: 2px 0 0 2px;
-            padding-left: rem(3) !important;
+            padding-left: 3px !important;
           }
           &.dr-hover-after {
-            border-right: 2px solid $blue !important;
+            border-right: 2px solid @blue !important;
             border-radius: 0 2px 2px 0;
-            padding-right: rem(3) !important;
+            padding-right: 3px !important;
           }
         }
         .dr-selected, .dr-start, .dr-end {
-          background-color: $moon;
+          background-color: @moon;
         }
         .dr-maybe {
-          background-color: $moon !important;
+          background-color: @moon !important;
         }
         .dr-fade {
-          color: $mouse;
+          color: @mouse;
         }
         .dr-start {
-          border-left: 2px solid $blue;
+          border-left: 2px solid @blue;
           border-radius: 2px 0 0 2px;
-          padding-left: rem(3);
+          padding-left: 3px;
         }
         .dr-end {
-          border-right: 2px solid $blue;
+          border-right: 2px solid @blue;
           border-radius: 0 2px 2px 0;
-          padding-right: rem(3);
+          padding-right: 3px;
         }
         .dr-current {
-          color: $blue !important;
-          background-color: rgba($blue, 0.2) !important;
+          color: @blue !important;
+          background-color: fade(@blue, 20%) !important;
         }
         .dr-outside {
           pointer-events: none;
           cursor: default;
-          color: rgba($mouse, 0.5);
+          color: fade(@mouse, 50%);
         }
       }
     }
 
     .dr-preset-list {
-      background-color: $white;
-      color: $blue;
-      font-size: rem(15);
-      box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      background-color: @white;
+      color: @blue;
+      font-size: 15px;
+      box-shadow: 0 0 5px @mouse;
+      border-radius: 0 0 @radius @radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -265,18 +274,18 @@
     .dr-list-item {
       display: flex;
       align-items: flex-end;
-      padding: rem(12 10);
-      border-bottom: 1px solid $moon;
+      padding: 12px 10px;
+      border-bottom: 1px solid @moon;
       cursor: pointer;
       white-space: nowrap;
 
       &:hover {
-        background-color: $moon;
+        background-color: @moon;
       }
       .dr-item-aside {
-        color: $rat;
-        font-size: rem(12);
-        margin-left: rem(5);
+        color: @rat;
+        font-size: 12px;
+        margin-left: 5px;
       }
     }
   }
@@ -294,7 +303,7 @@
 
       .dr-date {
         width: 100%;
-        padding: rem(10.5 12);
+        padding: 10.5px 12px;
         text-align: left;
       }
     }
