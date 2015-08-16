@@ -1,3 +1,17 @@
+// Colors
+$blue: #2693D5;
+$bluemoon: #BFDEEC;
+$moon: #EBF1F4;
+$white: #FFFFFF;
+$rat: #9BA3A7;
+$mouse: #C3CACD;
+
+// Variables
+$font-family: "proxima-nova", Proxima Nova, "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+$rem-base: 16px;
+$radius: 5px;
+
+// Functions
 @function strip-unit($num) {
   @return $num / ($num * 0 + 1);
 }

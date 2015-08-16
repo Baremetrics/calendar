@@ -1,5 +1,5 @@
 @charset "UTF-8";
 
-@import "components/*";
-@import "objects/*";
-@import "pages/*";
+@import "color-var-func",
+        "daterange",
+        "home";
