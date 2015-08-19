@@ -109,6 +109,8 @@ new Calendar({
   - The date to start the selection on for the calendar
 - end_date
   - The date to end the selection on for the calendar
+- same_day
+  - Allow selection of a single day range
 
 ---
 \* required

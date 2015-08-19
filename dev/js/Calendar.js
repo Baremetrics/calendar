@@ -31,6 +31,7 @@
     this.current_date =   settings.current_date ? new Date(settings.current_date) 
                           : (this.type == 'single' ? new Date() : null);
     this.callback =       settings.callback || this.calendarSetDates;
+    this.same_day =       settings.same_day || false;
     
     this.calendarHTML(this.type);
 
@@ -333,7 +334,7 @@
     if ((s || e) &&
         (moment(s).isAfter(e) ||
         moment(e).isBefore(s) ||
-        moment(s).isSame(e) ||
+        (moment(s).isSame(e) && !this.same_day) ||
         moment(s).isBefore(this.earliest_date) ||
         moment(e).isAfter(this.latest_date))) {
       return this.calendarSetDates();
@@ -366,7 +367,7 @@
     var other;
     var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
 
-    this.selected = selected || this.selected;
+    self.selected = this.selected = selected || this.selected;
 
     if (this.presetIsOpen == true)
       this.presetToggle();
@@ -407,13 +408,13 @@
         var end_date = moment(self.end_date);
         var current_date = moment(self.current_date);
 
-        if (start_date.isSame(current_date)) {
+        if (self.selected.classList.contains("dr-date-start")) {
           selected.addClass('dr-hover dr-hover-before');
           $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
           setMaybeRange('start');
         }
 
-        if (end_date.isSame(current_date)) {
+        if (self.selected.classList.contains("dr-date-end")) {
           selected.addClass('dr-hover dr-hover-after');
           $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
           setMaybeRange('end');
@@ -442,7 +443,7 @@
               next = curr;
 
             if (type == 'start') {
-              if (moment(next).isSame(self.end_date))
+              if (moment(next).isSame(self.end_date) || (self.same_day && moment(curr).isSame(self.end_date)))
                 return false;
               
               if (moment(curr).isAfter(self.end_date)) {
@@ -457,7 +458,7 @@
 
               selected = selected.next().addClass('dr-maybe');
             } else if (type == 'end') {
-              if (moment(prev).isSame(self.start_date))
+              if (moment(prev).isSame(self.start_date) || (self.same_day && moment(curr).isSame(self.start_date)))
                 return false;
 
               if (moment(curr).isBefore(self.start_date)) {
