@@ -11,7 +11,7 @@
     // Browser globals
     root.Calendar = factory(jQuery, moment);
   }
-}(this, function ($, moment) {
+} (this, function ($, moment) {
   function Calendar(settings) {
     var self = this;
 
@@ -252,7 +252,7 @@
 
 
   Calendar.prototype.calendarCheckDates = function() {
-    var regex = /(?!<=\d)(st|nd|rd|th)/;
+    var regex = /(?!\d)(st|nd|rd|th)/g;
     var s = $('.dr-date-start', this.element).html();
     var e = $('.dr-date-end', this.element).html();
     var c = $(this.selected).html();
@@ -290,32 +290,53 @@
       c = c_array.join(' ');
     }
 
-    if (s == 'today' || s == 'now') {
+    s = new Date(s) == 'Invalid Date' ? s : new Date(s);
+    e = new Date(e) == 'Invalid Date' ? e : new Date(e);
+    c = new Date(c) == 'Invalid Date' ? c : new Date(c);
+
+    // Today
+    if (s == 'today' || s == 'now')
       s = new Date();
-    } else {
-      s = new Date(s);
-    }
 
-    if (e == 'today' || e == 'now') {
+    if (e == 'today' || e == 'now')
       e = new Date();
-    } else {
-      e = new Date(e);
-    }
 
-    if (c == 'today' || c == 'now') {
+    if (c == 'today' || c == 'now')
       c = new Date();
-    } else {
-      c = new Date(c);
-    }
 
-    if (moment(s).isAfter(e) ||
+    // Earliest
+    if (s == 'earlie')
+      s = this.earliest_date;
+
+    if (e == 'earlie')
+      e = this.earliest_date;
+
+    if (c == 'earlie')
+      c = this.earliest_date;
+
+    // Latest
+    if (s == 'late')
+      s = this.latest_date;
+
+    if (e == 'late')
+      e = this.latest_date;
+
+    if (c == 'late')
+      c = this.latest_date;
+
+    console.log(s +" || "+ e +" || "+ c);
+
+    // Is this a valid date?
+    if ((s || e) &&
+        (moment(s).isAfter(e) ||
         moment(e).isBefore(s) ||
         moment(s).isSame(e) ||
         moment(s).isBefore(this.earliest_date) ||
-        moment(e).isAfter(this.latest_date)) {
+        moment(e).isAfter(this.latest_date))) {
       return this.calendarSetDates();
     }
 
+    // Push and save if it's valid
     this.start_date = s == 'Invalid Date' ? this.start_date : s;
     this.end_date = e == 'Invalid Date' ? this.end_date : e;
     this.current_date = c == 'Invalid Date' ? this.current_date : c;

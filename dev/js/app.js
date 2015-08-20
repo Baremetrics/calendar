@@ -13,6 +13,6 @@ new Calendar({
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
     
-    console.log('Start Date: '+ start +'\nEnd Date: '+ end);
+    // console.log('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
