@@ -5,8 +5,8 @@ new Calendar({
   
 new Calendar({
   element: $('.daterange--double'),
-  earliest_date: new Date('January 1, 2000'),
-  latest_date: new Date(),
+  earliest_date: moment(new Date('January 1, 2000')).startOf('day'),
+  latest_date: moment(new Date()).endOf('day'),
   start_date: new Date('May 1, 2015'),
   end_date: new Date('May 31, 2015'),
   callback: function() {

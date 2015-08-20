@@ -290,9 +290,23 @@
       c = c_array.join(' ');
     }
 
-    s = new Date(s);
-    e = new Date(e);
-    c = new Date(c);
+    if (s == 'today' || s == 'now') {
+      s = new Date();
+    } else {
+      s = new Date(s);
+    }
+
+    if (e == 'today' || e == 'now') {
+      e = new Date();
+    } else {
+      e = new Date(e);
+    }
+
+    if (c == 'today' || c == 'now') {
+      c = new Date();
+    } else {
+      c = new Date(c);
+    }
 
     if (moment(s).isAfter(e) ||
         moment(e).isBefore(s) ||
@@ -372,7 +386,7 @@
         $('.dr-selected', self.element).css('background-color', 'transparent');
 
         function setMaybeRange(type) {
-          var other = undefined;
+          other = undefined;
 
           range(6 * 7).forEach(function(i) {
             var next = selected.next().data('date');
