@@ -6,6 +6,7 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 ## 1.0.3 Update
 
 - Added basic shorthand keyword support
+  - **[IMPORTANT] You can now just include plain date strings in the Calendar object if you want to now.**
   - `now` or `today` to set date to today's date
   - `earliest` or `latest` to set date to the preset earliest or latest dates respectively
   - `[number] [interval] [ago/ahead]` to advance or regress the date based off the currently selected date (i.e. `1 month ago` on a date of August 1 would result in a date of July 1)
@@ -63,20 +64,20 @@ Next you've just gotta create a `new Calendar` instance.
 ```js
 new Calendar({
   element: $('.daterange--single'),
-  current_date: new Date('June 15, 2015')
+  current_date: 'June 15, 2015'
 });
 
 new Calendar({
   element: $('.daterange--double'),
-  earliest_date: new Date('January 1, 2000'),
+  earliest_date: 'January 1, 2000',
   latest_date: new Date(),
-  start_date: new Date('May 1, 2015'),
-  end_date: new Date('May 31, 2015'),
+  start_date: 'May 1, 2015',
+  end_date: 'May 31, 2015',
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
     
-    console.log('Start Date: '+ start +'\nEnd Date: '+ end);
+    console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
 ```
