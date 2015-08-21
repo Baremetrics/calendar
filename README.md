@@ -5,7 +5,7 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 
 ## 1.0.3 Update
 
-- **[IMPORTANT] You can now just include plain date strings in the Calendar object if you want to now.**
+- **[IMPORTANT] You may now use plain date strings in the Calendar object if you want to.**
 - Added basic shorthand keyword support
   - `now` or `today` to set date to today's date
   - `earliest` or `latest` to set date to the preset earliest or latest dates respectively
