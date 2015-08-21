@@ -5,11 +5,11 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 
 ## 1.0.3 Update
 
-- **[IMPORTANT] You may now use plain date strings in the Calendar object if you want to.**
 - Added basic shorthand keyword support
   - `now` or `today` to set date to today's date
   - `earliest` or `latest` to set date to the preset earliest or latest dates respectively
   - `[number] [interval] [ago/ahead]` to advance or regress the date based off the currently selected date (i.e. `1 month ago` on a date of August 1 would result in a date of July 1)
+- You may now use plain date strings in the Calendar object
 - Fixed a bug where auto selecting a week range after or before the current selection was getting suppressed and reset to the previous dates
 - Cleaned and dried out a couple verbose functions
 
