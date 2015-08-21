@@ -270,13 +270,13 @@
     // Modify strings via some specific keywords to create valid dates
     // Today
     if (s == 'today' || s == 'now')
-      s = new Date();
+      s = moment().isAfter(this.latest_date) ? this.latest_date : new Date();
 
     if (e == 'today' || e == 'now')
-      e = new Date();
+      e = moment().isAfter(this.latest_date) ? this.latest_date : new Date();
 
     if (c == 'today' || c == 'now')
-      c = new Date();
+      c = moment().isAfter(this.latest_date) ? this.latest_date : new Date();
 
     // Earliest
     if (s == 'earliest')
