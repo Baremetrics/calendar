@@ -252,29 +252,58 @@
 
 
   Calendar.prototype.calendarCheckDates = function() {
-    var regex = /(?!\d)(st|nd|rd|th)/g;
     var s = $('.dr-date-start', this.element).html();
     var e = $('.dr-date-end', this.element).html();
     var c = $(this.selected).html();
-    var s_array = [];
-    var e_array = [];
-    var c_array = [];
+    var regex = /(?!<=\d)(st|nd|rd|th)/;
 
-    if (s) {
-      s = s.replace(regex, '');
-      s_array = s.split(' ');
-    }
+    // Take away ordinals
+    var s_array = s ? s.replace(regex, '').split(' ') : [];
+    var e_array = e ? e.replace(regex, '').split(' ') : [];
+    var c_array = c ? c.replace(regex, '').split(' ') : [];
 
-    if (e) {
-      e = e.replace(regex, '');
-      e_array = e.split(' ');
-    }
+    // Modify strings via some specific keywords to create valid dates
+    // Today
+    if (s == 'today' || s == 'now')
+      s = new Date();
 
-    if (c) {
-      c = c.replace(regex, '');
-      c_array = c.split(' ');
-    }
+    if (e == 'today' || e == 'now')
+      e = new Date();
 
+    if (c == 'today' || c == 'now')
+      c = new Date();
+
+    // Earliest
+    if (s == 'earliest')
+      s = this.earliest_date;
+
+    if (e == 'earliest')
+      e = this.earliest_date;
+
+    if (c == 'earliest')
+      c = this.earliest_date;
+
+    // Latest
+    if (s == 'latest')
+      s = this.latest_date;
+
+    if (e == 'latest')
+      e = this.latest_date;
+
+    if (c == 'latest')
+      c = this.latest_date;
+
+    // Convert string to a date if keyword ago or ahead exists
+    if (s && (s.toString().indexOf('ago') != -1 || s.toString().indexOf('ahead') != -1))
+      s = this.stringToDate(s);
+
+    if (e && (e.toString().indexOf('ago') != -1 || e.toString().indexOf('ahead') != -1))
+      e = this.stringToDate(e);
+
+    if (c && (c.toString().indexOf('ago') != -1 || c.toString().indexOf('ahead') != -1))
+      c = this.stringToDate(c);
+
+    // Add current year if year is not included
     if (s_array.length == 2) {
       s_array.push(moment().format('YYYY'))
       s = s_array.join(' ');
@@ -289,42 +318,11 @@
       c_array.push(moment().format('YYYY'))
       c = c_array.join(' ');
     }
-
-    s = new Date(s) == 'Invalid Date' ? s : new Date(s);
-    e = new Date(e) == 'Invalid Date' ? e : new Date(e);
-    c = new Date(c) == 'Invalid Date' ? c : new Date(c);
-
-    // Today
-    if (s == 'today' || s == 'now')
-      s = new Date();
-
-    if (e == 'today' || e == 'now')
-      e = new Date();
-
-    if (c == 'today' || c == 'now')
-      c = new Date();
-
-    // Earliest
-    if (s == 'earlie')
-      s = this.earliest_date;
-
-    if (e == 'earlie')
-      e = this.earliest_date;
-
-    if (c == 'earlie')
-      c = this.earliest_date;
-
-    // Latest
-    if (s == 'late')
-      s = this.latest_date;
-
-    if (e == 'late')
-      e = this.latest_date;
-
-    if (c == 'late')
-      c = this.latest_date;
-
-    console.log(s +" || "+ e +" || "+ c);
+    
+    // Finally set all strings as dates
+    s = new Date(s);
+    e = new Date(e);
+    c = new Date(c);
 
     // Is this a valid date?
     if ((s || e) &&
@@ -336,10 +334,25 @@
       return this.calendarSetDates();
     }
 
-    // Push and save if it's valid
+    // Push and save if it's valid otherwise return to previous state
     this.start_date = s == 'Invalid Date' ? this.start_date : s;
     this.end_date = e == 'Invalid Date' ? this.end_date : e;
     this.current_date = c == 'Invalid Date' ? this.current_date : c;
+  }
+
+
+  Calendar.prototype.stringToDate = function(str) {
+    var date_arr = str.split(' ');
+
+    if (date_arr[2] == 'ago') {
+      return moment(this.current_date).subtract(date_arr[0], date_arr[1]);
+    } 
+
+    else if (date_arr[2] == 'ahead') {
+      return moment(this.current_date).add(date_arr[0], date_arr[1]);
+    }
+
+    return this.current_date;
   }
 
 
@@ -409,7 +422,7 @@
         function setMaybeRange(type) {
           other = undefined;
 
-          range(6 * 7).forEach(function(i) {
+          self.range(6 * 7).forEach(function(i) {
             var next = selected.next().data('date');
             var prev = selected.prev().data('date');
             var curr = selected.data('date');
@@ -546,7 +559,7 @@
     // Beginning faded dates
     var d = undefined;
 
-    var start_hidden = range(current_month.start.day).map(function() {
+    var start_hidden = this.range(current_month.start.day).map(function() {
       if (d == undefined) {
         d = moment(first_day);
       } d = d.subtract(1, 'day');
@@ -568,7 +581,7 @@
     var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
     d = undefined;
 
-    var end_hidden = range(leftover).map(function() {
+    var end_hidden = this.range(leftover).map(function() {
       if (d == undefined) {
         d = moment(last_day);
       } d = d.add(1, 'day').startOf('day');
@@ -589,7 +602,7 @@
     // Actual visible dates
     d = undefined;
 
-    var visible = range(current_month.end.str).map(function() {
+    var visible = this.range(current_month.end.str).map(function() {
       if (d == undefined) {
         d = moment(first_day);
       } else {
@@ -729,8 +742,8 @@
     '</div>');
   }
 
-  // Returns a contiguous array of integers with the specified length
-  function range(length) {
+
+  Calendar.prototype.range = function(length) {
     var range = new Array(length);
 
     for (var idx = 0; idx < length; idx++) {
@@ -739,6 +752,7 @@
 
     return range;
   }
+
 
   return Calendar;
 }));
