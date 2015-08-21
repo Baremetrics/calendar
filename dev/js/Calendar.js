@@ -20,13 +20,18 @@
     this.element =        settings.element || $('.daterange');
     this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
     this.selected =       null;
-    this.earliest_date =  moment(new Date(settings.earliest_date)).startOf('day') || moment(new Date('January 1, 1900')).startOf('day');
-    this.latest_date =    moment(new Date(settings.latest_date)).endOf('day') || moment(new Date('December 31, 2900')).endOf('day');
-    this.end_date =       new Date(settings.end_date) || (this.type == 'double' ? new Date() : null);
-    this.start_date =     new Date(settings.start_date) || (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
-    this.current_date =   new Date(settings.current_date) || (this.type == 'single' ? new Date() : null);
+    this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day') 
+                          : moment(new Date('January 1, 1900')).startOf('day');
+    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).endOf('day') 
+                          : moment(new Date('December 31, 2900')).endOf('day');
+    this.end_date =       settings.end_date ? new Date(settings.end_date) 
+                          : (this.type == 'double' ? new Date() : null);
+    this.start_date =     settings.start_date ? new Date(settings.start_date) 
+                          : (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
+    this.current_date =   settings.current_date ? new Date(settings.current_date) 
+                          : (this.type == 'single' ? new Date() : null);
     this.callback =       settings.callback || this.calendarSetDates;
-
+    
     this.calendarHTML(this.type);
 
     $('.dr-presets', this.element).click(function() {
