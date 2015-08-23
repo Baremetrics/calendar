@@ -515,6 +515,7 @@
       .slideDown(200);
     $('.dr-input', this.element).addClass('active');
     $(selected).addClass('active').focus();
+    $(this.element).addClass('dr-open');
 
     this.calIsOpen = true;
   }
@@ -537,6 +538,7 @@
     }
 
     $('.dr-input, .dr-date', this.element).removeClass('active');
+    $(this.element).removeClass('dr-open');
 
     this.calIsOpen = false;
   }

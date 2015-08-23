@@ -94,6 +94,9 @@
     }
   }
 
+  &.dr-open {
+    z-index: 10;
+  }
 
   .dr-selections {
     position: absolute;
@@ -298,5 +301,5 @@
         text-align: left;
       }
     }
-  } 
+  }
 }
