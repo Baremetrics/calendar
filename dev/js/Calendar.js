@@ -193,8 +193,8 @@
       this.calendarClose();
 
     $('.dr-preset-list', this.element).slideToggle(200);
-    $('.dr-input', this.element).toggleClass('active');
-    $('.dr-presets', this.element).toggleClass('active');
+    $('.dr-input', this.element).toggleClass('dr-active');
+    $('.dr-presets', this.element).toggleClass('dr-active');
   }
 
 
@@ -513,9 +513,9 @@
     $('.dr-calendar', this.element)
       .css('width', cal_width)
       .slideDown(200);
-    $('.dr-input', this.element).addClass('active');
-    $(selected).addClass('active').focus();
-    $(this.element).addClass('dr-open');
+    $('.dr-input', this.element).addClass('dr-active');
+    $(selected).addClass('dr-active').focus();
+    $(this.element).addClass('dr-active');
 
     this.calIsOpen = true;
   }
@@ -537,8 +537,8 @@
       return false;
     }
 
-    $('.dr-input, .dr-date', this.element).removeClass('active');
-    $(this.element).removeClass('dr-open');
+    $('.dr-input, .dr-date', this.element).removeClass('dr-active');
+    $(this.element).removeClass('dr-active');
 
     this.calIsOpen = false;
   }
