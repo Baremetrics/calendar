@@ -272,7 +272,7 @@
     // Year to date
     if (s == 'ytd' || e == 'ytd') {
       s = moment().startOf('year');
-      e = this.latest_date;
+      e = moment().isAfter(this.latest_date) ? this.latest_date : new Date();
     }
 
     // Today
