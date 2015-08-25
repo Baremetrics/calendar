@@ -269,6 +269,12 @@
     var c_array = c ? c.replace(regex, '').split(' ') : [];
 
     // Modify strings via some specific keywords to create valid dates
+    // Year to date
+    if (s == 'ytd' || e == 'ytd') {
+      s = moment().startOf('year');
+      e = this.latest_date;
+    }
+
     // Today
     if (s == 'today' || s == 'now')
       s = moment().isAfter(this.latest_date) ? this.latest_date : new Date();
