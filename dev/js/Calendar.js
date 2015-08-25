@@ -367,7 +367,7 @@
     var other;
     var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
 
-    self.selected = this.selected = selected || this.selected;
+    this.selected = selected || this.selected;
 
     if (this.presetIsOpen == true)
       this.presetToggle();
@@ -408,13 +408,13 @@
         var end_date = moment(self.end_date);
         var current_date = moment(self.current_date);
 
-        if (self.selected.classList.contains("dr-date-start")) {
+        if ($(self.selected).hasClass("dr-date-start")) {
           selected.addClass('dr-hover dr-hover-before');
           $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
           setMaybeRange('start');
         }
 
-        if (self.selected.classList.contains("dr-date-end")) {
+        if ($(self.selected).hasClass("dr-date-end")) {
           selected.addClass('dr-hover dr-hover-after');
           $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
           setMaybeRange('end');
