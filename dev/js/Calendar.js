@@ -34,7 +34,7 @@
     this.same_day =       settings.same_day || false;
 
     // These display formats denote the format for the visualisation
-    this.display_format = settings.display_format || 'D MMMM [x] YYYY';
+    this.display_format = settings.display_format || 'MMMM D, YYYY';
     this.display_year_format = settings.display_year_format || 'YYYY';
     this.display_month_format = settings.display_month_format || 'MMMM';
 
