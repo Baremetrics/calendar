@@ -24,14 +24,13 @@
 
     this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
 
-    this.format = {
-      'input': settings.format ? settings.format.input : 'MMMM D, YYYY',
-      'preset': settings.format ? settings.format.preset : 'll',
-      'jump_month': settings.format ? settings.format.jump_month : 'MMMM',
-      'jump_year': settings.format ? settings.format.jump_year : 'YYYY'
-    };
+    this.format = settings.format || {};
+    this.format.input =   settings.format && settings.format.input || 'MMMM D, YYYY';
+    this.format.preset =  settings.format && settings.format.preset || 'll';
+    this.format.jump_month = settings.format && settings.format.jump_month || 'MMMM';
+    this.format.jump_year = settings.format && settings.format.jump_year || 'YYYY';
 
-    this.days_array =     settings.days_array || ['S','M','T','W','T','F','S'];
+    this.days_array =     settings.days_array && settings.days_array.length == 7 ? settings.days_array : ['S','M','T','W','T','F','S'];
 
     this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
                           : moment(new Date('January 1, 1900')).startOf('day');
