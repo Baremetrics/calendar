@@ -27,6 +27,7 @@ new Calendar({
   }
 });
 ```
+- Added support for manual date entry outside the range.. will now clamp back/forward to latest/earliest dates rather then just resetting. Yay!
 - On the double calendar, callbacks now submit on a click event outside the calendar if a valid date has been chosen for the first date. No need to pick the same second date just to submit the changes!
 - A few more minor bug fixes and improvements
 
