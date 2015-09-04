@@ -162,6 +162,10 @@
           self.presetToggle();
 
         if (self.calIsOpen) {
+
+          if ($(self.selected).hasClass("dr-date-end"))
+            self.calendarSaveDates();
+
           self.calendarSetDates();
           self.calendarClose('force');
         }
@@ -170,16 +174,16 @@
       event.stopPropagation();
     });
 
-    $(this.element).add('.dr-date', this.element).focus(function(event) {
-      $('html').one('click',function() {
-        if (self.calIsOpen) {
-          self.calendarSetDates();
-          self.calendarClose('force');
-        }
-      });
+    // $(this.element).add('.dr-date', this.element).focus(function(event) {
+    //   $('html').one('click',function() {
+    //     if (self.calIsOpen) {
+    //       self.calendarSetDates();
+    //       self.calendarClose('force');
+    //     }
+    //   });
 
-      event.stopPropagation();
-    });
+    //   event.stopPropagation();
+    // });
   }
 
 
@@ -536,7 +540,7 @@
     var self = this;
 
     if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-      $('.dr-date', this.element).blur();
+      // $('.dr-date', this.element).blur();
       $('.dr-calendar', this.element).slideUp(200, function() {
         $('.dr-day', self.element).remove();
       });
