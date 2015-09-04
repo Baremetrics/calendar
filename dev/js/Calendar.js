@@ -79,9 +79,12 @@
           case 9: // Tab
             if ($(self.selected).hasClass('dr-date-start')) {
               event.preventDefault();
+              self.calendarCheckDates();
+              self.calendarSetDates();
               $('.dr-date-end', self.element).trigger('click');
             } else {
               self.calendarCheckDates();
+              self.calendarSetDates();
               self.calendarSaveDates();
               self.calendarClose('force');
             }
@@ -168,6 +171,7 @@
       $('.dr-date-start', self.element).trigger('click');
     });
 
+    // Once you click into a selection.. this lets you click out
     $(this.element).click(function(event) {
       $('html').one('click',function() {
         if (self.presetIsOpen)
@@ -178,6 +182,18 @@
           if ($(self.selected).hasClass("dr-date-end"))
             self.calendarSaveDates();
 
+          self.calendarSetDates();
+          self.calendarClose('force');
+        }
+      });
+
+      event.stopPropagation();
+    });
+
+    // If you tab into a selection.. this lets you click out
+    $(this.element).add('.dr-date', this.element).focus(function(event) {
+      $(window).one('click',function() {
+        if (self.calIsOpen) {
           self.calendarSetDates();
           self.calendarClose('force');
         }
@@ -319,15 +335,29 @@
       e = this.calendarCheckDate(e);
     } c = this.calendarCheckDate(c);
 
-    // Is this a valid date?
-    if ((s || e) &&
-        (moment(s).isAfter(e) ||
-        moment(e).isBefore(s) ||
-        (moment(s).isSame(e) && !this.sameDayRange) ||
-        moment(s).isBefore(this.earliest_date) ||
-        moment(e).isAfter(this.latest_date))) {
-      return this.calendarSetDates();
+    if (moment(c).isSame(s) && moment(s).isAfter(e)) {
+      e = moment(s).add(6, 'day');
+      // c = e.clone();
     }
+
+    if (moment(c).isSame(e) && moment(e).isBefore(s)) {
+      s = moment(e).subtract(6, 'day');
+      // c = s.clone();
+    }
+
+    if (moment(e).isBefore(this.earliest_date) || moment(s).isBefore(this.earliest_date)) {
+      s = moment(this.earliest_date);
+      e = moment(this.earliest_date).add(6, 'day');
+    }
+
+    if (moment(e).isAfter(this.latest_date) || moment(s).isAfter(this.latest_date)) {
+      s = moment(this.latest_date).subtract(6, 'day');
+      e = moment(this.latest_date);
+    }
+
+    // Is this a valid date?
+    if (moment(s).isSame(e) && !this.sameDayRange)
+      return this.calendarSetDates();
 
     // Push and save if it's valid otherwise return to previous state
     this.start_date = s == 'Invalid Date' ? this.start_date : s;
