@@ -40,10 +40,11 @@
     });
 
     $('.dr-list-item', this.element).click(function() {
-      var range = $('.dr-item-aside', this).html().split('–');
+      var start = $('.dr-item-aside', this).data('start');
+      var end = $('.dr-item-aside', this).data('end');
 
-      self.start_date = new Date(range[0]);
-      self.end_date = new Date(range[1]);
+      self.start_date = new Date(start);
+      self.end_date = new Date(end);
       self.calendarSetDates();
       self.presetToggle();
       self.calendarSaveDates();
@@ -233,7 +234,10 @@
       if (first_day.isBefore(self.earliest_date))
         return $(this).remove()
 
-      $('.dr-item-aside', this).html(first_day.format('ll') +' – '+ last_day.format('ll'));
+      $('.dr-item-aside', this)
+        .data('start', first_day.toISOString())
+        .data('end', last_day.toISOString())
+        .html(first_day.format('ll') +' &ndash; '+ last_day.format('ll'));
     });
   }
 
