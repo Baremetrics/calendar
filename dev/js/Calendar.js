@@ -224,17 +224,12 @@
   Calendar.prototype.presetCreate = function() {
     var self = this;
     var date = this.latest_date;
-
-    var s = new Date($('.dr-date-start', self.element).html());
-    var e = new Date($('.dr-date-end', self.element).html());
-    this.start_date = s == 'Invalid Date' ? this.start_date : s;
-    this.end_date = e == 'Invalid Date' ? this.end_date : e;
+    var last_day = moment(date).endOf('month');
+    var is_last_day = last_day.isSame(date);
+    var first_day;
 
     $('.dr-list-item', this.element).each(function() {
       var month_count = $(this).data('months');
-      var last_day = moment(date).endOf('month').startOf('day');
-      var is_last_day = last_day.isSame(date);
-      var first_day;
 
       if (!is_last_day)
         last_day = moment(date).subtract(1, 'month').endOf('month').startOf('day');
@@ -243,7 +238,7 @@
         first_day = moment(date).subtract(is_last_day ? month_count - 1 : month_count, 'month').startOf('month');
 
         if (month_count == 12)
-          first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
+          first_day = moment(date).subtract(is_last_day ? 11 : 12, 'month').startOf('month').startOf('day');
       } else if (month_count == 'all') {
         first_day = moment(self.earliest_date);
         last_day = moment(self.latest_date);
