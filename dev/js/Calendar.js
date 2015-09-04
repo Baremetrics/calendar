@@ -243,7 +243,7 @@
         first_day = moment(self.earliest_date);
         last_day = moment(self.latest_date);
       } else {
-        first_day = moment(self.latest_date).subtract(30, 'day');
+        first_day = moment(self.latest_date).subtract(29, 'day');
         last_day = moment(self.latest_date);
       }
 
