@@ -1,1 +1,750 @@
-"use strict";!function(e,t){"function"==typeof define&&define.amd?define(["jquery","moment"],t):"object"==typeof exports?module.exports=t(require("jquery"),require("moment")):e.Calendar=t(jQuery,moment)}(this,function(e,t){function a(a){var s=this;this.calIsOpen=!1,this.presetIsOpen=!1,this.element=a.element||e(".daterange"),this.type=this.element.hasClass("daterange--single")?"single":"double",this.selected=null,this.earliest_date=a.earliest_date?t(new Date(a.earliest_date)).startOf("day"):t(new Date("January 1, 1900")).startOf("day"),this.latest_date=a.latest_date?t(new Date(a.latest_date)).endOf("day"):t(new Date("December 31, 2900")).endOf("day"),this.end_date=a.end_date?new Date(a.end_date):"double"==this.type?new Date:null,this.start_date=a.start_date?new Date(a.start_date):"double"==this.type?new Date(t(this.end_date).subtract(1,"month")):null,this.current_date=a.current_date?new Date(a.current_date):"single"==this.type?new Date:null,this.callback=a.callback||this.calendarSetDates,this.same_day=a.same_day||!1,this.calendarHTML(this.type),e(".dr-presets",this.element).click(function(){s.presetToggle()}),e(".dr-list-item",this.element).click(function(){var t=e(".dr-item-aside",this).data("start"),a=e(".dr-item-aside",this).data("end");s.start_date=new Date(t),s.end_date=new Date(a),s.calendarSetDates(),s.presetToggle(),s.calendarSaveDates()}),e(".dr-date",this.element).on({click:function(){s.calendarOpen(this)},keyup:function(e){9!=e.keyCode||s.calIsOpen||s.start_date||s.end_date||s.calendarOpen(this)},keydown:function(a){switch(a.keyCode){case 9:e(s.selected).hasClass("dr-date-start")?(a.preventDefault(),e(".dr-date-end",s.element).trigger("click")):(s.calendarCheckDates(),s.calendarSaveDates(),s.calendarClose("force"));break;case 13:a.preventDefault(),s.calendarCheckDates(),s.calendarSetDates(),s.calendarSaveDates(),s.calendarClose("force");break;case 27:s.calendarSetDates(),s.calendarClose("force");break;case 38:a.preventDefault();var d="day";a.shiftKey&&(d="week"),a.metaKey&&(d="month");var r=t(s.current_date).subtract(1,d);e(this).html(r.format("MMMM D, YYYY")),s.current_date=r._d;break;case 40:a.preventDefault();var d="day";a.shiftKey&&(d="week"),a.metaKey&&(d="month");var i=t(s.current_date).add(1,d);e(this).html(i.format("MMMM D, YYYY")),s.current_date=i._d}}}),e(".dr-month-switcher i",this.element).click(function(){var a=e(".dr-month-switcher span",s.element).html(),d=e(".dr-year-switcher span",s.element).html(),r=t(new Date(a+" 1, "+d)).subtract(1,"month"),i=t(new Date(a+" 1, "+d)).add(1,"month").startOf("day");e(this).hasClass("dr-left")?(e(this).parent().find("span").html(r.format("MMMM")),s.calendarOpen(s.selected,r)):e(this).hasClass("dr-right")&&(e(this).parent().find("span").html(i.format("MMMM")),s.calendarOpen(s.selected,i))}),e(".dr-year-switcher i",this.element).click(function(){var a=e(".dr-month-switcher span",s.element).html(),d=e(".dr-year-switcher span",s.element).html(),r=t(new Date(a+" 1, "+d)).subtract(1,"year"),i=t(new Date(a+" 1, "+d)).add(1,"year").startOf("day");e(this).hasClass("dr-left")?(e(this).parent().find("span").html(r.format("YYYY")),s.calendarOpen(s.selected,r)):e(this).hasClass("dr-right")&&(e(this).parent().find("span").html(i.format("YYYY")),s.calendarOpen(s.selected,i))}),e(".dr-dates-dash",this.element).click(function(){e(".dr-date-start",s.element).trigger("click")}),e(this.element).click(function(t){e("html").one("click",function(){s.presetIsOpen&&s.presetToggle(),s.calIsOpen&&(e(s.selected).hasClass("dr-date-end")&&s.calendarSaveDates(),s.calendarSetDates(),s.calendarClose("force"))}),t.stopPropagation()})}return a.prototype.presetToggle=function(){0==this.presetIsOpen?(this.presetIsOpen=!0,this.presetCreate()):this.presetIsOpen&&(this.presetIsOpen=!1),1==this.calIsOpen&&this.calendarClose(),e(".dr-preset-list",this.element).slideToggle(200),e(".dr-input",this.element).toggleClass("dr-active"),e(".dr-presets",this.element).toggleClass("dr-active")},a.prototype.presetCreate=function(){var a=this,s=this.latest_date,d=new Date(e(".dr-date-start",a.element).html()),r=new Date(e(".dr-date-end",a.element).html());this.start_date="Invalid Date"==d?this.start_date:d,this.end_date="Invalid Date"==r?this.end_date:r,e(".dr-list-item",this.element).each(function(){var d,r=e(this).data("months"),i=t(s).endOf("month").startOf("day"),n=i.isSame(s);return n||(i=t(s).subtract(1,"month").endOf("month").startOf("day")),"number"==typeof r?(d=t(s).subtract(n?r-1:r,"month").startOf("month"),12==r&&(d=t(s).subtract(n?12:13,"month").endOf("month").startOf("day"))):"all"==r?(d=t(a.earliest_date),i=t(a.latest_date)):(d=t(a.latest_date).subtract(30,"day"),i=t(a.latest_date)),d.isBefore(a.earliest_date)?e(this).remove():void e(".dr-item-aside",this).data("start",d.toISOString()).data("end",i.toISOString()).html(d.format("ll")+" &ndash; "+i.format("ll"))})},a.prototype.calendarSetDates=function(){if(e(".dr-date-start",this.element).html(t(this.start_date).format("MMMM D, YYYY")),e(".dr-date-end",this.element).html(t(this.end_date).format("MMMM D, YYYY")),!this.start_date&&!this.end_date){var a=e(".dr-date",this.element).html(),s=t(this.current_date).format("MMMM D, YYYY");a!=s&&e(".dr-date",this.element).html(s)}},a.prototype.calendarSaveDates=function(){return this.callback()},a.prototype.calendarCheckDates=function(){var a=e(".dr-date-start",this.element).html(),s=e(".dr-date-end",this.element).html(),d=e(this.selected).html(),r=/(?!<=\d)(st|nd|rd|th)/,i=a?a.replace(r,"").split(" "):[],n=s?s.replace(r,"").split(" "):[],l=d?d.replace(r,"").split(" "):[];return("ytd"==a||"ytd"==s)&&(a=t().startOf("year"),s=t().isAfter(this.latest_date)?this.latest_date:new Date),("today"==a||"now"==a)&&(a=t().isAfter(this.latest_date)?this.latest_date:new Date),("today"==s||"now"==s)&&(s=t().isAfter(this.latest_date)?this.latest_date:new Date),("today"==d||"now"==d)&&(d=t().isAfter(this.latest_date)?this.latest_date:new Date),"earliest"==a&&(a=this.earliest_date),"earliest"==s&&(s=this.earliest_date),"earliest"==d&&(d=this.earliest_date),"latest"==a&&(a=this.latest_date),"latest"==s&&(s=this.latest_date),"latest"==d&&(d=this.latest_date),!a||-1==a.toString().indexOf("ago")&&-1==a.toString().indexOf("ahead")||(a=this.stringToDate(a)),!s||-1==s.toString().indexOf("ago")&&-1==s.toString().indexOf("ahead")||(s=this.stringToDate(s)),!d||-1==d.toString().indexOf("ago")&&-1==d.toString().indexOf("ahead")||(d=this.stringToDate(d)),2==i.length&&(i.push(t().format("YYYY")),a=i.join(" ")),2==n.length&&(n.push(t().format("YYYY")),s=n.join(" ")),2==l.length&&(l.push(t().format("YYYY")),d=l.join(" ")),a=new Date(a),s=new Date(s),d=new Date(d),(a||s)&&(t(a).isAfter(s)||t(s).isBefore(a)||t(a).isSame(s)&&!this.same_day||t(a).isBefore(this.earliest_date)||t(s).isAfter(this.latest_date))?this.calendarSetDates():(this.start_date="Invalid Date"==a?this.start_date:a,this.end_date="Invalid Date"==s?this.end_date:s,void(this.current_date="Invalid Date"==d?this.current_date:d))},a.prototype.stringToDate=function(e){var a=e.split(" ");return"ago"==a[2]?t(this.current_date).subtract(a[0],a[1]):"ahead"==a[2]?t(this.current_date).add(a[0],a[1]):this.current_date},a.prototype.calendarOpen=function(a,s){var d,r=this,i=e(".dr-dates",this.element).innerWidth()-8;this.selected=a||this.selected,1==this.presetIsOpen&&this.presetToggle(),1==this.calIsOpen&&this.calendarClose(s?"switcher":void 0),this.calendarCheckDates(),this.calendarCreate(s),this.calendarSetDates();var n=t(s||this.current_date).add(1,"month").startOf("month").startOf("day"),l=t(s||this.current_date).subtract(1,"month").endOf("month"),c=t(s||this.current_date).add(1,"year").startOf("month").startOf("day"),h=t(s||this.current_date).subtract(1,"year").endOf("month");e(".dr-month-switcher span",this.element).html(t(s||this.current_date).format("MMMM")),e(".dr-year-switcher span",this.element).html(t(s||this.current_date).format("YYYY")),e(".dr-switcher i",this.element).removeClass("dr-disabled"),n.isAfter(this.latest_date)&&e(".dr-month-switcher .dr-right",this.element).addClass("dr-disabled"),l.isBefore(this.earliest_date)&&e(".dr-month-switcher .dr-left",this.element).addClass("dr-disabled"),c.isAfter(this.latest_date)&&e(".dr-year-switcher .dr-right",this.element).addClass("dr-disabled"),h.isBefore(this.earliest_date)&&e(".dr-year-switcher .dr-left",this.element).addClass("dr-disabled"),e(".dr-day",this.element).on({mouseenter:function(){function a(a){d=void 0,r.range(42).forEach(function(i){var n=s.next().data("date"),l=s.prev().data("date"),c=s.data("date");if(!c)return!1;if(l||(l=c),n||(n=c),"start"==a){if(t(n).isSame(r.end_date)||r.same_day&&t(c).isSame(r.end_date))return!1;if(t(c).isAfter(r.end_date)&&(d=d||t(c).add(6,"day").startOf("day"),i>5||(n?t(n).isAfter(r.latest_date):!1)))return e(s).addClass("dr-end"),d=t(c),!1;s=s.next().addClass("dr-maybe")}else if("end"==a){if(t(l).isSame(r.start_date)||r.same_day&&t(c).isSame(r.start_date))return!1;if(t(c).isBefore(r.start_date)&&(d=d||t(c).subtract(6,"day"),i>5||(l?t(l).isBefore(r.earliest_date):!1)))return e(s).addClass("dr-start"),d=t(c),!1;s=s.prev().addClass("dr-maybe")}})}{var s=e(this);t(r.start_date),t(r.end_date),t(r.current_date)}e(r.selected).hasClass("dr-date-start")&&(s.addClass("dr-hover dr-hover-before"),e(".dr-start",r.element).css({border:"none","padding-left":"0.3125rem"}),a("start")),e(r.selected).hasClass("dr-date-end")&&(s.addClass("dr-hover dr-hover-after"),e(".dr-end",r.element).css({border:"none","padding-right":"0.3125rem"}),a("end")),r.start_date||r.end_date||s.addClass("dr-maybe"),e(".dr-selected",r.element).css("background-color","transparent")},mouseleave:function(){e(this).hasClass("dr-hover-before dr-end")&&e(this).removeClass("dr-end"),e(this).hasClass("dr-hover-after dr-start")&&e(this).removeClass("dr-start"),e(this).removeClass("dr-hover dr-hover-before dr-hover-after"),e(".dr-start, .dr-end",r.element).css({border:"",padding:""}),e(".dr-maybe:not(.dr-current)",r.element).removeClass("dr-start dr-end"),e(".dr-day",r.element).removeClass("dr-maybe"),e(".dr-selected",r.element).css("background-color","")},mousedown:function(){var a=e(this).data("date"),s=t(a).format("MMMM D, YYYY");d&&e(".dr-date",r.element).not(r.selected).html(d.format("MMMM D, YYYY")),e(r.selected).html(s),r.calendarOpen(r.selected),e(r.selected).hasClass("dr-date-start")?e(".dr-date-end",r.element).trigger("click"):(r.calendarSaveDates(),r.calendarClose("force"))}}),e(".dr-calendar",this.element).css("width",i).slideDown(200),e(".dr-input",this.element).addClass("dr-active"),e(a).addClass("dr-active").focus(),e(this.element).addClass("dr-active"),this.calIsOpen=!0},a.prototype.calendarClose=function(t){var a=this;return!this.calIsOpen||this.presetIsOpen||"force"==t?e(".dr-calendar",this.element).slideUp(200,function(){e(".dr-day",a.element).remove()}):e(".dr-day",this.element).remove(),"switcher"==t?!1:(e(".dr-input, .dr-date",this.element).removeClass("dr-active"),e(this.element).removeClass("dr-active"),void(this.calIsOpen=!1))},a.prototype.calendarArray=function(e,a,s,d){var r=this;s=s||e||a;var i=t(d||s).startOf("month"),n=t(d||s).endOf("month"),l={start:{day:+i.format("d"),str:+i.format("D")},end:{day:+n.format("d"),str:+n.format("D")}},c=void 0,h=this.range(l.start.day).map(function(){return void 0==c&&(c=t(i)),c=c.subtract(1,"day"),{str:+c.format("D"),start:c.isSame(e),end:c.isSame(a),current:c.isSame(s),selected:c.isBetween(e,a),date:c.toISOString(),outside:c.isBefore(r.earliest_date),fade:!0}}).reverse(),o=42-(l.end.str+h.length);c=void 0;var m=this.range(o).map(function(){return void 0==c&&(c=t(n)),c=c.add(1,"day").startOf("day"),{str:+c.format("D"),start:c.isSame(e),end:c.isSame(a),current:c.isSame(s),selected:c.isBetween(e,a),date:c.toISOString(),outside:c.isAfter(r.latest_date),fade:!0}});c=void 0;var f=this.range(l.end.str).map(function(){return c=void 0==c?t(i):c.add(1,"day").startOf("day"),{str:+c.format("D"),start:c.isSame(e),end:c.isSame(a),current:c.isSame(s),selected:c.isBetween(e,a),date:c.toISOString(),outside:c.isBefore(r.earliest_date)||c.isAfter(r.latest_date),fade:!1}});return h.concat(f,m)},a.prototype.calendarCreate=function(t){var a=this,s=this.calendarArray(this.start_date,this.end_date,this.current_date,t);s.forEach(function(t,s){var d="dr-day";t.fade&&(d+=" dr-fade"),t.start&&(d+=" dr-start"),t.end&&(d+=" dr-end"),t.current&&(d+=" dr-current"),t.selected&&(d+=" dr-selected"),t.outside&&(d+=" dr-outside"),e(".dr-day-list",a.element).append('<li class="'+d+'" data-date="'+t.date+'">'+t.str+"</li>")})},a.prototype.calendarHTML=function(e){return this.element.append("double"==e?'<div class="dr-input"><div class="dr-dates"><div class="dr-date dr-date-start" contenteditable>'+t(this.start_date).format("MMMM D, YYYY")+'</div><span class="dr-dates-dash">&ndash;</span><div class="dr-date dr-date-end" contenteditable>'+t(this.end_date).format("MMMM D, YYYY")+'</div></div><div class="dr-presets"><span class="dr-preset-bar"></span><span class="dr-preset-bar"></span><span class="dr-preset-bar"></span></div></div><div class="dr-selections"><div class="dr-calendar" style="display: none;"><div class="dr-range-switcher"><div class="dr-switcher dr-month-switcher"><i class="dr-left"></i><span>April</span><i class="dr-right"></i></div><div class="dr-switcher dr-year-switcher"><i class="dr-left"></i><span>2015</span><i class="dr-right"></i></div></div><ul class="dr-days-of-week-list"><li class="dr-day-of-week">S</li><li class="dr-day-of-week">M</li><li class="dr-day-of-week">T</li><li class="dr-day-of-week">W</li><li class="dr-day-of-week">T</li><li class="dr-day-of-week">F</li><li class="dr-day-of-week">S</li></ul><ul class="dr-day-list"></ul></div><ul class="dr-preset-list" style="display: none;"><li class="dr-list-item" data-months="days">Last 30 days <span class="dr-item-aside"></span></li><li class="dr-list-item" data-months="1">Last month <span class="dr-item-aside"></span></li><li class="dr-list-item" data-months="3">Last 3 months <span class="dr-item-aside"></span></li><li class="dr-list-item" data-months="6">Last 6 months <span class="dr-item-aside"></span></li><li class="dr-list-item" data-months="12">Last year <span class="dr-item-aside"></span></li><li class="dr-list-item" data-months="all">All time <span class="dr-item-aside"></span></li></ul></div>':'<div class="dr-input"><div class="dr-dates"><div class="dr-date" contenteditable>'+t(this.current_date).format("MMMM D, YYYY")+'</div></div></div><div class="dr-selections"><div class="dr-calendar" style="display: none;"><div class="dr-range-switcher"><div class="dr-switcher dr-month-switcher"><i class="dr-left"></i><span></span><i class="dr-right"></i></div><div class="dr-switcher dr-year-switcher"><i class="dr-left"></i><span></span><i class="dr-right"></i></div></div><ul class="dr-days-of-week-list"><li class="dr-day-of-week">S</li><li class="dr-day-of-week">M</li><li class="dr-day-of-week">T</li><li class="dr-day-of-week">W</li><li class="dr-day-of-week">T</li><li class="dr-day-of-week">F</li><li class="dr-day-of-week">S</li></ul><ul class="dr-day-list"></ul></div></div>')},a.prototype.range=function(e){for(var t=new Array(e),a=0;e>a;a++)t[a]=a;return t},a});
+'use strict';
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery', 'moment'], factory);
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS
+    module.exports = factory(require('jquery'), require('moment'));
+  } else {
+    // Browser globals
+    root.Calendar = factory(jQuery, moment);
+  }
+} (this, function ($, moment) {
+  function Calendar(settings) {
+    var self = this;
+
+    this.calIsOpen =      false;
+    this.presetIsOpen =   false;
+    this.sameDayRange =   settings.same_day_range || false;
+
+    this.element =        settings.element || $('.daterange');
+    this.selected =       null;
+
+    this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
+
+    this.format = {
+      'input': settings.format ? settings.format.input : 'MMMM D, YYYY',
+      'preset': settings.format ? settings.format.preset : 'll',
+      'jump_month': settings.format ? settings.format.jump_month : 'MMMM',
+      'jump_year': settings.format ? settings.format.jump_year : 'YYYY'
+    };
+
+    this.days_array =     settings.days_array || ['S','M','T','W','T','F','S'];
+
+    this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
+                          : moment(new Date('January 1, 1900')).startOf('day');
+    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).endOf('day')
+                          : moment(new Date('December 31, 2900')).endOf('day');
+    this.end_date =       settings.end_date ? new Date(settings.end_date)
+                          : (this.type == 'double' ? new Date() : null);
+    this.start_date =     settings.start_date ? new Date(settings.start_date)
+                          : (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
+    this.current_date =   settings.current_date ? new Date(settings.current_date)
+                          : (this.type == 'single' ? new Date() : null);
+
+    this.callback =       settings.callback || this.calendarSetDates;
+
+    this.calendarHTML(this.type);
+
+    $('.dr-presets', this.element).click(function() {
+      self.presetToggle();
+    });
+
+    $('.dr-list-item', this.element).click(function() {
+      var start = $('.dr-item-aside', this).data('start');
+      var end = $('.dr-item-aside', this).data('end');
+
+      self.start_date = self.calendarCheckDate(start);
+      self.end_date = self.calendarCheckDate(end);
+
+      self.calendarSetDates();
+      self.presetToggle();
+      self.calendarSaveDates();
+    });
+
+    $('.dr-date', this.element).on({
+      'click': function() {
+        self.calendarOpen(this);
+      },
+
+      'keyup': function(event) {
+        if (event.keyCode == 9 && !self.calIsOpen && !self.start_date && !self.end_date)
+          self.calendarOpen(this);
+      },
+
+      'keydown': function(event) {
+        switch (event.keyCode) {
+
+          case 9: // Tab
+            if ($(self.selected).hasClass('dr-date-start')) {
+              event.preventDefault();
+              $('.dr-date-end', self.element).trigger('click');
+            } else {
+              self.calendarCheckDates();
+              self.calendarSaveDates();
+              self.calendarClose('force');
+            }
+          break;
+
+          case 13: // Enter
+            event.preventDefault();
+            self.calendarCheckDates();
+            self.calendarSetDates();
+            self.calendarSaveDates();
+            self.calendarClose('force');
+          break;
+
+          case 27: // ESC
+            self.calendarSetDates();
+            self.calendarClose('force');
+          break;
+
+          case 38: // Up
+            event.preventDefault();
+            var timeframe = 'day';
+
+            if (event.shiftKey)
+              timeframe = 'week';
+
+            if (event.metaKey)
+              timeframe = 'month';
+
+            var back = moment(self.current_date).subtract(1, timeframe);
+
+            $(this).html(back.format(self.format.input));
+            self.current_date = back._d;
+          break;
+
+          case 40: // Down
+            event.preventDefault();
+            var timeframe = 'day';
+
+            if (event.shiftKey)
+              timeframe = 'week';
+
+            if (event.metaKey)
+              timeframe = 'month';
+
+            var forward = moment(self.current_date).add(1, timeframe);
+
+            $(this).html(forward.format(self.format.input));
+            self.current_date = forward._d;
+          break;
+        }
+      }
+    });
+
+    $('.dr-month-switcher i', this.element).click(function() {
+      var m = $('.dr-month-switcher span', self.element).data('month');
+      var y = $('.dr-year-switcher span', self.element).data('year');
+      var this_moment = moment([y, m, 1]);
+      var back = this_moment.clone().subtract(1, 'month');
+      var forward = this_moment.clone().add(1, 'month').startOf('day');
+
+      if ($(this).hasClass('dr-left')) {
+        self.calendarOpen(self.selected, back);
+      } else if ($(this).hasClass('dr-right')) {
+        self.calendarOpen(self.selected, forward);
+      }
+    });
+
+    $('.dr-year-switcher i', this.element).click(function() {
+      var m = $('.dr-month-switcher span', self.element).data('month');
+      var y = $('.dr-year-switcher span', self.element).data('year');
+      var this_moment = moment([y, m, 1]);
+      var back = this_moment.clone().subtract(1, 'year');
+      var forward = this_moment.clone().add(1, 'year').startOf('day');
+
+
+      if ($(this).hasClass('dr-left')) {
+        self.calendarOpen(self.selected, back);
+      } else if ($(this).hasClass('dr-right')) {
+        self.calendarOpen(self.selected, forward);
+      }
+    });
+
+    $('.dr-dates-dash', this.element).click(function() {
+      $('.dr-date-start', self.element).trigger('click');
+    });
+
+    $(this.element).click(function(event) {
+      $('html').one('click',function() {
+        if (self.presetIsOpen)
+          self.presetToggle();
+
+        if (self.calIsOpen) {
+
+          if ($(self.selected).hasClass("dr-date-end"))
+            self.calendarSaveDates();
+
+          self.calendarSetDates();
+          self.calendarClose('force');
+        }
+      });
+
+      event.stopPropagation();
+    });
+  }
+
+
+  Calendar.prototype.presetToggle = function() {
+    if (this.presetIsOpen == false) {
+      this.presetIsOpen = true;
+      this.presetCreate();
+    } else if (this.presetIsOpen) {
+      this.presetIsOpen = false;
+    }
+
+    if (this.calIsOpen == true)
+      this.calendarClose();
+
+    $('.dr-preset-list', this.element).slideToggle(200);
+    $('.dr-input', this.element).toggleClass('dr-active');
+    $('.dr-presets', this.element).toggleClass('dr-active');
+  }
+
+
+  Calendar.prototype.presetCreate = function() {
+    var self = this;
+    var date = this.latest_date;
+
+    var s = new Date($('.dr-date-start', self.element).html());
+    var e = new Date($('.dr-date-end', self.element).html());
+    this.start_date = s == 'Invalid Date' ? this.start_date : s;
+    this.end_date = e == 'Invalid Date' ? this.end_date : e;
+
+    $('.dr-list-item', this.element).each(function() {
+      var month_count = $(this).data('months');
+      var last_day = moment(date).endOf('month').startOf('day');
+      var is_last_day = last_day.isSame(date);
+      var first_day;
+
+      if (!is_last_day)
+        last_day = moment(date).subtract(1, 'month').endOf('month').startOf('day');
+
+      if (typeof month_count == 'number') {
+        first_day = moment(date).subtract(is_last_day ? month_count - 1 : month_count, 'month').startOf('month');
+
+        if (month_count == 12)
+          first_day = moment(date).subtract(is_last_day ? 12 : 13, 'month').endOf('month').startOf('day');
+      } else if (month_count == 'all') {
+        first_day = moment(self.earliest_date);
+        last_day = moment(self.latest_date);
+      } else {
+        first_day = moment(self.latest_date).subtract(30, 'day');
+        last_day = moment(self.latest_date);
+      }
+
+      if (first_day.isBefore(self.earliest_date))
+        return $(this).remove()
+
+      $('.dr-item-aside', this)
+        .data('start', first_day.toISOString())
+        .data('end', last_day.toISOString())
+        .html(first_day.format(self.format.preset) +' &ndash; '+ last_day.format(self.format.preset));
+    });
+  }
+
+
+  Calendar.prototype.calendarSetDates = function() {
+    $('.dr-date-start', this.element).html(moment(this.start_date).format(this.format.input));
+    $('.dr-date-end', this.element).html(moment(this.end_date).format(this.format.input));
+
+    if (!this.start_date && !this.end_date) {
+      var old_date = $('.dr-date', this.element).html();
+      var new_date = moment(this.current_date).format(this.format.input);
+
+      if (old_date != new_date)
+        $('.dr-date', this.element).html(new_date);
+    }
+  }
+
+
+  Calendar.prototype.calendarSaveDates = function() {
+    return this.callback();
+  }
+
+  Calendar.prototype.calendarCheckDate = function(d) {
+    var regex = /(?!<=\d)(st|nd|rd|th)/;
+    var d_array = d ? d.replace(regex, '').split(' ') : [];
+
+    // Today
+    if (d == 'today' || d == 'now')
+      d = moment().isAfter(this.latest_date) ? this.latest_date : moment();
+
+    // Earliest
+    if (d == 'earliest')
+      d = this.earliest_date;
+
+    // Latest
+    if (d == 'latest')
+      d = this.latest_date;
+
+    // Convert string to a date if keyword ago or ahead exists
+    if (d && (d.toString().indexOf('ago') != -1 || d.toString().indexOf('ahead') != -1))
+      d = this.stringToDate(d);
+
+    // Add current year if year is not included
+    if (d_array.length == 2) {
+      d_array.push(moment().format(this.display_year_format))
+      d = d_array.join(' ');
+    }
+
+    // Convert using settings format
+    if (d && $.type(d) == 'string') {
+      var parsed_d = moment(d, this.format.input);
+      if (parsed_d.isValid())
+        d = parsed_d;
+    }
+
+    return new Date(d);
+  }
+
+  Calendar.prototype.calendarCheckDates = function() {
+    var s = $('.dr-date-start', this.element).html();
+    var e = $('.dr-date-end', this.element).html();
+    var c = $(this.selected).html();
+
+    // Modify strings via some specific keywords to create valid dates
+    // Year to date
+    if (s == 'ytd' || e == 'ytd') {
+      s = moment().startOf('year');
+      e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
+    } 
+
+    // Finally set all strings as dates
+    else {
+      s = this.calendarCheckDate(s);
+      e = this.calendarCheckDate(e);
+    } c = this.calendarCheckDate(c);
+
+    // Is this a valid date?
+    if ((s || e) &&
+        (moment(s).isAfter(e) ||
+        moment(e).isBefore(s) ||
+        (moment(s).isSame(e) && !this.sameDayRange) ||
+        moment(s).isBefore(this.earliest_date) ||
+        moment(e).isAfter(this.latest_date))) {
+      return this.calendarSetDates();
+    }
+
+    // Push and save if it's valid otherwise return to previous state
+    this.start_date = s == 'Invalid Date' ? this.start_date : s;
+    this.end_date = e == 'Invalid Date' ? this.end_date : e;
+    this.current_date = c == 'Invalid Date' ? this.current_date : c;
+  }
+
+
+  Calendar.prototype.stringToDate = function(str) {
+    var date_arr = str.split(' ');
+
+    if (date_arr[2] == 'ago') {
+      return moment(this.current_date).subtract(date_arr[0], date_arr[1]);
+    }
+
+    else if (date_arr[2] == 'ahead') {
+      return moment(this.current_date).add(date_arr[0], date_arr[1]);
+    }
+
+    return this.current_date;
+  }
+
+
+  Calendar.prototype.calendarOpen = function(selected, switcher) {
+    var self = this;
+    var other;
+    var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
+
+    this.selected = selected || this.selected;
+
+    if (this.presetIsOpen == true)
+      this.presetToggle();
+
+    if (this.calIsOpen == true)
+      this.calendarClose(switcher ? 'switcher' : undefined);
+
+    this.calendarCheckDates();
+    this.calendarCreate(switcher);
+    this.calendarSetDates();
+
+    var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('month').startOf('day');
+    var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
+    var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
+    var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
+    var this_moment = moment(switcher || this.current_date);
+
+    $('.dr-month-switcher span', this.element)
+      .data('month', this_moment.month())
+      .html(this_moment.format(this.format.jump_month));
+    $('.dr-year-switcher span', this.element)
+      .data('year', this_moment.year())
+      .html(this_moment.format(this.format.jump_year));
+
+    $('.dr-switcher i', this.element).removeClass('dr-disabled');
+
+    if (next_month.isAfter(this.latest_date))
+      $('.dr-month-switcher .dr-right', this.element).addClass('dr-disabled');
+
+    if (past_month.isBefore(this.earliest_date))
+      $('.dr-month-switcher .dr-left', this.element).addClass('dr-disabled');
+
+    if (next_year.isAfter(this.latest_date))
+      $('.dr-year-switcher .dr-right', this.element).addClass('dr-disabled');
+
+    if (past_year.isBefore(this.earliest_date))
+      $('.dr-year-switcher .dr-left', this.element).addClass('dr-disabled');
+
+    $('.dr-day', this.element).on({
+      mouseenter: function() {
+        var selected = $(this);
+        var start_date = moment(self.start_date);
+        var end_date = moment(self.end_date);
+        var current_date = moment(self.current_date);
+
+        if ($(self.selected).hasClass("dr-date-start")) {
+          selected.addClass('dr-hover dr-hover-before');
+          $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
+          setMaybeRange('start');
+        }
+
+        if ($(self.selected).hasClass("dr-date-end")) {
+          selected.addClass('dr-hover dr-hover-after');
+          $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
+          setMaybeRange('end');
+        }
+
+        if (!self.start_date && !self.end_date)
+          selected.addClass('dr-maybe');
+
+        $('.dr-selected', self.element).css('background-color', 'transparent');
+
+        function setMaybeRange(type) {
+          other = undefined;
+
+          self.range(6 * 7).forEach(function(i) {
+            var next = selected.next().data('date');
+            var prev = selected.prev().data('date');
+            var curr = selected.data('date');
+
+            if (!curr)
+              return false;
+
+            if (!prev)
+              prev = curr;
+
+            if (!next)
+              next = curr;
+
+            if (type == 'start') {
+              if (moment(next).isSame(self.end_date) || (self.sameDayRange && moment(curr).isSame(self.end_date)))
+                return false;
+
+              if (moment(curr).isAfter(self.end_date)) {
+                other = other || moment(curr).add(6, 'day').startOf('day');
+
+                if (i > 5 || (next ? moment(next).isAfter(self.latest_date) : false)) {
+                  $(selected).addClass('dr-end');
+                  other = moment(curr);
+                  return false;
+                }
+              }
+
+              selected = selected.next().addClass('dr-maybe');
+            } else if (type == 'end') {
+              if (moment(prev).isSame(self.start_date) || (self.sameDayRange && moment(curr).isSame(self.start_date)))
+                return false;
+
+              if (moment(curr).isBefore(self.start_date)) {
+                other = other || moment(curr).subtract(6, 'day');
+
+                if (i > 5 || (prev ? moment(prev).isBefore(self.earliest_date) : false)) {
+                  $(selected).addClass('dr-start');
+                  other = moment(curr);
+                  return false;
+                }
+              }
+
+              selected = selected.prev().addClass('dr-maybe');
+            }
+          });
+        }
+      },
+      mouseleave: function() {
+        if ($(this).hasClass('dr-hover-before dr-end'))
+          $(this).removeClass('dr-end');
+
+        if ($(this).hasClass('dr-hover-after dr-start'))
+          $(this).removeClass('dr-start');
+
+        $(this).removeClass('dr-hover dr-hover-before dr-hover-after');
+        $('.dr-start, .dr-end', self.element).css({'border': '', 'padding': ''});
+        $('.dr-maybe:not(.dr-current)', self.element).removeClass('dr-start dr-end');
+        $('.dr-day', self.element).removeClass('dr-maybe');
+        $('.dr-selected', self.element).css('background-color', '');
+      },
+      mousedown: function() {
+        var date = $(this).data('date');
+        var string = moment(date).format(self.format.input);
+
+        if (other) {
+          $('.dr-date', self.element)
+            .not(self.selected)
+            .html(other.format(self.format.input));
+        }
+
+        $(self.selected).html(string);
+        self.calendarOpen(self.selected);
+
+        if ($(self.selected).hasClass('dr-date-start')) {
+          $('.dr-date-end', self.element).trigger('click');
+        } else {
+          self.calendarSaveDates();
+          self.calendarClose('force');
+        }
+      }
+    });
+
+    $('.dr-calendar', this.element)
+      .css('width', cal_width)
+      .slideDown(200);
+    $('.dr-input', this.element).addClass('dr-active');
+    $(selected).addClass('dr-active').focus();
+    $(this.element).addClass('dr-active');
+
+    this.calIsOpen = true;
+  }
+
+
+  Calendar.prototype.calendarClose = function(type) {
+    var self = this;
+
+    if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
+      $('.dr-calendar', this.element).slideUp(200, function() {
+        $('.dr-day', self.element).remove();
+      });
+    } else {
+      $('.dr-day', this.element).remove();
+    }
+
+    if (type == 'switcher') {
+      return false;
+    }
+
+    $('.dr-input, .dr-date', this.element).removeClass('dr-active');
+    $(this.element).removeClass('dr-active');
+
+    this.calIsOpen = false;
+  }
+
+
+  Calendar.prototype.calendarCreate = function(switcher) {
+    var self = this;
+    var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
+
+    array.forEach(function(d, i) {
+      var classString = "dr-day";
+
+      if (d.fade)
+        classString += " dr-fade";
+
+      if (d.start)
+        classString += " dr-start";
+
+      if (d.end)
+        classString += " dr-end";
+
+      if (d.current)
+        classString += " dr-current";
+
+      if (d.selected)
+        classString += " dr-selected";
+
+      if (d.outside)
+        classString += " dr-outside";
+
+      $('.dr-day-list', self.element).append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
+    });
+  }
+
+
+  Calendar.prototype.calendarArray = function(start, end, current, switcher) {
+    var self = this;
+    current = current || start || end;
+
+    var first_day = moment(switcher || current).startOf('month');
+    var last_day = moment(switcher || current).endOf('month');
+
+    var current_month = {
+      start: {
+        day: +first_day.format('d'),
+        str: +first_day.format('D')
+      },
+      end: {
+        day: +last_day.format('d'),
+        str: +last_day.format('D')
+      }
+    }
+
+
+    // Beginning faded dates
+    var d = undefined;
+
+    var start_hidden = this.range(current_month.start.day).map(function() {
+      if (d == undefined) {
+        d = moment(first_day);
+      } d = d.subtract(1, 'day');
+
+      return {
+        str: +d.format('D'),
+        start: d.isSame(start),
+        end: d.isSame(end),
+        current: d.isSame(current),
+        selected: d.isBetween(start, end),
+        date: d.toISOString(),
+        outside: d.isBefore(self.earliest_date),
+        fade: true
+      }
+    }).reverse();
+
+    // Leftover faded dates
+    var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
+    d = undefined;
+
+    var end_hidden = this.range(leftover).map(function() {
+      if (d == undefined) {
+        d = moment(last_day);
+      } d = d.add(1, 'day').startOf('day');
+
+      return {
+        str: +d.format('D'),
+        start: d.isSame(start),
+        end: d.isSame(end),
+        current: d.isSame(current),
+        selected: d.isBetween(start, end),
+        date: d.toISOString(),
+        outside: d.isAfter(self.latest_date),
+        fade: true
+      }
+    });
+
+
+    // Actual visible dates
+    d = undefined;
+
+    var visible = this.range(current_month.end.str).map(function() {
+      if (d == undefined) {
+        d = moment(first_day);
+      } else {
+        d = d.add(1, 'day').startOf('day');
+      }
+
+      return {
+        str: +d.format('D'),
+        start: d.isSame(start),
+        end: d.isSame(end),
+        current: d.isSame(current),
+        selected: d.isBetween(start, end),
+        date: d.toISOString(),
+        outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date),
+        fade: false
+      }
+    });
+
+
+    return start_hidden.concat(visible, end_hidden);
+  }
+
+
+  Calendar.prototype.calendarHTML = function(type) {
+    var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>')
+    var self = this;
+
+    $.each(this.days_array || moment.weekdaysMin(), function(i, elem) {
+      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
+    });
+
+    if (type == "double")
+      return this.element.append('<div class="dr-input">' +
+        '<div class="dr-dates">' +
+          '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.format.input) +'</div>' +
+          '<span class="dr-dates-dash">&ndash;</span>' +
+          '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.format.input) +'</div>' +
+        '</div>' +
+
+        '<div class="dr-presets">' +
+          '<span class="dr-preset-bar"></span>' +
+          '<span class="dr-preset-bar"></span>' +
+          '<span class="dr-preset-bar"></span>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="dr-selections">' +
+        '<div class="dr-calendar" style="display: none;">' +
+          '<div class="dr-range-switcher">' +
+            '<div class="dr-switcher dr-month-switcher">' +
+              '<i class="dr-left"></i>' +
+              '<span>April</span>' +
+              '<i class="dr-right"></i>' +
+            '</div>' +
+            '<div class="dr-switcher dr-year-switcher">' +
+              '<i class="dr-left"></i>' +
+              '<span>2015</span>' +
+              '<i class="dr-right"></i>' +
+            '</div>' +
+          '</div>' +
+          ul_days_of_the_week[0].outerHTML +
+          '<ul class="dr-day-list"></ul>' +
+        '</div>' +
+
+        '<ul class="dr-preset-list" style="display: none;">' +
+          '<li class="dr-list-item" data-months="days">Last 30 days <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="1">Last month <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="3">Last 3 months <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="6">Last 6 months <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="12">Last year <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="all">All time <span class="dr-item-aside"></span></li>' +
+        '</ul>' +
+      '</div>');
+
+    return this.element.append('<div class="dr-input">' +
+      '<div class="dr-dates">' +
+        '<div class="dr-date" contenteditable>'+ moment(this.current_date).format(this.format.input) +'</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="dr-selections">' +
+      '<div class="dr-calendar" style="display: none;">' +
+        '<div class="dr-range-switcher">' +
+          '<div class="dr-switcher dr-month-switcher">' +
+            '<i class="dr-left"></i>' +
+            '<span></span>' +
+            '<i class="dr-right"></i>' +
+          '</div>' +
+          '<div class="dr-switcher dr-year-switcher">' +
+            '<i class="dr-left"></i>' +
+            '<span></span>' +
+            '<i class="dr-right"></i>' +
+          '</div>' +
+        '</div>' +
+        ul_days_of_the_week[0].outerHTML +
+        '<ul class="dr-day-list"></ul>' +
+      '</div>' +
+    '</div>');
+  }
+
+
+  Calendar.prototype.range = function(length) {
+    var range = new Array(length);
+
+    for (var idx = 0; idx < length; idx++) {
+      range[idx] = idx;
+    }
+
+    return range;
+  }
+
+
+  return Calendar;
+}));
