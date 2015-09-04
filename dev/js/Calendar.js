@@ -24,8 +24,13 @@
 
     this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
 
-    this.calendar_format = settings.calendar_format || 'MMMM D, YYYY';
-    this.preset_format =  settings.preset_format || 'll';
+    this.format = {
+      'input': settings.format ? settings.format.input : 'MMMM D, YYYY',
+      'preset': settings.format ? settings.format.preset : 'll',
+      'jump_month': settings.format ? settings.format.jump_month : 'MMMM',
+      'jump_year': settings.format ? settings.format.jump_year : 'YYYY'
+    };
+
     this.days_array =     settings.days_array || ['S','M','T','W','T','F','S'];
 
     this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
@@ -108,7 +113,7 @@
 
             var back = moment(self.current_date).subtract(1, timeframe);
 
-            $(this).html(back.format(self.calendar_format));
+            $(this).html(back.format(self.format.input));
             self.current_date = back._d;
           break;
 
@@ -124,7 +129,7 @@
 
             var forward = moment(self.current_date).add(1, timeframe);
 
-            $(this).html(forward.format(self.calendar_format));
+            $(this).html(forward.format(self.format.input));
             self.current_date = forward._d;
           break;
         }
@@ -132,8 +137,8 @@
     });
 
     $('.dr-month-switcher i', this.element).click(function() {
-      var m = $('.dr-month-switcher span', self.element).data( 'moment' );
-      var y = $('.dr-year-switcher span', self.element).data( 'moment' );
+      var m = $('.dr-month-switcher span', self.element).data('month');
+      var y = $('.dr-year-switcher span', self.element).data('year');
       var this_moment = moment([y, m, 1]);
       var back = this_moment.clone().subtract(1, 'month');
       var forward = this_moment.clone().add(1, 'month').startOf('day');
@@ -146,11 +151,12 @@
     });
 
     $('.dr-year-switcher i', this.element).click(function() {
-      var m = $('.dr-month-switcher span', self.element).data( 'moment' );
-      var y = $('.dr-year-switcher span', self.element).data( 'moment' );
+      var m = $('.dr-month-switcher span', self.element).data('month');
+      var y = $('.dr-year-switcher span', self.element).data('year');
       var this_moment = moment([y, m, 1]);
       var back = this_moment.clone().subtract(1, 'year');
       var forward = this_moment.clone().add(1, 'year').startOf('day');
+
 
       if ($(this).hasClass('dr-left')) {
         self.calendarOpen(self.selected, back);
@@ -237,18 +243,18 @@
       $('.dr-item-aside', this)
         .data('start', first_day.toISOString())
         .data('end', last_day.toISOString())
-        .html(first_day.format(self.preset_format) +' &ndash; '+ last_day.format(self.preset_format));
+        .html(first_day.format(self.format.preset) +' &ndash; '+ last_day.format(self.format.preset));
     });
   }
 
 
   Calendar.prototype.calendarSetDates = function() {
-    $('.dr-date-start', this.element).html(moment(this.start_date).format(this.calendar_format));
-    $('.dr-date-end', this.element).html(moment(this.end_date).format(this.calendar_format));
+    $('.dr-date-start', this.element).html(moment(this.start_date).format(this.format.input));
+    $('.dr-date-end', this.element).html(moment(this.end_date).format(this.format.input));
 
     if (!this.start_date && !this.end_date) {
       var old_date = $('.dr-date', this.element).html();
-      var new_date = moment(this.current_date).format(this.calendar_format);
+      var new_date = moment(this.current_date).format(this.format.input);
 
       if (old_date != new_date)
         $('.dr-date', this.element).html(new_date);
@@ -287,9 +293,9 @@
     }
 
     // Convert using settings format
-    if (d && $.type( d ) === "string" ) {
-      var parsed_d = moment( d, this.calendar_format );
-      if ( parsed_d.isValid() )
+    if (d && $.type(d) == 'string') {
+      var parsed_d = moment(d, this.format.input);
+      if (parsed_d.isValid())
         d = parsed_d;
     }
 
@@ -367,9 +373,14 @@
     var past_month = moment(switcher || this.current_date).subtract(1, 'month').endOf('month');
     var next_year = moment(switcher || this.current_date).add(1, 'year').startOf('month').startOf('day');
     var past_year = moment(switcher || this.current_date).subtract(1, 'year').endOf('month');
+    var this_moment = moment(switcher || this.current_date);
 
-    $('.dr-month-switcher span', this.element).html(moment(switcher || this.current_date).format('MMMM'));
-    $('.dr-year-switcher span', this.element).html(moment(switcher || this.current_date).format('YYYY'));
+    $('.dr-month-switcher span', this.element)
+      .data('month', this_moment.month())
+      .html(this_moment.format(this.format.jump_month));
+    $('.dr-year-switcher span', this.element)
+      .data('year', this_moment.year())
+      .html(this_moment.format(this.format.jump_year));
 
     $('.dr-switcher i', this.element).removeClass('dr-disabled');
 
@@ -475,12 +486,12 @@
       },
       mousedown: function() {
         var date = $(this).data('date');
-        var string = moment(date).format(this.calendar_format);
+        var string = moment(date).format(self.format.input);
 
         if (other) {
           $('.dr-date', self.element)
             .not(self.selected)
-            .html(other.format(this.calendar_format));
+            .html(other.format(self.format.input));
         }
 
         $(self.selected).html(string);
@@ -510,7 +521,6 @@
     var self = this;
 
     if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-      // $('.dr-date', this.element).blur();
       $('.dr-calendar', this.element).slideUp(200, function() {
         $('.dr-day', self.element).remove();
       });
@@ -526,6 +536,36 @@
     $(this.element).removeClass('dr-active');
 
     this.calIsOpen = false;
+  }
+
+
+  Calendar.prototype.calendarCreate = function(switcher) {
+    var self = this;
+    var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
+
+    array.forEach(function(d, i) {
+      var classString = "dr-day";
+
+      if (d.fade)
+        classString += " dr-fade";
+
+      if (d.start)
+        classString += " dr-start";
+
+      if (d.end)
+        classString += " dr-end";
+
+      if (d.current)
+        classString += " dr-current";
+
+      if (d.selected)
+        classString += " dr-selected";
+
+      if (d.outside)
+        classString += " dr-outside";
+
+      $('.dr-day-list', self.element).append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
+    });
   }
 
 
@@ -567,7 +607,6 @@
         fade: true
       }
     }).reverse();
-
 
     // Leftover faded dates
     var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
@@ -618,36 +657,6 @@
   }
 
 
-  Calendar.prototype.calendarCreate = function(switcher) {
-    var self = this;
-    var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
-
-    array.forEach(function(d, i) {
-      var classString = "dr-day";
-
-      if (d.fade)
-        classString += " dr-fade";
-
-      if (d.start)
-        classString += " dr-start";
-
-      if (d.end)
-        classString += " dr-end";
-
-      if (d.current)
-        classString += " dr-current";
-
-      if (d.selected)
-        classString += " dr-selected";
-
-      if (d.outside)
-        classString += " dr-outside";
-
-      $('.dr-day-list', self.element).append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
-    });
-  }
-
-
   Calendar.prototype.calendarHTML = function(type) {
     var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>')
     var self = this;
@@ -659,9 +668,9 @@
     if (type == "double")
       return this.element.append('<div class="dr-input">' +
         '<div class="dr-dates">' +
-          '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.calendar_format) +'</div>' +
+          '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.format.input) +'</div>' +
           '<span class="dr-dates-dash">&ndash;</span>' +
-          '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.calendar_format) +'</div>' +
+          '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.format.input) +'</div>' +
         '</div>' +
 
         '<div class="dr-presets">' +
@@ -701,7 +710,7 @@
 
     return this.element.append('<div class="dr-input">' +
       '<div class="dr-dates">' +
-        '<div class="dr-date" contenteditable>'+ moment(this.current_date).format(this.calendar_format) +'</div>' +
+        '<div class="dr-date" contenteditable>'+ moment(this.current_date).format(this.format.input) +'</div>' +
       '</div>' +
     '</div>' +
 
