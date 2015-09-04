@@ -109,53 +109,48 @@ new Calendar({
 });
 ```
 
-### Single Calendar params
-- element\*
+### Both Single and Double Calendar Params
+- element \*required
   - jQuery DOM object of the calendar div you're working on
-- callback
-  - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest_date`, `this.latest_date` and `this.current_date` for doing things with the new dates.
 - earliest_date
   - The earliest date to show in the calendar
 - latest_date
   - The latest date to show in the calendar
-- current_date
-  - The date to start the calendar on
-
-### Double Calendar params
-- element\*
-  - jQuery DOM object of the calendar div you're working on
-- callback
-  - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest_date`, `this.latest_date`, `this.end_date`, `this.start_date` and `this.current_date` for doing things with the new dates.
-- earliest_date
-  - The earliest date to show in the calendar
-- latest_date
-  - The latest date to show in the calendar
-- start_date
-  - The date to start the selection on for the calendar
-- end_date
-  - The date to end the selection on for the calendar
 - format 
   - Object containing formatting strings for.. you guessed it.. formating your dates
-  - ```js
+  ```js
     format: {
       input: 'MMMM D, YYYY', // Format for the input fields
       preset: 'll', // Format for the preset dates
       jump_month: 'MMMM', // Format for the month switcher
       jump_year: 'YYYY' // Format for the year switcher
     }
-    ```
+  ```
 - days_array
   - Array of the 7 strings you'd like to represent your days in the calendar
-  - ```js
+  ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
-    ```
+  ```
+
+### Single Calendar Params
+- callback
+  - A function for whenever a new date is saved
+  - Inside you have access to variables like `this.earliest_date`, `this.latest_date` and `this.current_date` for doing things with the new dates.
+- current_date
+  - The date to start the calendar on
+
+### Double Calendar Params
+- callback
+  - A function for whenever a new date is saved
+  - Inside you have access to variables like `this.earliest_date`, `this.latest_date`, `this.end_date`, `this.start_date` and `this.current_date` for doing things with the new dates.
+- start_date
+  - The date to start the selection on for the calendar
+- end_date
+  - The date to end the selection on for the calendar
 - same_day_range
   - Allow a range selection of a single day
 
 ---
-\* required
 
 ## Developing
 
