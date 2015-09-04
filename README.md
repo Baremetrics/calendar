@@ -3,6 +3,33 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 
 ---
 
+## 1.0.4 Update
+- Formats! You can now format all the output dates via the format object in the `new Calendar` call (Thanks [Derk-Jan Karrenbeld](https://github.com/SleeplessByte))
+```js
+new Calendar({
+  ...
+  format = {
+    'input': 'MMMM D, YYYY', // Format for the input fields
+    'preset': 'll', // Format for the preset dates
+    'jump_month': 'MMMM', // Format for the month switcher
+    'jump_year': 'YYYY' // Format for the year switcher
+  }
+  ...
+  }
+});
+```
+- Days array. You can now include your own days array if you'd like to change the values at the top of the calendar
+```js
+new Calendar({
+  ...
+  days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
+  ...
+  }
+});
+```
+- On the double calendar, callbacks now submit on a click event outside the calendar if a valid date has been chosen for the first date. No need to pick the same second date just to submit the changes!
+- A few more minor bug fixes and improvements
+
 ## 1.0.3 Update
 
 - Added basic shorthand keyword support
@@ -109,8 +136,23 @@ new Calendar({
   - The date to start the selection on for the calendar
 - end_date
   - The date to end the selection on for the calendar
-- same_day
-  - Allow selection of a single day range
+- format 
+  - Object containing formatting strings for.. you guessed it.. formating your dates
+  - ```js
+    format: {
+      input: 'MMMM D, YYYY', // Format for the input fields
+      preset: 'll', // Format for the preset dates
+      jump_month: 'MMMM', // Format for the month switcher
+      jump_year: 'YYYY' // Format for the year switcher
+    }
+    ```
+- days_array
+  - Array of the 7 strings you'd like to represent your days in the calendar
+  - ```js
+    days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
+    ```
+- same_day_range
+  - Allow a range selection of a single day
 
 ---
 \* required
