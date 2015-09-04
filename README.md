@@ -38,6 +38,7 @@ new Calendar({
   - `[number] [interval] [ago/ahead]` to advance or regress the date based off the currently selected date (i.e. `1 month ago` on a date of August 1 would result in a date of July 1)
 - You may now use plain date strings in the Calendar object
 - Fixed a bug where auto selecting a week range after or before the current selection was getting suppressed and reset to the previous dates
+- Added support for selecting a range of single day with the `same_day_range` boolean in the double calendar call
 - Cleaned and dried out a couple verbose functions
 
 ## 1.0.2 Update
@@ -140,7 +141,7 @@ new Calendar({
 
 ### Double Calendar Params
 - callback
-  - The double calendar included access to `this.end_date` and `this.start_date`
+  - The double calendar includes access to `this.end_date` and `this.start_date`
 - start_date
   - The date to start the selection on for the calendar
 - end_date
