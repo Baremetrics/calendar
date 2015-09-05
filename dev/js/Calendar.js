@@ -30,7 +30,9 @@
     this.format.jump_month = settings.format && settings.format.jump_month || 'MMMM';
     this.format.jump_year = settings.format && settings.format.jump_year || 'YYYY';
 
-    this.days_array =     settings.days_array && settings.days_array.length == 7 ? settings.days_array : ['S','M','T','W','T','F','S'];
+    this.days_array =     settings.days_array && settings.days_array.length == 7 ? settings.days_array : moment.weekdaysMin();
+
+    this.periods =        settings.periods && settings.periods.length == 6 ? settings.periods : ['Last 30 days','Last month','Last 3 months','Last 6 months','Last year','All time'];
 
     this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
                           : moment(new Date('January 1, 1900')).startOf('day');
@@ -723,12 +725,12 @@
         '</div>' +
 
         '<ul class="dr-preset-list" style="display: none;">' +
-          '<li class="dr-list-item" data-months="days">Last 30 days <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="1">Last month <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="3">Last 3 months <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="6">Last 6 months <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="12">Last year <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="all">All time <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="days">' + this.periods[0] + ' <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="1">' + this.periods[1] + ' <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="3">' + this.periods[2] + ' <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="6">' + this.periods[3] + ' <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="12">' + this.periods[4] + ' <span class="dr-item-aside"></span></li>' +
+          '<li class="dr-list-item" data-months="all">' + this.periods[5] + ' <span class="dr-item-aside"></span></li>' +
         '</ul>' +
       '</div>');
 
