@@ -27,4 +27,13 @@ footer {
   margin-top: rem(24);
   border-top: 1px solid $mouse;
   clear: both;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
