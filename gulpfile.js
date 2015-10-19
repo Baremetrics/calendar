@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 
 
 // ROOT TASKS // ---------------------------------------------------------
-// Main style task  
+// Main style task
 gulp.task('css', function() {
   return gulp.src('dev/sass/application.scss')
     .pipe(sass())
@@ -20,10 +20,10 @@ gulp.task('css', function() {
 });
 
 // Main Javascript task
-gulp.task('js', function() {  
+gulp.task('js', function() {
   return gulp.src('dev/js/**/*.js')
     .pipe(newer('public/js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .on('error', handleError)
     .pipe(gulp.dest('public/js'));
 });
@@ -43,7 +43,7 @@ gulp.task('watch', function() {
   gulp.watch('dev/sass/**/*.scss', ['css']);
   gulp.watch('dev/js/**/*.js', ['js']);
   gulp.watch('dev/img/**/*.{jpg,jpeg,png,gif,svg,ico}', ['img']);
- 
+
   livereload.listen();
   gulp.watch(['public/*.html', 'public/js/**/*.js', 'public/img/**/*.{jpg,jpeg,png,gif,svg,ico}', 'public/css/*.css']).on('change', livereload.changed);
 });
