@@ -43,6 +43,34 @@
     this.current_date =   settings.current_date ? new Date(settings.current_date)
                           : (this.type == 'single' ? new Date() : null);
 
+    this.history_options =    settings.history_options || [
+      {
+        label   : 'last 30 days',
+        days    : '30',
+        round   : false
+      }, {
+        label   : 'last month',
+        months  : '1',
+        round   : true
+      }, {
+        label   : 'last 3 months',
+        months  : '3',
+        round   : true
+      }, {
+        label   : 'last 6 months',
+        months  : '6',
+        round   : true
+      }, {
+        label   : 'last year',
+        years   : '1',
+        round   : false
+      }, {
+        label   : 'all time',
+        months  : '0',
+        round   : true
+      }
+    ];
+
     this.callback =       settings.callback || this.calendarSetDates;
 
     this.calendarHTML(this.type);
@@ -207,7 +235,6 @@
   Calendar.prototype.presetToggle = function() {
     if (this.presetIsOpen == false) {
       this.presetIsOpen = true;
-      this.presetCreate();
     } else if (this.presetIsOpen) {
       this.presetIsOpen = false;
     }
@@ -222,39 +249,54 @@
 
 
   Calendar.prototype.presetCreate = function() {
-    var self = this;
-    var date = this.latest_date;
-    var last_day = moment(date).endOf('month');
-    var is_last_day = last_day.isSame(date);
-    var first_day;
+    var return_array  = [],
+        first_day,
+        last_day,
+        value,
+        time_measure  = 'day';
 
-    $('.dr-list-item', this.element).each(function() {
-      var month_count = $(this).data('months');
+    for (var i = 0, len = this.history_options.length; i < len ; i++) {
+      var elem       = this.history_options[i];
 
-      if (!is_last_day)
-        last_day = moment(date).subtract(1, 'month').endOf('month').startOf('day');
-
-      if (typeof month_count == 'number') {
-        first_day = moment(date).subtract(is_last_day ? month_count - 1 : month_count, 'month').startOf('month');
-
-        if (month_count == 12)
-          first_day = moment(date).subtract(is_last_day ? 11 : 12, 'month').startOf('month').startOf('day');
-      } else if (month_count == 'all') {
-        first_day = moment(self.earliest_date);
-        last_day = moment(self.latest_date);
+      if (elem.months && elem.months != 0) {
+        time_measure  = 'month';
+        value         = elem.months;
+      } else if (elem.weeks && elem.weeks != 0) {
+        time_measure  = 'week';
+        value         = elem.weeks;
+      } else if (elem.days && elem.days != 0) {
+        time_measure  = 'day';
+        value         = elem.days;
+      } else if (elem.years && elem.years != 0) {
+        time_measure  = 'year';
+        value         = elem.years;
       } else {
-        first_day = moment(self.latest_date).subtract(29, 'day');
-        last_day = moment(self.latest_date);
+        value         = '0';
       }
 
-      if (first_day.isBefore(self.earliest_date))
-        return $(this).remove()
+      if (value != '0' && elem.round) {
+        first_day   = moment(this.latest_date).subtract(value, time_measure).startOf(time_measure);
+        last_day    = moment(this.latest_date).subtract(1, time_measure).endOf(time_measure);
+      } else if (value != '0') {
+        first_day   = moment(this.latest_date).subtract(value, time_measure);
+        last_day    = moment(this.latest_date);
+      } else {
+        //this is for all time
+        first_day   = moment(this.earliest_date);
+        last_day    = this.latest_date;
+      }
 
-      $('.dr-item-aside', this)
-        .data('start', first_day.toISOString())
-        .data('end', last_day.toISOString())
-        .html(first_day.format(self.format.preset) +' &ndash; '+ last_day.format(self.format.preset));
-    });
+      return_array.push({
+        label               : elem.label,
+        first_day_ISOString : first_day.toISOString(),
+        last_day_ISOString  : last_day.toISOString(),
+        first_day           : first_day.format(this.format.preset),
+        last_day            : last_day.format(this.format.preset)
+      })
+
+    } //end for
+
+    return return_array;
   }
 
 
@@ -322,7 +364,7 @@
     if (s == 'ytd' || e == 'ytd') {
       s = moment().startOf('year');
       e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
-    } 
+    }
 
     // Finally set all strings as dates
     else {
@@ -682,12 +724,26 @@
 
 
   Calendar.prototype.calendarHTML = function(type) {
-    var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>')
+    var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>');
+    var ul_preset_list = $('<ul class="dr-preset-list" style="display: none;"></ul>');
     var self = this;
 
     $.each(this.days_array || moment.weekdaysMin(), function(i, elem) {
-      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
+      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
     });
+
+    $.each(this.presetCreate(), function(i, elem) {
+      ul_preset_list.append('<li class="dr-list-item">'
+        +elem.label+
+        '<span class="dr-item-aside" data-start="'+
+        elem.first_day_ISOString+
+        '" data-end="'+
+        elem.last_day_ISOString+
+        '">'+
+        elem.first_day+' &ndash; '+ elem.last_day+
+        '</span></li>');
+    });
+
 
     if (type == "double")
       return this.element.append('<div class="dr-input">' +
@@ -721,15 +777,9 @@
           ul_days_of_the_week[0].outerHTML +
           '<ul class="dr-day-list"></ul>' +
         '</div>' +
+        ul_preset_list[0].outerHTML +
 
-        '<ul class="dr-preset-list" style="display: none;">' +
-          '<li class="dr-list-item" data-months="days">Last 30 days <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="1">Last month <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="3">Last 3 months <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="6">Last 6 months <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="12">Last year <span class="dr-item-aside"></span></li>' +
-          '<li class="dr-list-item" data-months="all">All time <span class="dr-item-aside"></span></li>' +
-        '</ul>' +
+
       '</div>');
 
     return this.element.append('<div class="dr-input">' +
@@ -772,3 +822,7 @@
 
   return Calendar;
 }));
+
+
+
+
