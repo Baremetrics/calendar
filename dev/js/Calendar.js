@@ -39,8 +39,8 @@
 
     this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
                           : moment(new Date('January 1, 1900')).startOf('day');
-    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).endOf('day')
-                          : moment(new Date('December 31, 2900')).endOf('day');
+    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).startOf('day')
+                          : moment(new Date('December 31, 2900')).startOf('day');
     this.end_date =       settings.end_date ? new Date(settings.end_date)
                           : (this.type == 'double' ? new Date() : null);
     this.start_date =     settings.start_date ? new Date(settings.start_date)
