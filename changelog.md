@@ -3,7 +3,15 @@ Version 1.0.5 sees two major improvements.
 
 The first is you can now add a `required` key for the single date picker if you'd like to break the default and generate a picker with a placeholder rather then a predated input.
 
-![](http://tyler.link/dvjQ/Screen%20Shot%202015-11-27%20at%202.37.23%20PM.png)  
+```js
+new Calendar({
+  element: $('.daterange--single'),
+  current_date: 'June 15, 2015',
+  format: {input: 'M/D/YYYY'},
+  required: false
+});
+```
+
 ![](http://tyler.link/dw0p/Screen%20Shot%202015-11-27%20at%202.36.06%20PM.png)
 
 Note the input format will be the placeholder. Cool huh?
