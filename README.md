@@ -51,16 +51,16 @@ new Calendar({
 ```
 
 ### Base Calendar Params
-- *element* _\*required_ `[jQuery DOM object]`
+- **element** _\*required_ `[jQuery DOM object]`
   - jQuery DOM object of the calendar div you're working on
-- *earliest_date* `[date]`
+- **earliest_date** `[date]`
   - The earliest date to show in the calendar
-- *latest_date* `[date]`
+- **latest_date** `[date]`
   - The latest date to show in the calendar
-- *callback* `[function]`
+- **callback** `[function]`
   - A function for whenever a new date is saved
   - Inside you have access to object variables like `this.earliest_date` and `this.latest_date` for doing things with your calendar's dates
-- *format* `[object]`
+- **format** `[object]`
   - Object containing formatting strings for.. you guessed it.. formating your dates
   ```js
     format: {
@@ -69,26 +69,26 @@ new Calendar({
       jump_year: 'YYYY' // Format for the year switcher
     }
   ```
-- *days_array* `[array]`
+- **days_array** `[array]`
   - Array of the 7 strings you'd like to represent your days in the calendar
   ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
   ```
 
 ### Single Calendar Params
-- *current_date* `[date]`
+- **current_date** `[date]`
   - The date to start the calendar on
-- *required* `[boolean]`
+- **required** `[boolean]`
   - Toggle if this field must have always have a valid selected date
 
 ### Double Calendar Params
-- *start_date* `[date]`
+- **start_date** `[date]`
   - The date to start the selection on for the calendar
-- *end_date* `[date]`
+- **end_date** `[date]`
   - The date to end the selection on for the calendar
-- *format* `[object key:value]`
+- **format** `[object key:value]`
   - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
-- *same_day_range* `[boolean]`
+- **same_day_range** `[boolean]`
   - Allow a range selection of a single day
 
 ---
