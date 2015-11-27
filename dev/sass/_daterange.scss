@@ -50,6 +50,10 @@
         &:hover, &:focus, &.dr-active {
           color: $blue;
         }
+        &:empty:after {
+          content: attr(placeholder);
+          color: $rat;
+        }
       }
       .dr-dates-dash {
         color: $mouse;
@@ -104,7 +108,7 @@
       background-color: $white;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      border-radius: $radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -204,6 +208,7 @@
           text-align: center;
           width: calc(100% / 7);
           cursor: pointer;
+          color: $body;
 
           &.dr-hover:not(.dr-current) {
             background-color: $moon !important;
@@ -298,6 +303,7 @@
         width: 100%;
         padding: rem(10.5 12);
         text-align: left;
+        color: $body;
       }
     }
   }
