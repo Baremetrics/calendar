@@ -1,6 +1,7 @@
 var ss = new Calendar({
   element: $('.daterange--single'),
-  current_date: 'June 15, 2015'
+  current_date: 'June 15, 2015',
+  required: false
 });
   
 var dd = new Calendar({

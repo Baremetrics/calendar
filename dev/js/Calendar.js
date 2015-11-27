@@ -23,6 +23,7 @@
     this.selected =       null;
 
     this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
+    this.required =       settings.required == false ? false : true;
 
     this.format = settings.format || {};
     this.format.input =   settings.format && settings.format.input || 'MMMM D, YYYY';
@@ -266,6 +267,9 @@
       var old_date = $('.dr-date', this.element).html();
       var new_date = moment(this.current_date).format(this.format.input);
 
+      if (old_date.length == 0 && !this.required)
+        new_date = '';
+
       if (old_date != new_date)
         $('.dr-date', this.element).html(new_date);
     }
@@ -273,7 +277,8 @@
 
 
   Calendar.prototype.calendarSaveDates = function() {
-    return this.callback();
+    if ($(this.selected).html().length)
+      return this.callback();
   }
 
   Calendar.prototype.calendarCheckDate = function(d) {
@@ -595,7 +600,7 @@
 
   Calendar.prototype.calendarArray = function(start, end, current, switcher) {
     var self = this;
-    current = current || start || end;
+    current = moment(current || start || end).startOf('day');
 
     var first_day = moment(switcher || current).startOf('month');
     var last_day = moment(switcher || current).endOf('month');
@@ -734,7 +739,7 @@
 
     return this.element.append('<div class="dr-input">' +
       '<div class="dr-dates">' +
-        '<div class="dr-date" contenteditable>'+ moment(this.current_date).format(this.format.input) +'</div>' +
+        '<div class="dr-date" contenteditable placeholder="'+ this.format.input +'">'+ (this.required ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
       '</div>' +
     '</div>' +
 
