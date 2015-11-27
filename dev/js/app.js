@@ -2,7 +2,10 @@ var ss = new Calendar({
   element: $('.daterange--single'),
   current_date: 'June 15, 2015',
   format: {input: 'M/D/YYYY'},
-  required: false
+  required: false,
+  callback: function() {
+    console.log("single fired");
+  }
 });
   
 var dd = new Calendar({

@@ -25,13 +25,17 @@
     this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
     this.required =       settings.required == false ? false : true;
 
-    this.format = settings.format || {};
-    this.format.input =   settings.format && settings.format.input || 'MMMM D, YYYY';
-    this.format.preset =  settings.format && settings.format.preset || 'll';
-    this.format.jump_month = settings.format && settings.format.jump_month || 'MMMM';
-    this.format.jump_year = settings.format && settings.format.jump_year || 'YYYY';
+    this.format =             settings.format || {};
+    this.format.input =       settings.format && settings.format.input || 'MMMM D, YYYY';
+    this.format.preset =      settings.format && settings.format.preset || 'll';
+    this.format.jump_month =  settings.format && settings.format.jump_month || 'MMMM';
+    this.format.jump_year =   settings.format && settings.format.jump_year || 'YYYY';
 
     this.days_array =     settings.days_array && settings.days_array.length == 7 ? settings.days_array : ['S','M','T','W','T','F','S'];
+
+    this.orig_start_date =    null;
+    this.orig_end_date =      null;
+    this.orig_current_date =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
                           : moment(new Date('January 1, 1900')).startOf('day');
@@ -207,6 +211,11 @@
 
   Calendar.prototype.presetToggle = function() {
     if (this.presetIsOpen == false) {
+
+      this.orig_start_date = this.start_date;
+      this.orig_end_date = this.end_date;
+      this.orig_current_date = this.current_date;
+
       this.presetIsOpen = true;
       this.presetCreate();
     } else if (this.presetIsOpen) {
@@ -277,8 +286,13 @@
 
 
   Calendar.prototype.calendarSaveDates = function() {
-    if ($(this.selected).html().length)
-      return this.callback();
+    if (this.type == 'double') {
+      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date)) 
+        return this.callback();
+    } else {
+      if ($(this.selected).html().length && !moment(this.orig_current_date).isSame(this.current_date))
+        return this.callback();
+    } 
   }
 
   Calendar.prototype.calendarCheckDate = function(d) {
@@ -391,8 +405,13 @@
     if (this.presetIsOpen == true)
       this.presetToggle();
 
-    if (this.calIsOpen == true)
+    if (this.calIsOpen == true) {
       this.calendarClose(switcher ? 'switcher' : undefined);
+    } else if ($(this.selected).html().length) {
+      this.orig_start_date = this.start_date;
+      this.orig_end_date = this.end_date;
+      this.orig_current_date = this.current_date;
+    }
 
     this.calendarCheckDates();
     this.calendarCreate(switcher);
@@ -657,7 +676,6 @@
         fade: true
       }
     });
-
 
     // Actual visible dates
     d = undefined;

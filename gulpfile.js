@@ -23,7 +23,7 @@ gulp.task('css', function() {
 gulp.task('js', function() {  
   return gulp.src('dev/js/**/*.js')
     .pipe(newer('public/js'))
-    .pipe(uglify())
+    // .pipe(uglify())
     .on('error', handleError)
     .pipe(gulp.dest('public/js'));
 });
