@@ -30,7 +30,9 @@ Next you've just gotta create a `new Calendar` instance.
 ```js
 new Calendar({
   element: $('.daterange--single'),
-  current_date: 'June 15, 2015'
+  current_date: 'June 15, 2015',
+  format: {input: 'M/D/YYYY'},
+  required: false
 });
 
 new Calendar({
@@ -49,16 +51,16 @@ new Calendar({
 ```
 
 ### Base Calendar Params
-- element _\*required_
+- element _\*required_ `[jQuery DOM object]`
   - jQuery DOM object of the calendar div you're working on
-- earliest_date
+- earliest_date `[date]`
   - The earliest date to show in the calendar
-- latest_date
+- latest_date `[date]`
   - The latest date to show in the calendar
-- callback
+- callback `[function]`
   - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest_date`, `this.latest_date` and `this.current_date` for doing things with the new dates
-- format 
+  - Inside you have access to object variables like `this.earliest_date` and `this.latest_date` for doing things with your calendar's dates
+- format `[object]`
   - Object containing formatting strings for.. you guessed it.. formating your dates
   ```js
     format: {
@@ -67,26 +69,26 @@ new Calendar({
       jump_year: 'YYYY' // Format for the year switcher
     }
   ```
-- days_array
+- days_array `[array]`
   - Array of the 7 strings you'd like to represent your days in the calendar
   ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
   ```
 
 ### Single Calendar Params
-- current_date
+- current_date `[date]`
   - The date to start the calendar on
+- required `[boolean]`
+  - Toggle if this field must have always have a valid selected date
 
 ### Double Calendar Params
-- callback
-  - The double calendar includes access to `this.end_date` and `this.start_date`
-- start_date
+- start_date `[date]`
   - The date to start the selection on for the calendar
-- end_date
+- end_date `[date]`
   - The date to end the selection on for the calendar
-- format
+- format `[object key:value]`
   - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
-- same_day_range
+- same_day_range `[boolean]`
   - Allow a range selection of a single day
 
 ---
