@@ -1,19 +1,19 @@
 {
   "name": "BaremetricsCalendar",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Baremetrics/calendar.git"
   },
   "devDependencies": {
-    "gulp": "^3.8.10",
-    "gulp-autoprefixer": "^0.0.10",
-    "gulp-gh-pages": "^0.5.2",
-    "gulp-livereload": "^2.1.1",
-    "gulp-minify-css": "^0.3.8",
-    "gulp-newer": "^0.3.0",
-    "gulp-sass": "^0.7.3",
-    "gulp-uglify": "^1.0.1"
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-livereload": "^3.8.1",
+    "gulp-minify-css": "^1.2.2",
+    "gulp-newer": "^1.1.0",
+    "gulp-sass": "^2.1.0",
+    "gulp-uglify": "^1.5.1"
   }
 }
