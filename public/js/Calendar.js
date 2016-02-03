@@ -31,6 +31,8 @@
     this.format.jump_month =  settings.format && settings.format.jump_month || 'MMMM';
     this.format.jump_year =   settings.format && settings.format.jump_year || 'YYYY';
 
+    this.placeholder =        settings.placeholder || this.format.input;
+
     this.days_array =     settings.days_array && settings.days_array.length == 7 ? settings.days_array : ['S','M','T','W','T','F','S'];
 
     this.orig_start_date =    null;
@@ -287,12 +289,12 @@
 
   Calendar.prototype.calendarSaveDates = function() {
     if (this.type == 'double') {
-      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date)) 
+      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date))
         return this.callback();
     } else {
       if ($(this.selected).html().length && !moment(this.orig_current_date).isSame(this.current_date))
         return this.callback();
-    } 
+    }
   }
 
   Calendar.prototype.calendarCheckDate = function(d) {
@@ -341,7 +343,7 @@
     if (s == 'ytd' || e == 'ytd') {
       s = moment().startOf('year');
       e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
-    } 
+    }
 
     // Finally set all strings as dates
     else {
@@ -709,7 +711,7 @@
     var self = this;
 
     $.each(this.days_array || moment.weekdaysMin(), function(i, elem) {
-      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
+      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
     });
 
     if (type == "double")
@@ -757,7 +759,7 @@
 
     return this.element.append('<div class="dr-input">' +
       '<div class="dr-dates">' +
-        '<div class="dr-date" contenteditable placeholder="'+ this.format.input +'">'+ (this.required ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
+        '<div class="dr-date" contenteditable placeholder="'+ this.placeholder +'">'+ (this.required ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
       '</div>' +
     '</div>' +
 

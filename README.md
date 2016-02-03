@@ -5,10 +5,10 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 
 The Baremetrics date range picker is a simplified solution for selecting both date ranges and single dates all from a single calender view. There aren't a billion options but the code is pretty basic and modular so feel free to edit however to meet your own needs.
 
-Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)  
+Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)
 Code by [Tyler van der Hoeven](https://github.com/tyvdh)
 
-[View a demo](http://baremetrics.github.io/calendar/)  
+[View a demo](http://baremetrics.github.io/calendar/)
 [View in a live production app](https://demo.baremetrics.com/)
 
 ![](http://tyler.link/bqs5/Screen%20Shot%202015-07-02%20at%201.29.07%20PM.png)
@@ -44,7 +44,7 @@ new Calendar({
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
+
     console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
@@ -80,6 +80,8 @@ new Calendar({
   - The date to start the calendar on
 - **required** `[boolean]`
   - Toggle if this field must have always have a valid selected date
+- **placeholder** `[string]`
+  - Set placeholder text
 
 ### Double Calendar Params
 - **start_date** `[date]`
