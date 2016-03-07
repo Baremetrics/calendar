@@ -643,14 +643,16 @@
 
     var first_day = moment(switcher || current).startOf('month');
     var last_day = moment(switcher || current).endOf('month');
+    var current_month_start_day = +first_day.format('d') - moment().localeData().firstDayOfWeek();
+    var current_month_end_day = +last_day.format('d') - moment().localeData().firstDayOfWeek();
 
     var current_month = {
       start: {
-        day: +first_day.format('d'),
+        day: current_month_start_day ? current_month_start_day : 7 - current_month_start_day,
         str: +first_day.format('D')
       },
       end: {
-        day: +last_day.format('d'),
+        day: current_month_end_day ? current_month_end_day : 7 - current_month_end_day,
         str: +last_day.format('D')
       }
     }
@@ -726,8 +728,10 @@
 
   Calendar.prototype.calendarHTML = function(type) {
     var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>');
+    var days = this.days_array || moment.weekdaysMin();
+        days = days.splice(moment().localeData().firstDayOfWeek()).concat(days.splice(0, moment().localeData().firstDayOfWeek()));
 
-    $.each(this.days_array, function(i, elem) {
+    $.each(days, function(i, elem) {
       ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
     });
 
