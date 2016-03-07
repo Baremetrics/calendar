@@ -23,6 +23,7 @@
     position: relative;
     z-index: 5;
     overflow: hidden;
+    height: 40px;
 
     &:hover {
       border-color: $blue;
@@ -34,9 +35,9 @@
     .dr-dates {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       padding: 0 rem(24) 0 rem(12);
-      min-width: 230px;
+      min-width: calc(100% - 35px);
 
       .dr-date {
         font-size: rem(15);
@@ -56,12 +57,10 @@
         }
       }
       .dr-dates-dash {
-        color: $mouse;
-        position: relative;
-        top: -2px;
-        padding: 0 5px;
+        color: $rat;
+        padding: 0 10px;
         flex-grow: 0;
-        text-align: center;
+        font-weight: 600;
       }
     }
     .dr-presets {
@@ -260,7 +259,7 @@
       color: $blue;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      border-radius: $radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -284,6 +283,8 @@
         color: $rat;
         font-size: rem(12);
         margin-left: rem(5);
+        position: relative;
+        top: -1px;
       }
     }
   }
