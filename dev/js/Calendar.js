@@ -730,8 +730,7 @@
 
   Calendar.prototype.calendarHTML = function(type) {
     var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>');
-    var days = this.days_array || moment.weekdaysMin();
-        days = days.splice(moment().localeData().firstDayOfWeek()).concat(days.splice(0, moment().localeData().firstDayOfWeek()));
+    var days = this.days_array.splice(moment().localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment().localeData().firstDayOfWeek()));
 
     $.each(days, function(i, elem) {
       ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
