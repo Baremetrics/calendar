@@ -1,3 +1,10 @@
+## 1.0.6 Update
+Custom presets!!
+
+...
+
+We also added custom formatting for the placeholder text on the single date picker if the date is not required and locale based first day of the week.
+
 ## 1.0.5 Update
 Version 1.0.5 sees two major improvements.
 
