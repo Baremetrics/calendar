@@ -5,10 +5,10 @@ _[Baremetrics](https://baremetrics.com) provides one-click analytics & insights 
 
 The Baremetrics date range picker is a simplified solution for selecting both date ranges and single dates all from a single calender view. There aren't a billion options but the code is pretty basic and modular so feel free to edit however to meet your own needs.
 
-Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)  
+Design by [Chris Meeks](https://dribbble.com/ChrisMeeks)
 Code by [Tyler van der Hoeven](https://github.com/tyvdh)
 
-[View a demo](http://baremetrics.github.io/calendar/)  
+[View a demo](http://baremetrics.github.io/calendar/)
 [View in a live production app](https://demo.baremetrics.com/)
 
 ![](http://tyler.link/bqs5/Screen%20Shot%202015-07-02%20at%201.29.07%20PM.png)
@@ -44,7 +44,7 @@ new Calendar({
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
+
     console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
@@ -74,12 +74,28 @@ new Calendar({
   ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
   ```
+- **presets** `[boolean] or [object]`
+  - If you don't want to show the preset link just set this to `false` otherwise the default is true which will just give you a basic preset of.. yep.. presets. BOOM!
+  - Otherwise, if you want to customize it up you can include an array of preset objects. Something like:
+  ```js
+    presets: [{
+      label: 'Last month',
+      start: moment().subtract(1, 'month').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    },{
+      label: 'Last year',
+      start: moment().subtract(12, 'months').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    }]
+  ```
 
 ### Single Calendar Params
 - **current_date** `[date]`
   - The date to start the calendar on
 - **required** `[boolean]`
   - Toggle if this field must have always have a valid selected date
+- **placeholder** `[string]`
+  - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
 
 ### Double Calendar Params
 - **start_date** `[date]`
