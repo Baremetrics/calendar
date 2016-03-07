@@ -74,6 +74,20 @@ new Calendar({
   ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
   ```
+- **presets** `[boolean] or [object]`
+  - If you don't want to show the preset link just set this to `false` otherwise the default is true which will just give you a basic preset of.. yep.. presets. BOOM!
+  - Otherwise, if you want to customize it up you can include an array of preset objects. Something like:
+  ```js
+    presets: [{
+      label: 'Last month',
+      start: moment().subtract(1, 'month').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    },{
+      label: 'Last year',
+      start: moment().subtract(12, 'months').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    }]
+  ```
 
 ### Single Calendar Params
 - **current_date** `[date]`
@@ -81,7 +95,7 @@ new Calendar({
 - **required** `[boolean]`
   - Toggle if this field must have always have a valid selected date
 - **placeholder** `[string]`
-  - Set placeholder text (note this will only apply if the required key is set to `false`)
+  - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
 
 ### Double Calendar Params
 - **start_date** `[date]`

@@ -1,9 +1,27 @@
 ## 1.0.6 Update
 Custom presets!!
 
-...
+- **presets** `[boolean] or [object]`
+  - If you don't want to show the preset link just set this to `false` otherwise the default is true which will just give you a basic preset of.. yep.. presets. BOOM!
+  - Otherwise, if you want to customize it up you can include an array of preset objects. Something like:
+  ```js
+    presets: [{
+      label: 'Last month',
+      start: moment().subtract(1, 'month').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    },{
+      label: 'Last year',
+      start: moment().subtract(12, 'months').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    }]
+  ```
 
-We also added custom formatting for the placeholder text on the single date picker if the date is not required and locale based first day of the week.
+We also added custom formatting for the placeholder text on the single date picker if the date is not required.
+
+- **placeholder** `[string]`
+  - Set placeholder text (note this will only apply if the required key is set to `false`)
+
+Last but not least we also added support for locale based first day of the week.
 
 ## 1.0.5 Update
 Version 1.0.5 sees two major improvements.
