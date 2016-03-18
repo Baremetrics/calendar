@@ -33,10 +33,12 @@
     this.format.jump_month =  settings.format && settings.format.jump_month || 'MMMM';
     this.format.jump_year =   settings.format && settings.format.jump_year || 'YYYY';
 
-    this.placeholder =    settings.placeholder || this.format.input;
+    this.placeholder =        settings.placeholder || this.format.input;
+    this.placeholder_start =  settings.placeholder_start || this.format.input;
+    this.placeholder_end =    settings.placeholder_end  || this.format.input;
 
-    this.days_array =     settings.days_array && settings.days_array.length == 7 ? 
-                          settings.days_array : 
+    this.days_array =     settings.days_array && settings.days_array.length == 7 ?
+                          settings.days_array :
                           ['S','M','T','W','T','F','S'];
 
     this.orig_start_date =    null;
@@ -188,7 +190,7 @@
     this.element.on('click', function() {
       $('.daterange, input').add(window).on('click', function(f) {
         var contains = self.element.find(f.target);
-        
+
         if (!contains.length) {
           if (self.presetIsOpen)
             self.presetToggle();
@@ -231,7 +233,7 @@
   Calendar.prototype.presetCreate = function() {
     var self = this;
     var ul_presets = $('<ul class="dr-preset-list" style="display: none;"></ul>');
-    var presets = typeof self.settings.presets == 'object' ? self.settings.presets : 
+    var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
     [{
       label: 'Last 30 days',
       start: moment(this.latest_date).subtract(29, 'days'),
@@ -293,8 +295,26 @@
 
 
   Calendar.prototype.calendarSetDates = function() {
-    $('.dr-date-start', this.element).html(moment(this.start_date).format(this.format.input));
-    $('.dr-date-end', this.element).html(moment(this.end_date).format(this.format.input));
+
+    if (this.start_date) {
+      var old_start_date = $('.dr-date-start', this.element).html();
+      var new_start_date = moment(this.start_date).format(this.format.input);
+      if (old_start_date.length == 0 && !this.required)
+        new_start_date = '';
+
+      if (old_start_date != new_start_date)
+        $('.dr-date-start', this.element).html(new_start_date);
+    }
+
+    if (this.end_date) {
+      var old_end_date = $('.dr-date-end', this.element).html();
+      var new_end_date = moment(this.end_date).format(this.format.input);
+      if (old_end_date.length == 0 && !this.required)
+        new_end_date = '';
+
+      if (old_end_date != new_end_date)
+        $('.dr-date-start', this.element).html(new_end_date);
+    }
 
     if (!this.start_date && !this.end_date) {
       var old_date = $('.dr-date', this.element).html();
@@ -398,7 +418,25 @@
     // Push and save if it's valid otherwise return to previous state
     this.start_date = s == 'Invalid Date' ? this.start_date : s;
     this.end_date = e == 'Invalid Date' ? this.end_date : e;
-    this.current_date = c == 'Invalid Date' ? this.current_date : c;
+
+    // We need to handle double inputs differently to take care of required:false scenario
+    if (c == 'Invalid Date') {
+      if ($(this.selected).hasClass('dr-date-start')) {
+        this.current_date = this.start_date;
+      }
+
+      else if ($(this.selected).hasClass('dr-date-end')) {
+        this.current_date = this.end_date;
+      }
+
+      else {
+        this.current_date = this.current_date;
+      }
+    }
+
+    else {
+      this.current_date = c;
+    }
   }
 
 
@@ -733,15 +771,15 @@
     var days = this.days_array.splice(moment().localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment().localeData().firstDayOfWeek()));
 
     $.each(days, function(i, elem) {
-      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
+      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
     });
 
     if (type == "double")
       return this.element.append('<div class="dr-input">' +
         '<div class="dr-dates">' +
-          '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.format.input) +'</div>' +
+          '<div class="dr-date dr-date-start" contenteditable placeholder="'+ this.placeholder_start +'">'+ (this.required ? moment(this.start_date).format(this.format.input) : '') +'</div>' +
           '<span class="dr-dates-dash">&ndash;</span>' +
-          '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.format.input) +'</div>' +
+          '<div class="dr-date dr-date-end" contenteditable placeholder="'+ this.placeholder_end +'">'+ (this.required ? moment(this.end_date).format(this.format.input) : '') +'</div>' +
         '</div>' +
 
         (this.presets ? '<div class="dr-presets">' +
