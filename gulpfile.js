@@ -11,7 +11,7 @@ var gulp = require('gulp'),
 // ROOT TASKS // ---------------------------------------------------------
 // Main style task  
 gulp.task('css', function() {
-  return gulp.src('dev/sass/application.scss')
+  return gulp.src('dev/sass/**/**.scss')
     .pipe(sass())
     .on('error', handleError)
     .pipe(autoprefixer({cascade: false})) // auto prefix
