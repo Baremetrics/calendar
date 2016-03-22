@@ -88,12 +88,12 @@ new Calendar({
       end: moment().subtract(1, 'month').endOf('month')
     }]
   ```
+- **required** `[boolean]`
+  - Toggle if this field must have always have a valid selected dates
 
 ### Single Calendar Params
 - **current_date** `[date]`
   - The date to start the calendar on
-- **required** `[boolean]`
-  - Toggle if this field must have always have a valid selected date
 - **placeholder** `[string]`
   - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
 
@@ -106,6 +106,10 @@ new Calendar({
   - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
 - **same_day_range** `[boolean]`
   - Allow a range selection of a single day
+- **placeholder_start** `[string]`
+  - Set placeholder text for the start date (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
+- **placeholder_end** `[string]`
+  - Set placeholder text for the end date (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
 
 ---
 
