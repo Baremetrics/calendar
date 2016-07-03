@@ -1,5 +1,5 @@
 # [Baremetrics](https://baremetrics.com/) Date Range Picker
-_[Baremetrics](https://baremetrics.com) provides one-click analytics & insights for Stripe. **[Get started today!](https://baremetrics.com)**_
+_[Baremetrics](https://baremetrics.com) provides zero-setup subscription analytics & insights for Stripe, Braintree and Recurly. **[Get started today!](https://baremetrics.com)**_
 
 ---
 
