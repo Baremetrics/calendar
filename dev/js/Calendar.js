@@ -35,8 +35,8 @@
 
     this.placeholder =    settings.placeholder || this.format.input;
 
-    this.days_array =     settings.days_array && settings.days_array.length == 7 ? 
-                          settings.days_array : 
+    this.days_array =     settings.days_array && settings.days_array.length == 7 ?
+                          settings.days_array :
                           ['S','M','T','W','T','F','S'];
 
     this.orig_start_date =    null;
@@ -188,7 +188,7 @@
     this.element.on('click', function() {
       $('.daterange, input').add(window).on('click', function(f) {
         var contains = self.element.find(f.target);
-        
+
         if (!contains.length) {
           if (self.presetIsOpen)
             self.presetToggle();
@@ -231,7 +231,7 @@
   Calendar.prototype.presetCreate = function() {
     var self = this;
     var ul_presets = $('<ul class="dr-preset-list" style="display: none;"></ul>');
-    var presets = typeof self.settings.presets == 'object' ? self.settings.presets : 
+    var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
     [{
       label: 'Last 30 days',
       start: moment(this.latest_date).subtract(29, 'days'),
@@ -733,7 +733,7 @@
     var days = this.days_array.splice(moment().localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment().localeData().firstDayOfWeek()));
 
     $.each(days, function(i, elem) {
-      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>'); 
+      ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
     });
 
     if (type == "double")
