@@ -645,8 +645,8 @@
 
     var first_day = moment(switcher || current).startOf('month');
     var last_day = moment(switcher || current).endOf('month');
-    var current_month_start_day = +first_day.format('d') - moment().localeData().firstDayOfWeek();
-    var current_month_end_day = +last_day.format('d') - moment().localeData().firstDayOfWeek();
+    var current_month_start_day = +first_day.format('e') - moment().localeData().firstDayOfWeek();
+    var current_month_end_day = +last_day.format('e') - moment().localeData().firstDayOfWeek();
 
     var current_month = {
       start: {
