@@ -1,3 +1,6 @@
+## 1.0.7 Update
+Originally the compiled CSS file had both my demo app CSS and the calendar CSS all mashed together. Apparently some folks found that to be annoying. (Hint: It was me) This is no longer the case.
+
 ## 1.0.6 Update
 Custom presets!!
 
