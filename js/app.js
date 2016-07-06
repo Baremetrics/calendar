@@ -5,7 +5,7 @@ var ss = new Calendar({
   placeholder: 'Select a Date',
   required: false
 });
-  
+
 var dd = new Calendar({
   element: $('.one'),
   earliest_date: 'January 1, 2000',
@@ -15,7 +15,7 @@ var dd = new Calendar({
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
+
     console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
@@ -30,7 +30,7 @@ new Calendar({
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
+
     console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
@@ -57,7 +57,7 @@ new Calendar({
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
+
     console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
