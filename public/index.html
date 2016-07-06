@@ -10,7 +10,15 @@
   <link rel="stylesheet" href="css/home.css" />
 
   <script src="js/vendor/jquery.js"></script>
-  <script src="js/vendor/moment.js"></script>
+  <script src="js/vendor/moment-with-locales.min.js"></script>
+  
+  <script>
+    //Starting day of Week is Sunday
+    moment.locale('en');
+    
+    //Starting day of Week is Monday
+    //moment.locale('en-gb');
+  </script>
 </head>
 <body>
   <h1><a href="https://baremetrics.com">Baremetrics</a> Date Range Picker</h1>

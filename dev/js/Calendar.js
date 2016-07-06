@@ -643,18 +643,23 @@
     var self = this;
     current = moment(current || start || end).startOf('day');
 
+    //Determine what first day of the week is
+    //Some locale's it's Sunday 'en' others it's Momnday 'en-gb'
+    //0 = Sunday, 1 = Monday
+    var first_day_of_week = moment().localeData().firstDayOfWeek();
+    
     var first_day = moment(switcher || current).startOf('month');
     var last_day = moment(switcher || current).endOf('month');
-    var current_month_start_day = +first_day.format('d') - moment().localeData().firstDayOfWeek();
-    var current_month_end_day = +last_day.format('d') - moment().localeData().firstDayOfWeek();
+    var current_month_start_day = +first_day.format('d');
+    var current_month_end_day = +last_day.format('d');
 
     var current_month = {
       start: {
-        day: current_month_start_day ? current_month_start_day : 7 - current_month_start_day,
+        day: current_month_start_day ? current_month_start_day - first_day_of_week : 7 - current_month_start_day - first_day_of_week,
         str: +first_day.format('D')
       },
       end: {
-        day: current_month_end_day ? current_month_end_day : 7 - current_month_end_day,
+        day: current_month_end_day ? current_month_end_day - first_day_of_week : 7 - current_month_end_day - first_day_of_week,
         str: +last_day.format('D')
       }
     }
@@ -679,7 +684,7 @@
         fade: true
       }
     }).reverse();
-
+    
     // Leftover faded dates
     var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
     d = undefined;
@@ -804,7 +809,7 @@
     for (var idx = 0; idx < length; idx++) {
       range[idx] = idx;
     }
-
+    
     return range;
   }
 
