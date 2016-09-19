@@ -319,7 +319,7 @@
   }
 
   Calendar.prototype.calendarCheckDate = function(d) {
-    var regex = /(?!<=\d)(st|nd|rd|th)/;
+    var regex = /(?:\d)((?:st|nd|rd|th)?,?)/;
     var d_array = d ? d.replace(regex, '').split(' ') : [];
 
     // Today
@@ -335,7 +335,7 @@
       d = this.latest_date;
 
     // Convert string to a date if keyword ago or ahead exists
-    if (d && (d.toString().indexOf('ago') != -1 || d.toString().indexOf('ahead') != -1))
+    if ( d && (/\bago\b/.test(d) || /\bahead\b/.test(d)) )
       d = this.stringToDate(d);
 
     // Add current year if year is not included
