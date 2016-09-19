@@ -36,8 +36,7 @@
     this.placeholder =    settings.placeholder || this.format.input;
 
     this.days_array =     settings.days_array && settings.days_array.length == 7 ?
-                          settings.days_array :
-                          ['S','M','T','W','T','F','S'];
+                          settings.days_array : moment.weekdaysMin();
 
     this.orig_start_date =    null;
     this.orig_end_date =      null;
