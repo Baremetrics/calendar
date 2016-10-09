@@ -50,7 +50,7 @@
     this.end_date =       settings.end_date ? new Date(settings.end_date)
                           : (this.type == 'double' ? new Date() : null);
     this.start_date =     settings.start_date ? new Date(settings.start_date)
-                          : (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
+                          : (this.type == 'double' ? moment(this.end_date).subtract(1, 'month').toDate() : null);
     this.current_date =   settings.current_date ? new Date(settings.current_date)
                           : (this.type == 'single' ? new Date() : null);
 
