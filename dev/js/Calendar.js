@@ -341,7 +341,7 @@
 
     // Add current year if year is not included
     if (d_array.length == 2) {
-      d_array.push(moment().format(this.display_year_format))
+      d_array.push(moment().format(this.format.jump_year));
       d = d_array.join(' ');
     }
 
