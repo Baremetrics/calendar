@@ -129,7 +129,7 @@
             var back = moment(self.current_date).subtract(1, timeframe);
 
             $(this).html(back.format(self.format.input));
-            self.current_date = back._d;
+            self.current_date = back.toDate();
           break;
 
           case 40: // Down
@@ -145,7 +145,7 @@
             var forward = moment(self.current_date).add(1, timeframe);
 
             $(this).html(forward.format(self.format.input));
-            self.current_date = forward._d;
+            self.current_date = forward.toDate();
           break;
         }
       }
