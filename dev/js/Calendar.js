@@ -186,7 +186,7 @@
 
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
-      $('.daterange, input').add(window).on('click', function(f) {
+      window.addEventListener('click', function (f) {
         var contains = self.element.find(f.target);
 
         if (!contains.length) {
