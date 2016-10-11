@@ -36,8 +36,7 @@
     this.placeholder =    settings.placeholder || this.format.input;
 
     this.days_array =     settings.days_array && settings.days_array.length == 7 ?
-                          settings.days_array :
-                          ['S','M','T','W','T','F','S'];
+                          settings.days_array : moment.weekdaysMin();
 
     this.orig_start_date =    null;
     this.orig_end_date =      null;
@@ -329,7 +328,7 @@
   }
 
   Calendar.prototype.calendarCheckDate = function(d) {
-    var regex = /(?!<=\d)(st|nd|rd|th)/;
+    var regex = /(?:\d)((?:st|nd|rd|th)?,?)/;
     var d_array = d ? d.replace(regex, '').split(' ') : [];
 
     // Today
@@ -345,7 +344,7 @@
       d = this.latest_date;
 
     // Convert string to a date if keyword ago or ahead exists
-    if (d && (d.toString().indexOf('ago') != -1 || d.toString().indexOf('ahead') != -1))
+    if ( d && (/\bago\b/.test(d) || /\bahead\b/.test(d)) )
       d = this.stringToDate(d);
 
     // Add current year if year is not included
@@ -650,94 +649,34 @@
     var self = this;
     current = moment(current || start || end).startOf('day');
 
-    var first_day = moment(switcher || current).startOf('month');
-    var last_day = moment(switcher || current).endOf('month');
-    var current_month_start_day = +first_day.format('d') - moment().localeData().firstDayOfWeek();
-    var current_month_end_day = +last_day.format('d') - moment().localeData().firstDayOfWeek();
+    var reference = switcher || current || start || end;
 
-    var current_month = {
-      start: {
-        day: current_month_start_day ? current_month_start_day : 7 - current_month_start_day,
-        str: +first_day.format('D')
-      },
-      end: {
-        day: current_month_end_day ? current_month_end_day : 7 - current_month_end_day,
-        str: +last_day.format('D')
-      }
-    }
+    var startRange = moment(reference).startOf('month').startOf('week');
+    var endRange = moment(startRange).add(6*7 - 1, 'days').endOf('day');
 
-
-    // Beginning faded dates
-    var d = undefined;
-
-    var start_hidden = this.range(current_month.start.day).map(function() {
-      if (d == undefined) {
-        d = moment(first_day);
-      } d = d.subtract(1, 'day');
-
-      return {
+    var daysInRange = [];
+    var d = moment(startRange);
+    while ( d.isBefore(endRange) ) {
+      daysInRange.push( {
         str: +d.format('D'),
-        start: d.isSame(start),
-        end: d.isSame(end),
-        current: d.isSame(current),
-        selected: d.isBetween(start, end),
-        date: d.toISOString(),
-        outside: d.isBefore(self.earliest_date),
-        fade: true
-      }
-    }).reverse();
-
-    // Leftover faded dates
-    var leftover = (6 * 7) - (current_month.end.str + start_hidden.length);
-    d = undefined;
-
-    var end_hidden = this.range(leftover).map(function() {
-      if (d == undefined) {
-        d = moment(last_day);
-      } d = d.add(1, 'day').startOf('day');
-
-      return {
-        str: +d.format('D'),
-        start: d.isSame(start),
-        end: d.isSame(end),
-        current: d.isSame(current),
-        selected: d.isBetween(start, end),
-        date: d.toISOString(),
-        outside: d.isAfter(self.latest_date),
-        fade: true
-      }
-    });
-
-    // Actual visible dates
-    d = undefined;
-
-    var visible = this.range(current_month.end.str).map(function() {
-      if (d == undefined) {
-        d = moment(first_day);
-      } else {
-        d = d.add(1, 'day').startOf('day');
-      }
-
-      return {
-        str: +d.format('D'),
-        start: d.isSame(start),
-        end: d.isSame(end),
-        current: d.isSame(current),
-        selected: d.isBetween(start, end),
+        start: start && d.isSame(start, 'day'),
+        end: end && d.isSame(end, 'day'),
+        current: current && d.isSame(current, 'day'),
+        selected: start && end && d.isBetween(start, end),
         date: d.toISOString(),
         outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date),
-        fade: false
-      }
-    });
+        fade: !d.isSame(reference, 'month')
+      } );
+      d.add(1, 'd');
+    }
 
-
-    return start_hidden.concat(visible, end_hidden);
+    return daysInRange;
   }
 
 
   Calendar.prototype.calendarHTML = function(type) {
     var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>');
-    var days = this.days_array.splice(moment().localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment().localeData().firstDayOfWeek()));
+    var days = this.days_array.splice(moment.localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment.localeData().firstDayOfWeek()));
 
     $.each(days, function(i, elem) {
       ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
