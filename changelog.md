@@ -1,3 +1,7 @@
+## 1.0.8 Update
+- Pulled in a couple pull requests to fix some locale issues
+- Couple small bug fixes and performance improvements
+
 ## 1.0.7 Update
 Originally the compiled CSS file had both my demo app CSS and the calendar CSS all mashed together. Apparently some folks found that to be annoying. (Hint: It was me) This is no longer the case.
 
