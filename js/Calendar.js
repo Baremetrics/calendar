@@ -43,16 +43,16 @@
     this.orig_end_date =      null;
     this.orig_current_date =  null;
 
-    this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
-                          : moment(new Date('January 1, 1900')).startOf('day');
-    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).startOf('day')
-                          : moment(new Date('December 31, 2900')).startOf('day');
-    this.end_date =       settings.end_date ? new Date(settings.end_date)
-                          : (this.type == 'double' ? new Date() : null);
-    this.start_date =     settings.start_date ? new Date(settings.start_date)
-                          : (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
-    this.current_date =   settings.current_date ? new Date(settings.current_date)
-                          : (this.type == 'single' ? new Date() : null);
+    this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
+                          : moment('January 1, 1900');
+    this.latest_date =    settings.latest_date ? moment(settings.latest_date)
+                          : moment('December 31, 2900');
+    this.end_date =       settings.end_date ? moment(settings.end_date)
+                          : (this.type == 'double' ? moment() : null);
+    this.start_date =     settings.start_date ? moment(settings.start_date)
+                          : (this.type == 'double' ? moment(this.end_date, -1, 'month') : null);
+    this.current_date =   settings.current_date ? moment(settings.current_date)
+                          : (this.type == 'single' ? moment() : null);
 
     this.presets =        settings.presets == false || this.type == 'single' ? false : true;
 
@@ -129,7 +129,7 @@
             var back = moment(self.current_date).subtract(1, timeframe);
 
             $(this).html(back.format(self.format.input));
-            self.current_date = back._d;
+            self.current_date = back.toDate();
           break;
 
           case 40: // Down
@@ -145,7 +145,7 @@
             var forward = moment(self.current_date).add(1, timeframe);
 
             $(this).html(forward.format(self.format.input));
-            self.current_date = forward._d;
+            self.current_date = forward.toDate();
           break;
         }
       }
@@ -186,7 +186,7 @@
 
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
-      $('.daterange, input').add(window).on('click', function(f) {
+      window.addEventListener('click', function (f) {
         var contains = self.element.find(f.target);
 
         if (!contains.length) {
@@ -234,29 +234,38 @@
     var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
     [{
       label: 'Last 30 days',
-      start: moment(this.latest_date).subtract(29, 'days'),
-      end: this.latest_date
+      start: moment(self.latest_date).subtract(29, 'days'),
+      end: self.latest_date
     },{
       label: 'Last month',
-      start: moment(this.latest_date).subtract(1, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(1, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last 3 months',
-      start: moment(this.latest_date).subtract(3, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(3, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last 6 months',
-      start: moment(this.latest_date).subtract(6, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(6, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last year',
-      start: moment(this.latest_date).subtract(12, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(12, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'All time',
-      start: this.earliest_date,
-      end: this.latest_date
+      start: self.earliest_date,
+      end: self.latest_date
     }];
+
+    if (moment(self.latest_date).diff(moment(self.latest_date).startOf('month'), 'days') >= 6) {
+
+      presets.splice(1, 0, {
+        label: 'This month',
+        start: moment(self.latest_date).startOf('month'),
+        end: self.latest_date
+      });
+    }
 
     $.each(presets, function(i, d) {
       if (moment(d.start).isBefore(self.earliest_date)) {
@@ -341,7 +350,7 @@
 
     // Add current year if year is not included
     if (d_array.length == 2) {
-      d_array.push(moment().format(this.display_year_format))
+      d_array.push(moment().format(this.format.jump_year));
       d = d_array.join(' ');
     }
 
@@ -356,49 +365,47 @@
   }
 
   Calendar.prototype.calendarCheckDates = function() {
-    var s = $('.dr-date-start', this.element).html();
-    var e = $('.dr-date-end', this.element).html();
-    var c = $(this.selected).html();
+    var startTxt = $('.dr-date-start', this.element).html();
+    var endTxt = $('.dr-date-end', this.element).html();
+    var c = moment(this.calendarCheckDate($(this.selected).html()));
 
     // Modify strings via some specific keywords to create valid dates
-    // Year to date
-    if (s == 'ytd' || e == 'ytd') {
-      s = moment().startOf('year');
-      e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
-    }
-
     // Finally set all strings as dates
-    else {
-      s = this.calendarCheckDate(s);
-      e = this.calendarCheckDate(e);
-    } c = this.calendarCheckDate(c);
-
-    if (moment(c).isSame(s) && moment(s).isAfter(e)) {
-      e = moment(s).add(6, 'day');
+    if (startTxt == 'ytd' || endTxt == 'ytd') {
+      // Year to date
+      var s = moment().startOf('year');
+      var e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
+    } else {
+      s = moment(this.calendarCheckDate(startTxt));
+      e = moment(this.calendarCheckDate(endTxt));
     }
 
-    if (moment(c).isSame(e) && moment(e).isBefore(s)) {
-      s = moment(e).subtract(6, 'day');
+    if (c.isSame(s) && s.isAfter(e)) {
+      e = s.add(6, 'day');
     }
 
-    if (moment(e).isBefore(this.earliest_date) || moment(s).isBefore(this.earliest_date)) {
+    if (c.isSame(e) && e.isBefore(s)) {
+      s = e.subtract(6, 'day');
+    }
+
+    if (e.isBefore(this.earliest_date) || s.isBefore(this.earliest_date)) {
       s = moment(this.earliest_date);
       e = moment(this.earliest_date).add(6, 'day');
     }
 
-    if (moment(e).isAfter(this.latest_date) || moment(s).isAfter(this.latest_date)) {
+    if (e.isAfter(this.latest_date) || s.isAfter(this.latest_date)) {
       s = moment(this.latest_date).subtract(6, 'day');
       e = moment(this.latest_date);
     }
 
     // Is this a valid date?
-    if (moment(s).isSame(e) && !this.sameDayRange)
+    if (s.isSame(e) && !this.sameDayRange)
       return this.calendarSetDates();
 
     // Push and save if it's valid otherwise return to previous state
-    this.start_date = s == 'Invalid Date' ? this.start_date : s;
-    this.end_date = e == 'Invalid Date' ? this.end_date : e;
-    this.current_date = c == 'Invalid Date' ? this.current_date : c;
+    this.start_date = s.isValid() ? s.toDate() : this.start_date;
+    this.end_date = e.isValid() ? e.toDate() : this.end_date;
+    this.current_date = c.isValid() ? c.toDate() : this.current_date;
   }
 
 
