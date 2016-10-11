@@ -43,16 +43,16 @@
     this.orig_end_date =      null;
     this.orig_current_date =  null;
 
-    this.earliest_date =  settings.earliest_date ? moment(new Date(settings.earliest_date)).startOf('day')
-                          : moment(new Date('January 1, 1900')).startOf('day');
-    this.latest_date =    settings.latest_date ? moment(new Date(settings.latest_date)).startOf('day')
-                          : moment(new Date('December 31, 2900')).startOf('day');
-    this.end_date =       settings.end_date ? new Date(settings.end_date)
-                          : (this.type == 'double' ? new Date() : null);
-    this.start_date =     settings.start_date ? new Date(settings.start_date)
-                          : (this.type == 'double' ? new Date(moment(this.end_date).subtract(1, 'month')) : null);
-    this.current_date =   settings.current_date ? new Date(settings.current_date)
-                          : (this.type == 'single' ? new Date() : null);
+    this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
+                          : moment('January 1, 1900');
+    this.latest_date =    settings.latest_date ? moment(settings.latest_date)
+                          : moment('December 31, 2900');
+    this.end_date =       settings.end_date ? moment(settings.end_date)
+                          : (this.type == 'double' ? moment() : null);
+    this.start_date =     settings.start_date ? moment(settings.start_date)
+                          : (this.type == 'double' ? moment(this.end_date, -1, 'month') : null);
+    this.current_date =   settings.current_date ? moment(settings.current_date)
+                          : (this.type == 'single' ? moment() : null);
 
     this.presets =        settings.presets == false || this.type == 'single' ? false : true;
 
@@ -234,29 +234,38 @@
     var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
     [{
       label: 'Last 30 days',
-      start: moment(this.latest_date).subtract(29, 'days'),
-      end: this.latest_date
+      start: moment(self.latest_date).subtract(29, 'days'),
+      end: self.latest_date
     },{
       label: 'Last month',
-      start: moment(this.latest_date).subtract(1, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(1, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last 3 months',
-      start: moment(this.latest_date).subtract(3, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(3, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last 6 months',
-      start: moment(this.latest_date).subtract(6, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(6, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last year',
-      start: moment(this.latest_date).subtract(12, 'month').startOf('month'),
-      end: moment(this.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(12, 'month').startOf('month'),
+      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'All time',
-      start: this.earliest_date,
-      end: this.latest_date
+      start: self.earliest_date,
+      end: self.latest_date
     }];
+
+    if (moment(self.latest_date).diff(moment(self.latest_date).startOf('month'), 'days') >= 6) {
+
+      presets.splice(1, 0, {
+        label: 'This month',
+        start: moment(self.latest_date).startOf('month'),
+        end: self.latest_date
+      });
+    }
 
     $.each(presets, function(i, d) {
       if (moment(d.start).isBefore(self.earliest_date)) {
