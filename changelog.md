@@ -1,3 +1,7 @@
+## 1.0.9 Update
+- Don't automatically include the "This month" preset in with custom presets (sorry guys)
+- If required is set to `false` for a date range but you've included a `current_date` value the input will pre-fill with that date rather then defaulting to the placeholder
+
 ## 1.0.8 Update
 - Pulled in a couple pull requests to fix some locale issues
 - Couple small bug fixes and performance improvements
