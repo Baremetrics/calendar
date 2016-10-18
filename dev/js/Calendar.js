@@ -15,55 +15,55 @@
   function Calendar(settings) {
     var self = this;
 
-    this.settings =       settings;
+    this.settings = settings;
 
-    this.calIsOpen =      false;
-    this.presetIsOpen =   false;
-    this.sameDayRange =   settings.same_day_range || false;
+    this.calIsOpen = false;
+    this.presetIsOpen = false;
+    this.sameDayRange = settings.same_day_range || false;
 
-    this.element =        settings.element || $('.daterange');
-    this.selected =       null;
+    this.element = settings.element || $('.daterange');
+    this.selected = null;
 
-    this.type =           this.element.hasClass('daterange--single') ? 'single' : 'double';
-    this.required =       settings.required == false ? false : true;
+    this.type = this.element.hasClass('daterange--single') ? 'single' : 'double';
+    this.required = settings.required == false ? false : true;
 
-    this.format =             settings.format || {};
-    this.format.input =       settings.format && settings.format.input || 'MMMM D, YYYY';
-    this.format.preset =      settings.format && settings.format.preset || 'll';
-    this.format.jump_month =  settings.format && settings.format.jump_month || 'MMMM';
-    this.format.jump_year =   settings.format && settings.format.jump_year || 'YYYY';
+    this.format = settings.format || {};
+    this.format.input = settings.format && settings.format.input || 'MMMM D, YYYY';
+    this.format.preset = settings.format && settings.format.preset || 'll';
+    this.format.jump_month = settings.format && settings.format.jump_month || 'MMMM';
+    this.format.jump_year = settings.format && settings.format.jump_year || 'YYYY';
 
-    this.placeholder =    settings.placeholder || this.format.input;
+    this.placeholder = settings.placeholder || this.format.input;
 
-    this.days_array =     settings.days_array && settings.days_array.length == 7 ?
-                          settings.days_array : moment.weekdaysMin();
+    this.days_array = settings.days_array && settings.days_array.length == 7 ?
+      settings.days_array : moment.weekdaysMin();
 
-    this.orig_start_date =    null;
-    this.orig_end_date =      null;
-    this.orig_current_date =  null;
+    this.orig_start_date = null;
+    this.orig_end_date = null;
+    this.orig_current_date = null;
 
-    this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
-                          : moment('January 1, 1900');
-    this.latest_date =    settings.latest_date ? moment(settings.latest_date)
-                          : moment('December 31, 2900');
-    this.end_date =       settings.end_date ? moment(settings.end_date)
-                          : (this.type == 'double' ? moment() : null);
-    this.start_date =     settings.start_date ? moment(settings.start_date)
-                          : (this.type == 'double' ? moment(this.end_date, -1, 'month') : null);
-    this.current_date =   settings.current_date ? moment(settings.current_date)
-                          : (this.type == 'single' ? moment() : null);
+    this.earliest_date = settings.earliest_date ? moment(settings.earliest_date)
+      : moment('January 1, 1900');
+    this.latest_date = settings.latest_date ? moment(settings.latest_date)
+      : moment('December 31, 2900');
+    this.end_date = settings.end_date ? moment(settings.end_date)
+      : (this.type == 'double' ? moment() : null);
+    this.start_date = settings.start_date ? moment(settings.start_date)
+      : (this.type == 'double' ? moment(this.end_date, -1, 'month') : null);
+    this.current_date = settings.current_date ? moment(settings.current_date)
+      : (this.type == 'single' ? moment() : null);
 
-    this.presets =        settings.presets == false || this.type == 'single' ? false : true;
+    this.presets = settings.presets == false || this.type == 'single' ? false : true;
 
-    this.callback =       settings.callback || this.calendarSetDates;
+    this.callback = settings.callback || this.calendarSetDates;
 
     this.calendarHTML(this.type);
 
-    $('.dr-presets', this.element).click(function() {
+    $('.dr-presets', this.element).click(function () {
       self.presetToggle();
     });
 
-    $('.dr-list-item', this.element).click(function() {
+    $('.dr-list-item', this.element).click(function () {
       var start = $('.dr-item-aside', this).data('start');
       var end = $('.dr-item-aside', this).data('end');
 
@@ -76,16 +76,16 @@
     });
 
     $('.dr-date', this.element).on({
-      'click': function() {
+      'click': function () {
         self.calendarOpen(this);
       },
 
-      'keyup': function(event) {
+      'keyup': function (event) {
         if (event.keyCode == 9 && !self.calIsOpen && !self.start_date && !self.end_date)
           self.calendarOpen(this);
       },
 
-      'keydown': function(event) {
+      'keydown': function (event) {
         switch (event.keyCode) {
 
           case 9: // Tab
@@ -100,7 +100,7 @@
               self.calendarSaveDates();
               self.calendarClose('force');
             }
-          break;
+            break;
 
           case 13: // Enter
             event.preventDefault();
@@ -108,12 +108,12 @@
             self.calendarSetDates();
             self.calendarSaveDates();
             self.calendarClose('force');
-          break;
+            break;
 
           case 27: // ESC
             self.calendarSetDates();
             self.calendarClose('force');
-          break;
+            break;
 
           case 38: // Up
             event.preventDefault();
@@ -129,7 +129,7 @@
 
             $(this).html(back.format(self.format.input));
             self.current_date = back.toDate();
-          break;
+            break;
 
           case 40: // Down
             event.preventDefault();
@@ -145,12 +145,12 @@
 
             $(this).html(forward.format(self.format.input));
             self.current_date = forward.toDate();
-          break;
+            break;
         }
       }
     });
 
-    $('.dr-month-switcher i', this.element).click(function() {
+    $('.dr-month-switcher i', this.element).click(function () {
       var m = $('.dr-month-switcher span', self.element).data('month');
       var y = $('.dr-year-switcher span', self.element).data('year');
       var this_moment = moment([y, m, 1]);
@@ -164,7 +164,7 @@
       }
     });
 
-    $('.dr-year-switcher i', this.element).click(function() {
+    $('.dr-year-switcher i', this.element).click(function () {
       var m = $('.dr-month-switcher span', self.element).data('month');
       var y = $('.dr-year-switcher span', self.element).data('year');
       var this_moment = moment([y, m, 1]);
@@ -179,12 +179,12 @@
       }
     });
 
-    $('.dr-dates-dash', this.element).click(function() {
+    $('.dr-dates-dash', this.element).click(function () {
       $('.dr-date-start', self.element).trigger('click');
     });
 
     // Once you click into a selection.. this lets you click out
-    this.element.on('click', function() {
+    this.element.on('click', function () {
       window.addEventListener('click', function (f) {
         var contains = self.element.find(f.target);
 
@@ -206,7 +206,7 @@
   }
 
 
-  Calendar.prototype.presetToggle = function() {
+  Calendar.prototype.presetToggle = function () {
     if (this.presetIsOpen == false) {
       this.orig_start_date = this.start_date;
       this.orig_end_date = this.end_date;
@@ -227,80 +227,80 @@
   }
 
 
-  Calendar.prototype.presetCreate = function() {
-    var self = this;
+  Calendar.prototype.presetCreate = function () {
     var ul_presets = $('<ul class="dr-preset-list" style="display: none;"></ul>');
-    var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
-    [{
-      label: 'Last 30 days',
-      start: moment(self.latest_date).subtract(29, 'days'),
-      end: self.latest_date
-    },{
-      label: 'Last month',
-      start: moment(self.latest_date).subtract(1, 'month').startOf('month'),
-      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
-    },{
-      label: 'Last 3 months',
-      start: moment(self.latest_date).subtract(3, 'month').startOf('month'),
-      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
-    },{
-      label: 'Last 6 months',
-      start: moment(self.latest_date).subtract(6, 'month').startOf('month'),
-      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
-    },{
-      label: 'Last year',
-      start: moment(self.latest_date).subtract(12, 'month').startOf('month'),
-      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
-    },{
-      label: 'All time',
-      start: self.earliest_date,
-      end: self.latest_date
-    }];
+    var presets = typeof this.settings.presets == 'object' ? this.settings.presets : this.getDefaultPresets();
 
-    if (moment(self.latest_date).diff(moment(self.latest_date).startOf('month'), 'days') >= 6) {
+    $.each(presets, function (i, d) {
+      d.start = moment.max(moment(d.start), this.earliest_date);
+      d.end = moment.min(d.end, this.latest_date);
 
-      presets.splice(1, 0, {
-        label: 'This month',
-        start: moment(self.latest_date).startOf('month'),
-        end: self.latest_date
-      });
-    }
-
-    $.each(presets, function(i, d) {
-      if (moment(d.start).isBefore(self.earliest_date)) {
-        d.start = self.earliest_date;
-      }
-      if (moment(d.start).isAfter(self.latest_date)) {
-        d.start = self.latest_date;
-      }
-      if (moment(d.end).isBefore(self.earliest_date)) {
-        d.end = self.earliest_date;
-      }
-      if (moment(d.end).isAfter(self.latest_date)) {
-        d.end = self.latest_date;
-      }
-
-      var startISO = moment(d.start).toISOString();
-      var endISO = moment(d.end).toISOString();
-      var string = moment(d.start).format(self.format.preset) +' &ndash; '+ moment(d.end).format(self.format.preset);
-
-      if ($('.dr-preset-list', self.element).length) {
-        var item = $('.dr-preset-list .dr-list-item:nth-of-type('+ (i + 1) +') .dr-item-aside', self.element);
-        item.data('start', startISO);
-        item.data('end', endISO);
-        item.html(string);
-      } else {
-        ul_presets.append('<li class="dr-list-item">'+ d.label +
-          '<span class="dr-item-aside" data-start="'+ startISO +'" data-end="'+ endISO +'">'+ string +'</span>'+
-        '</li>');
+      if (!d.start.isAfter(d.end)) {
+        this.appendPresetHtml(d, ul_presets);
       }
     });
 
     return ul_presets;
   }
 
+  Calendar.prototype.getDefaultPresets = function () {
+    var defaultPresets =
+      [{
+        label: 'Last 30 days',
+        start: moment().subtract(29, 'days'),
+        end: moment()
+      }, {
+        label: 'Last month',
+        start: moment().subtract(1, 'month').startOf('month'),
+        end: moment().subtract(1, 'month').endOf('month')
+      }, {
+        label: 'Last 3 months',
+        start: moment().subtract(3, 'month').startOf('month'),
+        end: moment().subtract(1, 'month').endOf('month')
+      }, {
+        label: 'Last 6 months',
+        start: moment().subtract(6, 'month').startOf('month'),
+        end: moment().subtract(1, 'month').endOf('month')
+      }, {
+        label: 'Last year',
+        start: moment().subtract(12, 'month').startOf('month'),
+        end: moment().subtract(1, 'month').endOf('month')
+      }, {
+        label: 'All time',
+        start: this.earliest_date,
+        end: this.latest_date
+      }];
 
-  Calendar.prototype.calendarSetDates = function() {
+    if (moment().diff(moment().startOf('month'), 'days') >= 6) {
+
+      defaultPresets.splice(1, 0, {
+        label: 'This month',
+        start: moment().startOf('month'),
+        end: moment()
+      });
+    }
+
+    return defaultPresets;
+  }
+
+  Calendar.prototype.appendPresetHtml = function (preset, ul) {
+    var startISO = preset.start.toISOString();
+    var endISO = preset.end.toISOString();
+    var string = preset.start.format(this.format.preset) + ' &ndash; ' + preset.end.format(this.format.preset);
+
+    if ($('.dr-preset-list', this.element).length) {
+      var item = $('.dr-preset-list .dr-list-item:nth-of-type(' + (i + 1) + ') .dr-item-aside', this.element);
+      item.data('start', startISO);
+      item.data('end', endISO);
+      item.html(string);
+    } else {
+      ul.append('<li class="dr-list-item">' + preset.label +
+        '<span class="dr-item-aside" data-start="' + startISO + '" data-end="' + endISO + '">' + string + '</span>' +
+        '</li>');
+    }
+  }
+
+  Calendar.prototype.calendarSetDates = function () {
     $('.dr-date-start', this.element).html(moment(this.start_date).format(this.format.input));
     $('.dr-date-end', this.element).html(moment(this.end_date).format(this.format.input));
 
@@ -317,7 +317,7 @@
   }
 
 
-  Calendar.prototype.calendarSaveDates = function() {
+  Calendar.prototype.calendarSaveDates = function () {
     if (this.type == 'double') {
       if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date))
         return this.callback();
@@ -327,7 +327,7 @@
     }
   }
 
-  Calendar.prototype.calendarCheckDate = function(d) {
+  Calendar.prototype.calendarCheckDate = function (d) {
     var regex = /(?:\d)((?:st|nd|rd|th)?,?)/;
     var d_array = d ? d.replace(regex, '').split(' ') : [];
 
@@ -344,7 +344,7 @@
       d = this.latest_date;
 
     // Convert string to a date if keyword ago or ahead exists
-    if ( d && (/\bago\b/.test(d) || /\bahead\b/.test(d)) )
+    if (d && (/\bago\b/.test(d) || /\bahead\b/.test(d)))
       d = this.stringToDate(d);
 
     // Add current year if year is not included
@@ -363,7 +363,7 @@
     return new Date(d);
   }
 
-  Calendar.prototype.calendarCheckDates = function() {
+  Calendar.prototype.calendarCheckDates = function () {
     var startTxt = $('.dr-date-start', this.element).html();
     var endTxt = $('.dr-date-end', this.element).html();
     var c = moment(this.calendarCheckDate($(this.selected).html()));
@@ -408,7 +408,7 @@
   }
 
 
-  Calendar.prototype.stringToDate = function(str) {
+  Calendar.prototype.stringToDate = function (str) {
     var date_arr = str.split(' ');
 
     if (date_arr[2] == 'ago') {
@@ -423,7 +423,7 @@
   }
 
 
-  Calendar.prototype.calendarOpen = function(selected, switcher) {
+  Calendar.prototype.calendarOpen = function (selected, switcher) {
     var self = this;
     var other;
     var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
@@ -473,7 +473,7 @@
       $('.dr-year-switcher .dr-left', this.element).addClass('dr-disabled');
 
     $('.dr-day', this.element).on({
-      mouseenter: function() {
+      mouseenter: function () {
         var selected = $(this);
         var start_date = moment(self.start_date);
         var end_date = moment(self.end_date);
@@ -481,13 +481,13 @@
 
         if ($(self.selected).hasClass("dr-date-start")) {
           selected.addClass('dr-hover dr-hover-before');
-          $('.dr-start', self.element).css({'border': 'none', 'padding-left': '0.3125rem'});
+          $('.dr-start', self.element).css({ 'border': 'none', 'padding-left': '0.3125rem' });
           setMaybeRange('start');
         }
 
         if ($(self.selected).hasClass("dr-date-end")) {
           selected.addClass('dr-hover dr-hover-after');
-          $('.dr-end', self.element).css({'border': 'none', 'padding-right': '0.3125rem'});
+          $('.dr-end', self.element).css({ 'border': 'none', 'padding-right': '0.3125rem' });
           setMaybeRange('end');
         }
 
@@ -499,7 +499,7 @@
         function setMaybeRange(type) {
           other = undefined;
 
-          self.range(6 * 7).forEach(function(i) {
+          self.range(6 * 7).forEach(function (i) {
             var next = selected.next().data('date');
             var prev = selected.prev().data('date');
             var curr = selected.data('date');
@@ -547,7 +547,7 @@
           });
         }
       },
-      mouseleave: function() {
+      mouseleave: function () {
         if ($(this).hasClass('dr-hover-before dr-end'))
           $(this).removeClass('dr-end');
 
@@ -555,12 +555,12 @@
           $(this).removeClass('dr-start');
 
         $(this).removeClass('dr-hover dr-hover-before dr-hover-after');
-        $('.dr-start, .dr-end', self.element).css({'border': '', 'padding': ''});
+        $('.dr-start, .dr-end', self.element).css({ 'border': '', 'padding': '' });
         $('.dr-maybe:not(.dr-current)', self.element).removeClass('dr-start dr-end');
         $('.dr-day', self.element).removeClass('dr-maybe');
         $('.dr-selected', self.element).css('background-color', '');
       },
-      mousedown: function() {
+      mousedown: function () {
         var date = $(this).data('date');
         var string = moment(date).format(self.format.input);
 
@@ -593,11 +593,11 @@
   }
 
 
-  Calendar.prototype.calendarClose = function(type) {
+  Calendar.prototype.calendarClose = function (type) {
     var self = this;
 
     if (!this.calIsOpen || this.presetIsOpen || type == 'force') {
-      $('.dr-calendar', this.element).slideUp(200, function() {
+      $('.dr-calendar', this.element).slideUp(200, function () {
         $('.dr-day', self.element).remove();
       });
     } else {
@@ -615,11 +615,11 @@
   }
 
 
-  Calendar.prototype.calendarCreate = function(switcher) {
+  Calendar.prototype.calendarCreate = function (switcher) {
     var self = this;
     var array = this.calendarArray(this.start_date, this.end_date, this.current_date, switcher);
 
-    array.forEach(function(d, i) {
+    array.forEach(function (d, i) {
       var classString = "dr-day";
 
       if (d.fade)
@@ -640,24 +640,24 @@
       if (d.outside)
         classString += " dr-outside";
 
-      $('.dr-day-list', self.element).append('<li class="'+ classString +'" data-date="'+ d.date +'">'+ d.str +'</li>');
+      $('.dr-day-list', self.element).append('<li class="' + classString + '" data-date="' + d.date + '">' + d.str + '</li>');
     });
   }
 
 
-  Calendar.prototype.calendarArray = function(start, end, current, switcher) {
+  Calendar.prototype.calendarArray = function (start, end, current, switcher) {
     var self = this;
     current = moment(current || start || end).startOf('day');
 
     var reference = switcher || current || start || end;
 
     var startRange = moment(reference).startOf('month').startOf('week');
-    var endRange = moment(startRange).add(6*7 - 1, 'days').endOf('day');
+    var endRange = moment(startRange).add(6 * 7 - 1, 'days').endOf('day');
 
     var daysInRange = [];
     var d = moment(startRange);
-    while ( d.isBefore(endRange) ) {
-      daysInRange.push( {
+    while (d.isBefore(endRange)) {
+      daysInRange.push({
         str: +d.format('D'),
         start: start && d.isSame(start, 'day'),
         end: end && d.isSame(end, 'day'),
@@ -666,7 +666,7 @@
         date: d.toISOString(),
         outside: d.isBefore(self.earliest_date) || d.isAfter(self.latest_date),
         fade: !d.isSame(reference, 'month')
-      } );
+      });
       d.add(1, 'd');
     }
 
@@ -674,77 +674,77 @@
   }
 
 
-  Calendar.prototype.calendarHTML = function(type) {
+  Calendar.prototype.calendarHTML = function (type) {
     var ul_days_of_the_week = $('<ul class="dr-days-of-week-list"></ul>');
     var days = this.days_array.splice(moment.localeData().firstDayOfWeek()).concat(this.days_array.splice(0, moment.localeData().firstDayOfWeek()));
 
-    $.each(days, function(i, elem) {
+    $.each(days, function (i, elem) {
       ul_days_of_the_week.append('<li class="dr-day-of-week">' + elem + '</li>');
     });
 
     if (type == "double")
       return this.element.append('<div class="dr-input">' +
         '<div class="dr-dates">' +
-          '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.format.input) +'</div>' +
-          '<span class="dr-dates-dash">&ndash;</span>' +
-          '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.format.input) +'</div>' +
+        '<div class="dr-date dr-date-start" contenteditable>' + moment(this.start_date).format(this.format.input) + '</div>' +
+        '<span class="dr-dates-dash">&ndash;</span>' +
+        '<div class="dr-date dr-date-end" contenteditable>' + moment(this.end_date).format(this.format.input) + '</div>' +
         '</div>' +
 
         (this.presets ? '<div class="dr-presets">' +
           '<span class="dr-preset-bar"></span>' +
           '<span class="dr-preset-bar"></span>' +
           '<span class="dr-preset-bar"></span>' +
-        '</div>' : '') +
-      '</div>' +
-
-      '<div class="dr-selections">' +
-        '<div class="dr-calendar" style="display: none;">' +
-          '<div class="dr-range-switcher">' +
-            '<div class="dr-switcher dr-month-switcher">' +
-              '<i class="dr-left"></i>' +
-              '<span>April</span>' +
-              '<i class="dr-right"></i>' +
-            '</div>' +
-            '<div class="dr-switcher dr-year-switcher">' +
-              '<i class="dr-left"></i>' +
-              '<span>2015</span>' +
-              '<i class="dr-right"></i>' +
-            '</div>' +
-          '</div>' +
-          ul_days_of_the_week[0].outerHTML +
-          '<ul class="dr-day-list"></ul>' +
+          '</div>' : '') +
         '</div>' +
-        (this.presets ? this.presetCreate()[0].outerHTML : '') +
-      '</div>');
 
-    return this.element.append('<div class="dr-input">' +
-      '<div class="dr-dates">' +
-        '<div class="dr-date" contenteditable placeholder="'+ this.placeholder +'">'+ (this.required ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="dr-selections">' +
-      '<div class="dr-calendar" style="display: none;">' +
+        '<div class="dr-selections">' +
+        '<div class="dr-calendar" style="display: none;">' +
         '<div class="dr-range-switcher">' +
-          '<div class="dr-switcher dr-month-switcher">' +
-            '<i class="dr-left"></i>' +
-            '<span></span>' +
-            '<i class="dr-right"></i>' +
-          '</div>' +
-          '<div class="dr-switcher dr-year-switcher">' +
-            '<i class="dr-left"></i>' +
-            '<span></span>' +
-            '<i class="dr-right"></i>' +
-          '</div>' +
+        '<div class="dr-switcher dr-month-switcher">' +
+        '<i class="dr-left"></i>' +
+        '<span>April</span>' +
+        '<i class="dr-right"></i>' +
+        '</div>' +
+        '<div class="dr-switcher dr-year-switcher">' +
+        '<i class="dr-left"></i>' +
+        '<span>2015</span>' +
+        '<i class="dr-right"></i>' +
+        '</div>' +
         '</div>' +
         ul_days_of_the_week[0].outerHTML +
         '<ul class="dr-day-list"></ul>' +
+        '</div>' +
+        (this.presets ? this.presetCreate()[0].outerHTML : '') +
+        '</div>');
+
+    return this.element.append('<div class="dr-input">' +
+      '<div class="dr-dates">' +
+      '<div class="dr-date" contenteditable placeholder="' + this.placeholder + '">' + (this.required ? moment(this.current_date).format(this.format.input) : '') + '</div>' +
       '</div>' +
-    '</div>');
+      '</div>' +
+
+      '<div class="dr-selections">' +
+      '<div class="dr-calendar" style="display: none;">' +
+      '<div class="dr-range-switcher">' +
+      '<div class="dr-switcher dr-month-switcher">' +
+      '<i class="dr-left"></i>' +
+      '<span></span>' +
+      '<i class="dr-right"></i>' +
+      '</div>' +
+      '<div class="dr-switcher dr-year-switcher">' +
+      '<i class="dr-left"></i>' +
+      '<span></span>' +
+      '<i class="dr-right"></i>' +
+      '</div>' +
+      '</div>' +
+      ul_days_of_the_week[0].outerHTML +
+      '<ul class="dr-day-list"></ul>' +
+      '</div>' +
+      '</div>');
   }
 
 
-  Calendar.prototype.range = function(length) {
+  Calendar.prototype.range = function (length) {
     var range = new Array(length);
 
     for (var idx = 0; idx < length; idx++) {
