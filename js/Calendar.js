@@ -230,7 +230,7 @@
   Calendar.prototype.presetCreate = function() {
     var self = this;
     var ul_presets = $('<ul class="dr-preset-list" style="display: none;"></ul>');
-    var presets = typeof self.settings.presets == 'object' ? self.settings.presets :
+    var presets = typeof self.settings.presets === 'object' ? self.settings.presets :
     [{
       label: 'Last 30 days',
       start: moment(self.latest_date).subtract(29, 'days'),
@@ -257,8 +257,9 @@
       end: self.latest_date
     }];
 
-    if (moment(self.latest_date).diff(moment(self.latest_date).startOf('month'), 'days') >= 6) {
-
+    if (moment(self.latest_date).diff(moment(self.latest_date).startOf('month'), 'days') >= 6 &&
+        typeof self.settings.presets !== 'object'
+    ) {
       presets.splice(1, 0, {
         label: 'This month',
         start: moment(self.latest_date).startOf('month'),
@@ -719,7 +720,7 @@
 
     return this.element.append('<div class="dr-input">' +
       '<div class="dr-dates">' +
-        '<div class="dr-date" contenteditable placeholder="'+ this.placeholder +'">'+ (this.required ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
+        '<div class="dr-date" contenteditable placeholder="'+ this.placeholder +'">'+ (this.settings.current_date ? moment(this.current_date).format(this.format.input) : '') +'</div>' +
       '</div>' +
     '</div>' +
 
