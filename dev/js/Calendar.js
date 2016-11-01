@@ -356,7 +356,7 @@
 
     // Convert using settings format
     if (d && $.type(d) == 'string') {
-      var parsed_d = moment(d, this.format.input);
+      var parsed_d = this.parseDate(d);
       if (parsed_d.isValid())
         d = parsed_d;
     }
@@ -743,6 +743,15 @@
       '</div>' +
     '</div>');
   }
+
+
+  Calendar.prototype.parseDate = function(d) {
+    if (moment.defaultZone != null && moment.hasOwnProperty('tz')) {
+      return moment.tz(d, this.format.input, moment.defaultZone.name);
+    } else {
+      return moment(d, this.format.input);
+    }
+  };
 
 
   Calendar.prototype.range = function(length) {
