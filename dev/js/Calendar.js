@@ -43,9 +43,9 @@
     this.orig_current_date =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
-                          : moment('January 1, 1900');
+                          : moment('1900-01-01');
     this.latest_date =    settings.latest_date ? moment(settings.latest_date)
-                          : moment('December 31, 2900');
+                          : moment('2900-12-31');
     this.end_date =       settings.end_date ? moment(settings.end_date)
                           : (this.type == 'double' ? moment() : null);
     this.start_date =     settings.start_date ? moment(settings.start_date)
