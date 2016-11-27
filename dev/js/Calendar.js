@@ -748,11 +748,7 @@
 
 
   Calendar.prototype.parseDate = function(d) {
-    if (moment.defaultZone != null && moment.hasOwnProperty('tz')) {
-      return moment.tz(d, this.format.input, moment.defaultZone.name);
-    } else {
-      return moment(d, this.format.input);
-    }
+    return moment(d, this.format.input);
   };
 
 
