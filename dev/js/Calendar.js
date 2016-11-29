@@ -185,8 +185,8 @@
 
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
-      window.addEventListener('click', function (f) {
-        var contains = self.element.find(f.target);
+      document.addEventListener('click', function (f) {
+        var contains = self.element.find(f.path[0]);
 
         if (!contains.length) {
           if (self.presetIsOpen)
