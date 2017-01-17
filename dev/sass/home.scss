@@ -1,0 +1,45 @@
+@import "color-var-func";
+
+html, body {
+  margin: 0;
+  padding: 20px;
+  font-family: $font-family;
+}
+.daterange {
+  float: left;
+  padding: 20px 20px 20px 0;
+
+  &:last-of-type {
+    padding-right: 0;
+  }
+}
+h1 {
+  font-size: rem(32);
+  margin: 0;
+  padding-bottom: rem(24);
+  border-bottom: 1px solid $mouse;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+footer {
+  padding-top: rem(24);
+  margin-top: rem(24);
+  border-top: 1px solid $mouse;
+  clear: both;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

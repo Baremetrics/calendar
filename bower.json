@@ -1,17 +1,18 @@
 {
   "name": "BaremetricsCalendar",
-  "version": "1.0.1",
+  "version": "1.0.9",
   "homepage": "https://github.com/Baremetrics/calendar",
   "authors": [
     "Tyler van der Hoeven <hi@tyvdh.com>"
   ],
   "description": "The Baremetrics date range picker is a simplified solution for selecting both date ranges and single dates all from a single calender view. There aren't a billion options but the code is pretty basic and modular so feel free to edit however to meet your own needs.",
   "main": [
-    "dev/js/Calendar.js",
-    "dev/sass/application.scss"
+    "public/js/Calendar.js",
+    "public/css/application.css"
   ],
   "dependencies": {
-    "moment": "2.10.3"
+    "moment": "2.10.3",
+    "jquery": "2.1.4"
   },
   "moduleType": [
     "globals"

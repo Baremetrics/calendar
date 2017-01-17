@@ -1,19 +1,5 @@
 # [Baremetrics](https://baremetrics.com/) Date Range Picker
-_[Baremetrics](https://baremetrics.com) provides one-click analytics & insights for Stripe. **[Get started today!](https://baremetrics.com)**_
-
----
-
-## 1.0.1 Update
-
-- Removed global CSS reset file
-- Fixed issue with presets not respecting earliest date
-- Registered the package with Bower `bower install BaremetricsCalendar` (Thanks [Agustin Diaz](https://github.com/HiroAgustin))
-- Shifted code base to support UMD support (Thanks [Derrick Reimer](https://github.com/djreimer))
-- Added up/down keyboard support
-  - day = keystroke up/down
-  - week = hold shift + keystroke up/down
-  - month = hold meta + keystroke up/down
-- Fixed a couple minor typos hither and thither
+_[Baremetrics](https://baremetrics.com) provides zero-setup subscription analytics & insights for Stripe, Braintree and Recurly. **[Get started today!](https://baremetrics.com)**_
 
 ---
 
@@ -44,54 +30,84 @@ Next you've just gotta create a `new Calendar` instance.
 ```js
 new Calendar({
   element: $('.daterange--single'),
-  current_date: new Date('June 15, 2015')
+  current_date: 'June 15, 2015',
+  format: {input: 'M/D/YYYY'},
+  required: false
 });
 
 new Calendar({
   element: $('.daterange--double'),
-  earliest_date: new Date('January 1, 2000'),
+  earliest_date: 'January 1, 2000',
   latest_date: new Date(),
-  start_date: new Date('May 1, 2015'),
-  end_date: new Date('May 31, 2015'),
+  start_date: 'May 1, 2015',
+  end_date: 'May 31, 2015',
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
-    
-    console.log('Start Date: '+ start +'\nEnd Date: '+ end);
+
+    console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
   }
 });
 ```
 
-### Single Calendar params
-- element\*
+### Base Calendar Params
+- **element** _\*required_ `[jQuery DOM object]`
   - jQuery DOM object of the calendar div you're working on
-- callback
-  - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest_date`, `this.latest_date` and `this.current_date` for doing things with the new dates.
-- earliest_date
+- **earliest_date** `[date]`
   - The earliest date to show in the calendar
-- latest_date
+- **latest_date** `[date]`
   - The latest date to show in the calendar
-- current_date
-  - The date to start the calendar on
+- **callback** `[function]`
+  - A function for whenever a new date is saved
+  - Inside you have access to object variables like `this.earliest_date` and `this.latest_date` for doing things with your calendar's dates
+- **format** `[object]`
+  - Object containing formatting strings for.. you guessed it.. formating your dates
+  ```js
+    format: {
+      input: 'MMMM D, YYYY', // Format for the input fields
+      jump_month: 'MMMM', // Format for the month switcher
+      jump_year: 'YYYY' // Format for the year switcher
+    }
+  ```
+- **days_array** `[array]`
+  - Array of the 7 strings you'd like to represent your days in the calendar
+  ```js
+    days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
+  ```
+- **presets** `[boolean] or [object]`
+  - If you don't want to show the preset link just set this to `false` otherwise the default is true which will just give you a basic preset of.. yep.. presets. BOOM!
+  - Otherwise, if you want to customize it up you can include an array of preset objects. Something like:
+  ```js
+    presets: [{
+      label: 'Last month',
+      start: moment().subtract(1, 'month').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    },{
+      label: 'Last year',
+      start: moment().subtract(12, 'months').startOf('month'),
+      end: moment().subtract(1, 'month').endOf('month')
+    }]
+  ```
 
-### Double Calendar params
-- element\*
-  - jQuery DOM object of the calendar div you're working on
-- callback
-  - A function for whenever a new date is saved
-  - Inside you have access to variables like `this.earliest_date`, `this.latest_date`, `this.end_date`, `this.start_date` and `this.current_date` for doing things with the new dates.
-- earliest_date
-  - The earliest date to show in the calendar
-- latest_date
-  - The latest date to show in the calendar
-- start_date
+### Single Calendar Params
+- **current_date** `[date]`
+  - The date to start the calendar on
+- **required** `[boolean]`
+  - Toggle if this field must have always have a valid selected date
+- **placeholder** `[string]`
+  - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
+
+### Double Calendar Params
+- **start_date** `[date]`
   - The date to start the selection on for the calendar
-- end_date
+- **end_date** `[date]`
   - The date to end the selection on for the calendar
+- **format** `[object key:value]`
+  - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
+- **same_day_range** `[boolean]`
+  - Allow a range selection of a single day
 
 ---
-\* required
 
 ## Developing
 

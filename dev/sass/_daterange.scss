@@ -12,6 +12,9 @@
   ul {
     list-style: none;
   }
+  &.dr-active {
+    z-index: 10;
+  }
   .dr-input {
     display: flex;
     border: 1px solid $mouse;
@@ -20,20 +23,21 @@
     position: relative;
     z-index: 5;
     overflow: hidden;
+    height: 40px;
 
     &:hover {
       border-color: $blue;
     }
-    &.active {
-      box-shadow: 0 0 0 3px rgba($bluemoon, 0.8);
+    &.dr-active {
+      box-shadow: 0 0 0 3px rgba($blue, 0.3);
       border-color: $blue;
     }
     .dr-dates {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       padding: 0 rem(24) 0 rem(12);
-      min-width: 230px;
+      min-width: calc(100% - 35px);
 
       .dr-date {
         font-size: rem(15);
@@ -44,17 +48,19 @@
         text-overflow: ellipsis;
         outline: none;
 
-        &:hover, &:focus, &.active {
+        &:hover, &:focus, &.dr-active {
           color: $blue;
+        }
+        &:empty:after {
+          content: attr(placeholder);
+          color: $rat;
         }
       }
       .dr-dates-dash {
-        color: $mouse;
-        position: relative;
-        top: -2px;
-        padding: 0 5px;
+        color: $rat;
+        padding: 0 10px;
         flex-grow: 0;
-        text-align: center;
+        font-weight: 600;
       }
     }
     .dr-presets {
@@ -68,7 +74,7 @@
       align-items: flex-start;
       justify-content: center;
 
-      &:hover, &.active {
+      &:hover, &.dr-active {
         border-color: $blue;
         box-shadow: inset 0 2px 3px $moon;
 
@@ -94,7 +100,6 @@
     }
   }
 
-
   .dr-selections {
     position: absolute;
 
@@ -102,7 +107,7 @@
       background-color: $white;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      border-radius: $radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -202,6 +207,7 @@
           text-align: center;
           width: calc(100% / 7);
           cursor: pointer;
+          color: $body;
 
           &.dr-hover:not(.dr-current) {
             background-color: $moon !important;
@@ -253,7 +259,7 @@
       color: $blue;
       font-size: rem(15);
       box-shadow: 0 0 5px $mouse;
-      border-radius: 0 0 $radius $radius;
+      border-radius: $radius;
       position: relative;
       overflow: hidden;
       z-index: 4;
@@ -277,6 +283,8 @@
         color: $rat;
         font-size: rem(12);
         margin-left: rem(5);
+        position: relative;
+        top: -1px;
       }
     }
   }
@@ -296,7 +304,8 @@
         width: 100%;
         padding: rem(10.5 12);
         text-align: left;
+        color: $body;
       }
     }
-  } 
+  }
 }
