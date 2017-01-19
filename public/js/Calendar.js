@@ -560,28 +560,24 @@
         $('.dr-maybe:not(.dr-current)', self.element).removeClass('dr-start dr-end');
         $('.dr-day', self.element).removeClass('dr-maybe');
         $('.dr-selected', self.element).css('background-color', '');
-      },
-      mousedown: function() {
-        var date = $(this).data('date');
-        var string = moment(date).format(self.format.input);
-
-        if (other) {
-          $('.dr-date', self.element)
-            .not(self.selected)
-            .html(other.format(self.format.input));
-        }
-
-        $(self.selected).html(string);
-        self.calendarOpen(self.selected);
-
-        if ($(self.selected).hasClass('dr-date-start')) {
-          $('.dr-date-end', self.element).trigger('click');
-        } else {
-          self.calendarSaveDates();
-          self.calendarClose('force');
-        }
       }
     });
+	
+	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        $('.dr-day', this.element).on({
+            touchstart: function() {
+                selectOneDate(other, self, $(this).data('date'));
+            }
+        });
+
+        $('div[contenteditable]', this.element).removeAttr('contenteditable');
+    } else {
+        $('.dr-day', this.element).on({
+            mousedown: function () {
+                selectOneDate(other, self, $(this).data('date'));
+            }
+        });
+    }
 
     $('.dr-calendar', this.element)
       .css('width', cal_width)
@@ -762,6 +758,26 @@
     }
 
     return range;
+  }
+  
+  function selectOneDate(other, cal, date) {
+      var string = moment(date).format(cal.format.input);
+
+      if (other) {
+          $('.dr-date', cal.element)
+            .not(cal.selected)
+            .html(other.format(cal.format.input));
+      }
+
+      $(cal.selected).html(string);
+      cal.calendarOpen(cal.selected);
+
+      if ($(cal.selected).hasClass('dr-date-start')) {
+          $('.dr-date-end', cal.element).trigger('click');
+      } else {
+          cal.calendarSaveDates();
+          cal.calendarClose('force');
+      }
   }
 
 
