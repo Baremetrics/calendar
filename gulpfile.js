@@ -14,7 +14,7 @@ gulp.task('css', function() {
   return gulp.src('dev/sass/**/**.scss')
     .pipe(sass())
     .on('error', handleError)
-    .pipe(autoprefixer({cascade: false})) // auto prefix
+    .pipe(autoprefixer({cascade: false,  browsers: ['last 10 versions']})) // auto prefix
     .pipe(minifycss()) // minify everything
     .pipe(gulp.dest('public/css'));
 });
