@@ -562,7 +562,7 @@
         $('.dr-selected', self.element).css('background-color', '');
       }
     });
-	
+
 	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
         $('.dr-day', this.element).on({
             touchstart: function() {
@@ -759,7 +759,7 @@
 
     return range;
   }
-  
+
   function selectOneDate(other, cal, date) {
       var string = moment(date).format(cal.format.input);
 

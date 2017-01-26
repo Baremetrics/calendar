@@ -1,6 +1,6 @@
 ## 1.0.10 Update
 - Better iOS support. The date inputs are no longer editable. Having a keyboard popup for editing dates was a lot slower then just tapping stuff. So we cut it. Thanks [azaytsev-csr](https://github.com/azaytsev-csr)!
-- 
+- Minor tweaks and outlier bug fixes Thanks [Paul Ryan](https://github.com/paullryan)!
 
 ## 1.0.9 Update
 - Don't automatically include the "This month" preset in with custom presets (sorry guys)
