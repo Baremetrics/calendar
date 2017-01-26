@@ -2,6 +2,7 @@
 - Better iOS support. The date inputs are no longer editable. Having a keyboard popup for editing dates was a lot slower then just tapping stuff. So we cut it. Thanks [azaytsev-csr](https://github.com/azaytsev-csr)!
 - Minor tweaks and outlier bug fixes Thanks [Paul Ryan](https://github.com/paullryan)!
 - More consistent moment usage. Cleaned up the code base quite a bit. Thanks [Theodore Brown](https://github.com/theodorejb)!
+- Fire callback on single calendar when value is deleted [](https://github.com/Baremetrics/calendar/issues/68)
 
 ## 1.0.9 Update
 - Don't automatically include the "This month" preset in with custom presets (sorry guys)
