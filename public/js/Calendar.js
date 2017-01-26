@@ -330,19 +330,20 @@
 
   Calendar.prototype.calendarCheckDate = function(d) {
     // Today
-    if (d == 'today' || d == 'now')
-      return moment().isAfter(this.latest_date) ? this.latest_date : moment();
+    if (d === 'today' || d === 'now')
+      return moment().isAfter(this.latest_date) ? this.latest_date :
+             moment().isBefore(this.earliest_date) ? this.earliest_date : moment();
 
     // Earliest
-    if (d == 'earliest')
+    if (d === 'earliest')
       return this.earliest_date;
 
     // Latest
-    if (d == 'latest')
+    if (d === 'latest')
       return this.latest_date;
 
     // Convert string to a date if keyword ago or ahead exists
-    if ( d && (/\bago\b/.test(d) || /\bahead\b/.test(d)) )
+    if (d && (/\bago\b/.test(d) || /\bahead\b/.test(d)))
       return this.stringToDate(d);
 
     var regex = /(?:\d)((?:st|nd|rd|th)?,?)/;
@@ -367,38 +368,36 @@
     var startTxt = $('.dr-date-start', this.element).html();
     var endTxt = $('.dr-date-end', this.element).html();
     var c = this.calendarCheckDate($(this.selected).html());
+    var s;
+    var e;
 
     // Modify strings via some specific keywords to create valid dates
     // Finally set all strings as dates
-    if (startTxt == 'ytd' || endTxt == 'ytd') {
-      // Year to date
-      var s = moment().startOf('year');
-      var e = moment().isAfter(this.latest_date) ? this.latest_date : moment();
+    if (startTxt === 'ytd' || endTxt === 'ytd') { // Year to date
+      s = moment().startOf('year');
+      e = moment().endOf('year');
     } else {
       s = this.calendarCheckDate(startTxt);
       e = this.calendarCheckDate(endTxt);
     }
 
-    if (c.isSame(s) && s.isAfter(e)) {
-      e = s.clone().add(6, 'day');
-    }
-
-    if (c.isSame(e) && e.isBefore(s)) {
-      s = e.clone().subtract(6, 'day');
-    }
-
-    if (e.isBefore(this.earliest_date) || s.isBefore(this.earliest_date)) {
+    if (c.isBefore(this.earliest_date))
+      c = this.earliest_date;
+    if (s.isBefore(this.earliest_date))
       s = this.earliest_date;
-      e = moment(this.earliest_date).add(6, 'day');
-    }
+    if (e.isBefore(this.earliest_date) || e.isBefore(s))
+      e = s.clone().add(6, 'day');
 
-    if (e.isAfter(this.latest_date) || s.isAfter(this.latest_date)) {
-      s = moment(this.latest_date).subtract(6, 'day');
+    if (c.isAfter(this.latest_date))
+      c = this.latest_date;
+    if (e.isAfter(this.latest_date))
       e = this.latest_date;
-    }
+    if (s.isAfter(this.latest_date) || s.isAfter(e))
+      s = e.clone().subtract(6, 'day');
 
     // Push and save if it's valid otherwise return to previous state
     if (this.type === 'double') {
+
       // Is this a valid date?
       if (s.isSame(e) && !this.sameDayRange)
         return this.calendarSetDates();
@@ -414,11 +413,11 @@
   Calendar.prototype.stringToDate = function(str) {
     var date_arr = str.split(' ');
 
-    if (date_arr[2] == 'ago') {
+    if (date_arr[2] === 'ago') {
       return moment(this.current_date).subtract(date_arr[0], date_arr[1]);
     }
 
-    else if (date_arr[2] == 'ahead') {
+    else if (date_arr[2] === 'ahead') {
       return moment(this.current_date).add(date_arr[0], date_arr[1]);
     }
 
@@ -749,7 +748,7 @@
     } else {
       return moment(d, this.format.input);
     }
-  };
+  }
 
 
   Calendar.prototype.range = function(length) {
