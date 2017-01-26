@@ -2,7 +2,10 @@ var ss = new Calendar({
   element: $('.daterange--single'),
   format: {input: 'M/D/YYYY'},
   placeholder: 'Select a Date',
-  required: false
+  required: false,
+  callback: function() {
+    console.log('Single calendar callback triggered');
+  }
 });
 
 var dd = new Calendar({

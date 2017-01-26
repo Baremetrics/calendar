@@ -309,7 +309,7 @@
       var old_date = $('.dr-date', this.element).html();
       var new_date = moment(this.current_date).format(this.format.input);
 
-      if (old_date.length == 0 && !this.required)
+      if (old_date.length === 0 && !this.required)
         new_date = '';
 
       if (old_date != new_date)
