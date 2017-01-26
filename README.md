@@ -30,17 +30,17 @@ Next you've just gotta create a `new Calendar` instance.
 ```js
 new Calendar({
   element: $('.daterange--single'),
-  current_date: 'June 15, 2015',
+  current_date: '2015-06-15',
   format: {input: 'M/D/YYYY'},
   required: false
 });
 
 new Calendar({
   element: $('.daterange--double'),
-  earliest_date: 'January 1, 2000',
-  latest_date: new Date(),
-  start_date: 'May 1, 2015',
-  end_date: 'May 31, 2015',
+  earliest_date: '2000-01-1',
+  latest_date: moment(),
+  start_date: '2015-05-01',
+  end_date: '2015-05-31',
   callback: function() {
     var start = moment(this.start_date).format('ll'),
         end = moment(this.end_date).format('ll');
@@ -53,15 +53,15 @@ new Calendar({
 ### Base Calendar Params
 - **element** _\*required_ `[jQuery DOM object]`
   - jQuery DOM object of the calendar div you're working on
-- **earliest_date** `[date]`
+- **earliest_date** `[date YYYY-MM-DD]`
   - The earliest date to show in the calendar
-- **latest_date** `[date]`
+- **latest_date** `[date YYYY-MM-DD]`
   - The latest date to show in the calendar
 - **callback** `[function]`
   - A function for whenever a new date is saved
   - Inside you have access to object variables like `this.earliest_date` and `this.latest_date` for doing things with your calendar's dates
 - **format** `[object]`
-  - Object containing formatting strings for.. you guessed it.. formating your dates
+  - Object containing formatting strings for.. you guessed it.. formatting your dates
   ```js
     format: {
       input: 'MMMM D, YYYY', // Format for the input fields
@@ -74,6 +74,24 @@ new Calendar({
   ```js
     days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
   ```
+
+### Single Calendar Params
+- **current_date** `[date YYYY-MM-DD]`
+  - The date to start the calendar on
+- **required** `[boolean]`
+  - Toggle if this field must have always have a valid selected date
+- **placeholder** `[string]`
+  - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
+
+### Double Calendar Params
+- **start_date** `[date YYYY-MM-DD]`
+  - The date to start the selection on for the calendar
+- **end_date** `[date YYYY-MM-DD]`
+  - The date to end the selection on for the calendar
+- **same_day_range** `[boolean]`
+  - Allow a range selection of a single day
+- **format** `[preset key in format object] // see above`
+  - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
 - **presets** `[boolean] or [object]`
   - If you don't want to show the preset link just set this to `false` otherwise the default is true which will just give you a basic preset of.. yep.. presets. BOOM!
   - Otherwise, if you want to customize it up you can include an array of preset objects. Something like:
@@ -88,24 +106,6 @@ new Calendar({
       end: moment().subtract(1, 'month').endOf('month')
     }]
   ```
-
-### Single Calendar Params
-- **current_date** `[date]`
-  - The date to start the calendar on
-- **required** `[boolean]`
-  - Toggle if this field must have always have a valid selected date
-- **placeholder** `[string]`
-  - Set placeholder text (note this will only apply if the required key is set to `false`). The default will be whatever moment date format you're using. (i.e. 'M/D/YYYY')
-
-### Double Calendar Params
-- **start_date** `[date]`
-  - The date to start the selection on for the calendar
-- **end_date** `[date]`
-  - The date to end the selection on for the calendar
-- **format** `[object key:value]`
-  - The double calendar adds the `preset` key to the format object for formatting the preset dates in the preset dropdown
-- **same_day_range** `[boolean]`
-  - Allow a range selection of a single day
 
 ---
 
