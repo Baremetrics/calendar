@@ -248,8 +248,8 @@
       end: moment(self.latest_date).subtract(1, 'month').endOf('month')
     },{
       label: 'Last year',
-      start: moment(self.latest_date).subtract(12, 'month').startOf('month'),
-      end: moment(self.latest_date).subtract(1, 'month').endOf('month')
+      start: moment(self.latest_date).subtract(1, 'year').startOf('year'),
+      end: moment(self.latest_date).subtract(1, 'year').endOf('year')
     },{
       label: 'All time',
       start: self.earliest_date,
