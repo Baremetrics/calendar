@@ -53,8 +53,8 @@ new Calendar({
     end: moment().subtract(1, 'month').endOf('month')
   },{
     label: 'Last year',
-    start: moment().subtract(12, 'months').startOf('month'),
-    end: moment().subtract(1, 'month').endOf('month')
+    start: moment().subtract(1, 'year').startOf('year'),
+    end: moment().subtract(1, 'year').endOf('year')
   }],
   callback: function() {
     var start = moment(this.start_date).format('ll'),
