@@ -193,7 +193,7 @@
         border-right: none;
 
         .dr-day-of-week {
-          width: calc(100% / 7);
+          width: calc(99.97% / 7);
           text-align: center;
         }
       }
@@ -205,7 +205,7 @@
         .dr-day {
           padding: rem(5);
           text-align: center;
-          width: calc(100% / 7);
+          width: calc(99.97% / 7);
           cursor: pointer;
           color: $body;
 
