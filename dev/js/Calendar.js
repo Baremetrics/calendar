@@ -68,8 +68,9 @@
       var start = $('.dr-item-aside', this).data('start');
       var end = $('.dr-item-aside', this).data('end');
 
-      self.start_date = self.calendarCheckDate(start);
-      self.end_date = self.calendarCheckDate(end);
+      // these are ISO date strings
+      self.start_date = moment(start);
+      self.end_date = moment(end);
 
       self.calendarSetDates();
       self.presetToggle();
