@@ -1,3 +1,7 @@
+## 1.0.11 Update
+- Third party library updates
+- Typos and code formatting. Because I'm paranoid
+
 ## 1.0.10 Update
 - Better iOS support. The date inputs are no longer editable. Having a keyboard popup for editing dates was a lot slower then just tapping stuff. So we cut it. Thanks [azaytsev-csr](https://github.com/azaytsev-csr)!
 - Minor tweaks and outlier bug fixes Thanks [Paul Ryan](https://github.com/paullryan)!

@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     ghPages = require('gulp-gh-pages'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
-    minifycss = require('gulp-minify-css'),
+    cleancss = require('gulp-clean-css'),
     uglify = require('gulp-uglify'),
     livereload = require('gulp-livereload'),
     newer = require('gulp-newer');
@@ -15,7 +15,7 @@ gulp.task('css', function() {
     .pipe(sass())
     .on('error', handleError)
     .pipe(autoprefixer({cascade: false,  browsers: ['last 10 versions']})) // auto prefix
-    .pipe(minifycss()) // minify everything
+    .pipe(cleancss()) // minify everything
     .pipe(gulp.dest('public/css'));
 });
 

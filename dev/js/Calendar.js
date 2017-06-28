@@ -1,5 +1,6 @@
 'use strict';
 
+
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -331,7 +332,7 @@
     // Today
     if (d === 'today' || d === 'now')
       return moment().isAfter(this.latest_date) ? this.latest_date :
-             moment().isBefore(this.earliest_date) ? this.earliest_date : moment();
+              moment().isBefore(this.earliest_date) ? this.earliest_date : moment();
 
     // Earliest
     if (d === 'earliest')
@@ -563,20 +564,20 @@
       }
     });
 
-	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        $('.dr-day', this.element).on({
-            touchstart: function() {
-                selectOneDate(other, self, $(this).data('date'));
-            }
-        });
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+      $('.dr-day', this.element).on({
+        touchstart: function() {
+          self.selectOneDate(other, self, $(this).data('date'));
+        }
+      });
 
-        $('div[contenteditable]', this.element).removeAttr('contenteditable');
+      $('div[contenteditable]', this.element).removeAttr('contenteditable');
     } else {
-        $('.dr-day', this.element).on({
-            mousedown: function () {
-                selectOneDate(other, self, $(this).data('date'));
-            }
-        });
+      $('.dr-day', this.element).on({
+        mousedown: function () {
+          self.selectOneDate(other, self, $(this).data('date'));
+        }
+      });
     }
 
     $('.dr-calendar', this.element)
@@ -760,24 +761,25 @@
     return range;
   }
 
-  function selectOneDate(other, cal, date) {
-      var string = moment(date).format(cal.format.input);
 
-      if (other) {
-        $('.dr-date', cal.element)
-          .not(cal.selected)
-          .html(other.format(cal.format.input));
-      }
+  Calendar.prototype.selectOneDate = function(other, cal, date) {
+    var string = moment(date).format(cal.format.input);
 
-      $(cal.selected).html(string);
-      cal.calendarOpen(cal.selected);
+    if (other) {
+      $('.dr-date', cal.element)
+        .not(cal.selected)
+        .html(other.format(cal.format.input));
+    }
 
-      if ($(cal.selected).hasClass('dr-date-start')) {
-        $('.dr-date-end', cal.element).trigger('click');
-      } else {
-        cal.calendarSaveDates();
-        cal.calendarClose('force');
-      }
+    $(cal.selected).html(string);
+    cal.calendarOpen(cal.selected);
+
+    if ($(cal.selected).hasClass('dr-date-start')) {
+      $('.dr-date-end', cal.element).trigger('click');
+    } else {
+      cal.calendarSaveDates();
+      cal.calendarClose('force');
+    }
   }
 
 

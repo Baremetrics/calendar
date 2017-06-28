@@ -72,7 +72,7 @@ new Calendar({
 - **days_array** `[array]`
   - Array of the 7 strings you'd like to represent your days in the calendar
   ```js
-    days_array: ['Su','Mo','Tu','We','Th','Fr','Sa']
+    days_array: ['S','M','T','W','T','F','S']
   ```
 
 ### Single Calendar Params
