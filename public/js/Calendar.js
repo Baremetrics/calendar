@@ -44,9 +44,9 @@
     this.orig_current_date =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
-                          : moment('1900-01-01');
+                          : moment('1900-01-01', 'YYYY-MM-DD');
     this.latest_date =    settings.latest_date ? moment(settings.latest_date)
-                          : moment('2900-12-31');
+                          : moment('2900-12-31', 'YYYY-MM-DD');
     this.end_date =       settings.end_date ? moment(settings.end_date)
                           : (this.type == 'double' ? moment() : null);
     this.start_date =     settings.start_date ? moment(settings.start_date)
@@ -186,8 +186,8 @@
 
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
-      document.addEventListener('click', function (f) {
-        var contains = self.element.find(f.path[0]);
+      document.addEventListener('click', function (event) {
+        var contains = $(event.target).parents('.daterange');
 
         if (!contains.length) {
           if (self.presetIsOpen)
