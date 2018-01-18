@@ -1,3 +1,7 @@
+## 1.0.12 Update
+- Mostly just a few key PR inclusions
+- Few small tweaks and minor bug fixes
+
 ## 1.0.11 Update
 - Third party library updates
 - Typos and code formatting. Because I'm paranoid
