@@ -186,8 +186,11 @@
 
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
+      var this_element = this;
+
       document.addEventListener('click', function (event) {
-        var contains = $(event.target).parents('.daterange');
+        // Detect if the target of the click is child of the calendar
+        var contains = $(event.target).parents('.' + this_element.classList[0]);
 
         if (!contains.length) {
           if (self.presetIsOpen)
