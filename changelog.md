@@ -1,3 +1,9 @@
+## 1.0.13 Update
+- Microsoft Edge compatibility updates
+
+## 1.0.12 Update
+
+
 ## 1.0.11 Update
 - Third party library updates
 - Typos and code formatting. Because I'm paranoid
