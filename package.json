@@ -1,7 +1,8 @@
 {
-  "name": "BaremetricsCalendar",
-  "version": "1.0.13",
+  "name": "baremetrics-calendar",
+  "version": "1.0.14",
   "license": "MIT",
+  "main": "./public/js/Calendar.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/Baremetrics/calendar.git"
