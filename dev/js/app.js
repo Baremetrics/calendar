@@ -16,9 +16,10 @@ var dd = new Calendar({
   end_date: moment(),
   callback: function() {
     var start = moment(this.start_date).format('ll'),
-        end = moment(this.end_date).format('ll');
+        end = moment(this.end_date).format('ll'),
+        preset = this.preset_label;
 
-    console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
+    console.debug('Start Date: ' + start + '\nEnd Date: ' + end + '\nPreset: ' + preset);
   }
 });
 
@@ -31,9 +32,10 @@ new Calendar({
   presets: false,
   callback: function() {
     var start = moment(this.start_date).format('ll'),
-        end = moment(this.end_date).format('ll');
+        end = moment(this.end_date).format('ll'),
+        preset = this.preset_label;
 
-    console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
+    console.debug('Start Date: ' + start + '\nEnd Date: ' + end + '\nPreset: ' + preset);
   }
 });
 
@@ -58,8 +60,9 @@ new Calendar({
   }],
   callback: function() {
     var start = moment(this.start_date).format('ll'),
-        end = moment(this.end_date).format('ll');
+        end = moment(this.end_date).format('ll'),
+        preset = this.preset_label;
 
-    console.debug('Start Date: '+ start +'\nEnd Date: '+ end);
+    console.debug('Start Date: ' + start + '\nEnd Date: ' + end + '\nPreset: ' + preset);
   }
 });
