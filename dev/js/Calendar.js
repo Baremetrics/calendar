@@ -54,6 +54,7 @@
     this.current_date =   settings.current_date ? moment(settings.current_date)
                           : (this.type == 'single' ? moment() : null);
 
+    this.sticky_presets = settings.sticky_presets || false;
     this.presets =        settings.presets == false || this.type == 'single' ? false : true;
 
     this.callback =       settings.callback || this.calendarSetDates;
@@ -313,12 +314,14 @@
     $('.dr-date-preset', this.element).html(this.preset_label);
 
     // show one set (preset vs. custom days) and hide the other
-    if (this.preset_label) {
-      $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).hide();
-      $('.dr-date-preset', this.element).show();
-    } else {
-      $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).show();
-      $('.dr-date-preset', this.element).hide();
+    if (this.sticky_presets) {
+      if (this.preset_label) {
+        $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).hide();
+        $('.dr-date-preset', this.element).show();
+      } else {
+        $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).show();
+        $('.dr-date-preset', this.element).hide();
+      }
     }
 
     if (!this.start_date && !this.end_date) {
