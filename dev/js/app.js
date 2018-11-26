@@ -66,3 +66,32 @@ new Calendar({
     console.debug('Start Date: ' + start + '\nEnd Date: ' + end + '\nPreset: ' + preset);
   }
 });
+
+new Calendar({
+  element: $('.four'),
+  sticky_presets: true,
+  earliest_date: '2000-01-01',
+  latest_date: moment(),
+  start_date: moment().subtract(29, 'days'),
+  end_date: moment(),
+  presets: [{
+    label: 'Last 30 days',
+    start: moment().subtract(29, 'days'),
+    end: moment()
+  },{
+    label: 'Last month',
+    start: moment().subtract(1, 'month').startOf('month'),
+    end: moment().subtract(1, 'month').endOf('month')
+  },{
+    label: 'Last year',
+    start: moment().subtract(1, 'year').startOf('year'),
+    end: moment().subtract(1, 'year').endOf('year')
+  }],
+  callback: function() {
+    var start = moment(this.start_date).format('ll'),
+        end = moment(this.end_date).format('ll'),
+        preset = this.preset_label;
+
+    console.debug('Start Date: ' + start + '\nEnd Date: ' + end + '\nPreset: ' + preset);
+  }
+});
