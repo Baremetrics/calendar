@@ -383,11 +383,8 @@
   Calendar.prototype.calendarCheckDates = function() {
     var startTxt = $('.dr-date-start', this.element).html();
     var endTxt = $('.dr-date-end', this.element).html();
-    if (this.preset_label) {
-      var c = this.calendarCheckDate(startTxt);
-    } else {
-      var c = this.calendarCheckDate($(this.selected).html());
-    }
+
+    var c = this.calendarCheckDate($(this.selected).html());
     var s;
     var e;
 
@@ -449,7 +446,12 @@
     var self = this;
     var other;
 
-    this.selected = selected || this.selected;
+    if ($(selected).hasClass('dr-date-preset')) {
+      this.selected = $('.dr-date.dr-date-start', this.element).get(0);
+      this.preset_label = null;
+    } else {
+      this.selected = selected || this.selected;
+    }
 
     if (this.presetIsOpen == true)
       this.presetToggle();
@@ -464,12 +466,6 @@
 
     this.calendarCheckDates();
     this.calendarCreate(switcher);
-
-    if (this.preset_label) {
-        selected = this.selected = $('.dr-date.dr-date-start').get(0);
-        this.preset_label = null;
-    }
-
     this.calendarSetDates();
 
     var next_month = moment(switcher || this.current_date).add(1, 'month').startOf('month').startOf('day');
@@ -610,7 +606,7 @@
       .css('width', cal_width)
       .slideDown(200);
     $('.dr-input', this.element).addClass('dr-active');
-    $(selected).addClass('dr-active').focus();
+    $(this.selected).addClass('dr-active').focus();
     this.element.addClass('dr-active');
 
     this.calIsOpen = true;
