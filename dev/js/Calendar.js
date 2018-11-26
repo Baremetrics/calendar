@@ -42,6 +42,7 @@
     this.orig_start_date =    null;
     this.orig_end_date =      null;
     this.orig_current_date =  null;
+    this.orig_preset_label =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
                           : moment('1900-01-01', 'YYYY-MM-DD');
@@ -217,6 +218,7 @@
       this.orig_start_date = this.start_date;
       this.orig_end_date = this.end_date;
       this.orig_current_date = this.current_date;
+      this.orig_preset_label = this.preset_label;
 
       this.presetIsOpen = true;
     } else if (this.presetIsOpen) {
@@ -339,7 +341,7 @@
 
   Calendar.prototype.calendarSaveDates = function() {
     if (this.type === 'double') {
-      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date))
+      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date) || (this.sticky_presets && (this.orig_preset_label !== this.preset_label)))
         return this.callback();
     } else {
       if (!this.required || !moment(this.orig_current_date).isSame(this.current_date))
@@ -465,6 +467,7 @@
       this.orig_start_date = this.start_date;
       this.orig_end_date = this.end_date;
       this.orig_current_date = this.current_date;
+      this.orig_preset_label = this.preset_label;
     }
 
     this.calendarCheckDates();
