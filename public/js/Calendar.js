@@ -187,7 +187,7 @@
     // Once you click into a selection.. this lets you click out
     this.element.on('click', function() {
       document.addEventListener('click', function (event) {
-        var contains = $(event.target).parents(self.element);
+        var contains = $(event.target).parent().closest(self.element);
 
         if (!contains.length) {
           if (self.presetIsOpen)
