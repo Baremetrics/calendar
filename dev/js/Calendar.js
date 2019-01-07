@@ -185,23 +185,27 @@
     });
 
     // Once you click into a selection.. this lets you click out
-    this.element.on('click', function() {
-      document.addEventListener('click', function (event) {
-        var contains = $(event.target).parent().closest(self.element);
+    var clickHandler = function(event) {
+      var contains = $(event.target).parent().closest(self.element);
 
-        if (!contains.length) {
-          if (self.presetIsOpen)
-            self.presetToggle();
+      if (!contains.length) {
+        document.removeEventListener('click', clickHandler, false);
 
-          if (self.calIsOpen) {
-            if ($(self.selected).hasClass('dr-date-end'))
-              self.calendarSaveDates();
+        if (self.presetIsOpen)
+          self.presetToggle();
 
-            self.calendarSetDates();
-            self.calendarClose('force');
-          }
+        if (self.calIsOpen) {
+          if ($(self.selected).hasClass('dr-date-end'))
+            self.calendarSaveDates();
+
+          self.calendarSetDates();
+          self.calendarClose('force');
         }
-      });
+      }
+    }
+
+    this.element.on('click', function() {
+      document.addEventListener('click', clickHandler, false);
     });
   }
 
