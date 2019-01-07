@@ -1,5 +1,6 @@
 'use strict';
 
+
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
@@ -43,9 +44,9 @@
     this.orig_current_date =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
-                          : moment('1900-01-01');
+                          : moment('1900-01-01', 'YYYY-MM-DD');
     this.latest_date =    settings.latest_date ? moment(settings.latest_date)
-                          : moment('2900-12-31');
+                          : moment('2900-12-31', 'YYYY-MM-DD');
     this.end_date =       settings.end_date ? moment(settings.end_date)
                           : (this.type == 'double' ? moment() : null);
     this.start_date =     settings.start_date ? moment(settings.start_date)
@@ -184,23 +185,27 @@
     });
 
     // Once you click into a selection.. this lets you click out
-    this.element.on('click', function() {
-      document.addEventListener('click', function (f) {
-        var contains = self.element.find(f.path[0]);
+    var clickHandler = function(event) {
+      var contains = $(event.target).parent().closest(self.element);
 
-        if (!contains.length) {
-          if (self.presetIsOpen)
-            self.presetToggle();
+      if (!contains.length) {
+        document.removeEventListener('click', clickHandler, false);
 
-          if (self.calIsOpen) {
-            if ($(self.selected).hasClass('dr-date-end'))
-              self.calendarSaveDates();
+        if (self.presetIsOpen)
+          self.presetToggle();
 
-            self.calendarSetDates();
-            self.calendarClose('force');
-          }
+        if (self.calIsOpen) {
+          if ($(self.selected).hasClass('dr-date-end'))
+            self.calendarSaveDates();
+
+          self.calendarSetDates();
+          self.calendarClose('force');
         }
-      });
+      }
+    }
+
+    this.element.on('click', function() {
+      document.addEventListener('click', clickHandler, false);
     });
   }
 
@@ -331,7 +336,7 @@
     // Today
     if (d === 'today' || d === 'now')
       return moment().isAfter(this.latest_date) ? this.latest_date :
-             moment().isBefore(this.earliest_date) ? this.earliest_date : moment();
+              moment().isBefore(this.earliest_date) ? this.earliest_date : moment();
 
     // Earliest
     if (d === 'earliest')
@@ -563,20 +568,20 @@
       }
     });
 
-	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        $('.dr-day', this.element).on({
-            touchstart: function() {
-                selectOneDate(other, self, $(this).data('date'));
-            }
-        });
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+      $('.dr-day', this.element).on({
+        touchstart: function() {
+          self.selectOneDate(other, self, $(this).data('date'));
+        }
+      });
 
-        $('div[contenteditable]', this.element).removeAttr('contenteditable');
+      $('div[contenteditable]', this.element).removeAttr('contenteditable');
     } else {
-        $('.dr-day', this.element).on({
-            mousedown: function () {
-                selectOneDate(other, self, $(this).data('date'));
-            }
-        });
+      $('.dr-day', this.element).on({
+        mousedown: function () {
+          self.selectOneDate(other, self, $(this).data('date'));
+        }
+      });
     }
 
     $('.dr-calendar', this.element)
@@ -760,24 +765,25 @@
     return range;
   }
 
-  function selectOneDate(other, cal, date) {
-      var string = moment(date).format(cal.format.input);
 
-      if (other) {
-        $('.dr-date', cal.element)
-          .not(cal.selected)
-          .html(other.format(cal.format.input));
-      }
+  Calendar.prototype.selectOneDate = function(other, cal, date) {
+    var string = moment(date).format(cal.format.input);
 
-      $(cal.selected).html(string);
-      cal.calendarOpen(cal.selected);
+    if (other) {
+      $('.dr-date', cal.element)
+        .not(cal.selected)
+        .html(other.format(cal.format.input));
+    }
 
-      if ($(cal.selected).hasClass('dr-date-start')) {
-        $('.dr-date-end', cal.element).trigger('click');
-      } else {
-        cal.calendarSaveDates();
-        cal.calendarClose('force');
-      }
+    $(cal.selected).html(string);
+    cal.calendarOpen(cal.selected);
+
+    if ($(cal.selected).hasClass('dr-date-start')) {
+      $('.dr-date-end', cal.element).trigger('click');
+    } else {
+      cal.calendarSaveDates();
+      cal.calendarClose('force');
+    }
   }
 
 
