@@ -1,3 +1,6 @@
+## 1.0.14 Update
+- Fixed calendar close clicking issues. It's harder than you might think
+
 ## 1.0.13 Update
 - Microsoft Edge compatibility updates
 
