@@ -42,6 +42,7 @@
     this.orig_start_date =    null;
     this.orig_end_date =      null;
     this.orig_current_date =  null;
+    this.orig_preset_label =  null;
 
     this.earliest_date =  settings.earliest_date ? moment(settings.earliest_date)
                           : moment('1900-01-01', 'YYYY-MM-DD');
@@ -54,6 +55,7 @@
     this.current_date =   settings.current_date ? moment(settings.current_date)
                           : (this.type == 'single' ? moment() : null);
 
+    this.sticky_presets = settings.sticky_presets || false;
     this.presets =        settings.presets == false || this.type == 'single' ? false : true;
 
     this.callback =       settings.callback || this.calendarSetDates;
@@ -68,6 +70,7 @@
       var start = $('.dr-item-aside', this).data('start');
       var end = $('.dr-item-aside', this).data('end');
 
+      self.preset_label = $(this).data('label');
       self.start_date = self.calendarCheckDate(start);
       self.end_date = self.calendarCheckDate(end);
 
@@ -215,6 +218,7 @@
       this.orig_start_date = this.start_date;
       this.orig_end_date = this.end_date;
       this.orig_current_date = this.current_date;
+      this.orig_preset_label = this.preset_label;
 
       this.presetIsOpen = true;
     } else if (this.presetIsOpen) {
@@ -295,7 +299,7 @@
         item.data('end', endISO);
         item.html(string);
       } else {
-        ul_presets.append('<li class="dr-list-item">'+ d.label +
+        ul_presets.append('<li class="dr-list-item" data-label="' + d.label + '">'+ d.label +
           '<span class="dr-item-aside" data-start="'+ startISO +'" data-end="'+ endISO +'">'+ string +'</span>'+
         '</li>');
       }
@@ -306,8 +310,21 @@
 
 
   Calendar.prototype.calendarSetDates = function() {
+    // fill widgets with data
     $('.dr-date-start', this.element).html(moment(this.start_date).format(this.format.input));
     $('.dr-date-end', this.element).html(moment(this.end_date).format(this.format.input));
+    $('.dr-date-preset', this.element).html(this.preset_label);
+
+    // show one set (preset vs. custom days) and hide the other
+    if (this.sticky_presets) {
+      if (this.preset_label) {
+        $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).hide();
+        $('.dr-date-preset', this.element).show();
+      } else {
+        $('.dr-date-start, .dr-dates-dash, .dr-date-end', this.element).show();
+        $('.dr-date-preset', this.element).hide();
+      }
+    }
 
     if (!this.start_date && !this.end_date) {
       var old_date = $('.dr-date', this.element).html();
@@ -324,7 +341,7 @@
 
   Calendar.prototype.calendarSaveDates = function() {
     if (this.type === 'double') {
-      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date))
+      if (!moment(this.orig_end_date).isSame(this.end_date) || !moment(this.orig_start_date).isSame(this.start_date) || (this.sticky_presets && (this.orig_preset_label !== this.preset_label)))
         return this.callback();
     } else {
       if (!this.required || !moment(this.orig_current_date).isSame(this.current_date))
@@ -371,6 +388,7 @@
   Calendar.prototype.calendarCheckDates = function() {
     var startTxt = $('.dr-date-start', this.element).html();
     var endTxt = $('.dr-date-end', this.element).html();
+
     var c = this.calendarCheckDate($(this.selected).html());
     var s;
     var e;
@@ -432,9 +450,13 @@
   Calendar.prototype.calendarOpen = function(selected, switcher) {
     var self = this;
     var other;
-    var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
 
-    this.selected = selected || this.selected;
+    if ($(selected).hasClass('dr-date-preset')) {
+      this.selected = $('.dr-date.dr-date-start', this.element).get(0);
+      this.preset_label = null;
+    } else {
+      this.selected = selected || this.selected;
+    }
 
     if (this.presetIsOpen == true)
       this.presetToggle();
@@ -445,6 +467,7 @@
       this.orig_start_date = this.start_date;
       this.orig_end_date = this.end_date;
       this.orig_current_date = this.current_date;
+      this.orig_preset_label = this.preset_label;
     }
 
     this.calendarCheckDates();
@@ -584,11 +607,12 @@
       });
     }
 
+    var cal_width = $('.dr-dates', this.element).innerWidth() - 8;
     $('.dr-calendar', this.element)
       .css('width', cal_width)
       .slideDown(200);
     $('.dr-input', this.element).addClass('dr-active');
-    $(selected).addClass('dr-active').focus();
+    $(this.selected).addClass('dr-active').focus();
     this.element.addClass('dr-active');
 
     this.calIsOpen = true;
@@ -690,6 +714,7 @@
           '<div class="dr-date dr-date-start" contenteditable>'+ moment(this.start_date).format(this.format.input) +'</div>' +
           '<span class="dr-dates-dash">&ndash;</span>' +
           '<div class="dr-date dr-date-end" contenteditable>'+ moment(this.end_date).format(this.format.input) +'</div>' +
+          '<div class="dr-date dr-date-preset" style="display: none">' + '</div>' +
         '</div>' +
 
         (this.presets ? '<div class="dr-presets">' +
