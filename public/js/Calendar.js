@@ -48,12 +48,23 @@
                           : moment('1900-01-01', 'YYYY-MM-DD');
     this.latest_date =    settings.latest_date ? moment(settings.latest_date)
                           : moment('2900-12-31', 'YYYY-MM-DD');
-    this.end_date =       settings.end_date ? moment(settings.end_date)
-                          : (this.type == 'double' ? moment() : null);
-    this.start_date =     settings.start_date ? moment(settings.start_date)
-                          : (this.type == 'double' ? this.end_date.clone().subtract(1, 'month') : null);
     this.current_date =   settings.current_date ? moment(settings.current_date)
                           : (this.type == 'single' ? moment() : null);
+    this.preset_label =   settings.preset_label ? settings.preset_label
+                          : (this.type == 'single' ? 'Last 3 months' : null);
+     if(this.preset_label) {
+	var self = this;
+        var preset = settings.presets.find(function(obj) {
+          return obj.label === self.preset_label;
+        });
+        this.start_date = preset.start;
+        this.end_date = preset.end;
+    } else {
+        this.start_date =     settings.start_date ? moment(settings.start_date)
+                          : (this.type == 'double' ? this.end_date.clone().subtract(1, 'month') : null);
+        this.end_date =       settings.end_date ? moment(settings.end_date)
+                          : (this.type == 'double' ? moment() : null);
+    }
 
     this.sticky_presets = settings.sticky_presets || false;
     this.presets =        settings.presets == false || this.type == 'single' ? false : true;
@@ -61,6 +72,7 @@
     this.callback =       settings.callback || this.calendarSetDates;
 
     this.calendarHTML(this.type);
+    this.calendarSetDates();
 
     $('.dr-presets', this.element).click(function() {
       self.presetToggle();
@@ -71,6 +83,10 @@
       var end = $('.dr-item-aside', this).data('end');
 
       self.preset_label = $(this).data('label');
+      if (self.preset_label == 'custom'){
+        self.calendarOpen($('.dr-date', this.element));
+        return;
+      }
       self.start_date = self.calendarCheckDate(start);
       self.end_date = self.calendarCheckDate(end);
 
@@ -304,7 +320,7 @@
         '</li>');
       }
     });
-
+    ul_presets.append('<li class="dr-list-item" data-label="custom">Custom</li>');
     return ul_presets;
   }
 
@@ -806,6 +822,7 @@
     if ($(cal.selected).hasClass('dr-date-start')) {
       $('.dr-date-end', cal.element).trigger('click');
     } else {
+      self.preset_label = null;
       cal.calendarSaveDates();
       cal.calendarClose('force');
     }
