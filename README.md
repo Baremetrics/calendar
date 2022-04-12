@@ -1,3 +1,5 @@
+# DEPRECATED - This library is no longer being maintained.
+
 # [Baremetrics](https://baremetrics.com/) Date Range Picker
 _[Baremetrics](https://baremetrics.com) provides zero-setup subscription analytics & insights for Stripe, Braintree and Recurly. **[Get started today!](https://baremetrics.com)**_
 
